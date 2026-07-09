@@ -1,0 +1,45 @@
+{
+  "entity": "pitch",
+  "fixtures": [
+    {
+      "name": "stripped-12tet-sa",
+      "scenario": "stripped",
+      "description": "sa in 12-TET at default fundamental (baseline)"
+    },
+    {
+      "name": "stripped-12tet-re-raised",
+      "scenario": "stripped",
+      "description": "re raised, 12-TET, default fundamental"
+    },
+    {
+      "name": "stripped-nondefault-fundamental-ga-komal",
+      "scenario": "stripped",
+      "description": "ga komal, oct+1, fundamental 246Hz (Yaman-like). If an impl fails to thread the fundamental it uses 261.63 and gets the WRONG frequency."
+    },
+    {
+      "name": "stripped-just-intonation-ga",
+      "scenario": "stripped",
+      "description": "ga raised with JUST-INTONATION ratios (5/4), fundamental 246Hz. Catches an impl that ignores threaded ratios and uses 12-TET."
+    },
+    {
+      "name": "stripped-just-intonation-pa",
+      "scenario": "stripped",
+      "description": "pa (single-ratio swara) just-intonation 3/2, fundamental 220Hz"
+    },
+    {
+      "name": "stripped-logoffset-ni",
+      "scenario": "stripped",
+      "description": "ni raised, oct-1, logOffset 0.15 (microtonal bend), fundamental 246Hz"
+    },
+    {
+      "name": "legacy-embedded-ga-komal",
+      "scenario": "legacy",
+      "description": "Legacy JSON with ratios+fundamental embedded in the pitch (no context threaded). Must still compute the correct frequency (backward compat)."
+    },
+    {
+      "name": "legacy-embedded-just-pa",
+      "scenario": "legacy",
+      "description": "Legacy embedded just-intonation pa, fundamental 220Hz"
+    }
+  ]
+}

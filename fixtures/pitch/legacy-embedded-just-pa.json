@@ -1,0 +1,47 @@
+{
+  "name": "legacy-embedded-just-pa",
+  "description": "Legacy embedded just-intonation pa, fundamental 220Hz",
+  "scenario": "legacy",
+  "pitchJson": {
+    "swara": 4,
+    "raised": true,
+    "oct": 0,
+    "logOffset": 0.0,
+    "ratios": [
+      1,
+      [
+        1.0666666666666667,
+        1.125
+      ],
+      [
+        1.2,
+        1.25
+      ],
+      [
+        1.3333333333333333,
+        1.40625
+      ],
+      1.5,
+      [
+        1.6,
+        1.6666666666666667
+      ],
+      [
+        1.7777777777777777,
+        1.875
+      ]
+    ],
+    "fundamental": 220.0
+  },
+  "context": null,
+  "expected": {
+    "frequency": 330.0,
+    "logFreq": 8.366322214245816,
+    "numberedPitch": 7,
+    "chroma": 7,
+    "sargamLetter": "P"
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

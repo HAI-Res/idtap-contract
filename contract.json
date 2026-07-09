@@ -1,0 +1,13 @@
+{
+  "name": "idtap-contract",
+  "version": "0.1.0",
+  "description": "Language-neutral serialization contract (JSON Schemas + golden fixtures) for the IDTAP data model, shared by idtap (TS) and idtap-api (Python).",
+  "entities": {
+    "pitch": {
+      "schema": "schemas/pitch.schema.json",
+      "fixtures": "fixtures/pitch/",
+      "status": "complete"
+    }
+  },
+  "roadmap": ["raga", "trajectory", "phrase", "piece"]
+}

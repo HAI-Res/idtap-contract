@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/pitch.schema.json",
+  "title": "Pitch",
+  "description": "Serialized form of a Pitch. CANONICAL (stripped) form is {swara, raised, oct, logOffset}. `ratios` and `fundamental` are NOT part of the canonical form — they are supplied at load time from the enclosing raga context. They MAY appear here only in LEGACY data; when present, an implementation must honor threaded context over embedded values (context wins).",
+  "type": "object",
+  "required": ["swara", "raised", "oct"],
+  "additionalProperties": false,
+  "properties": {
+    "swara": {
+      "description": "Scale degree 0-6 (sa, re, ga, ma, pa, dha, ni). Always serialized as an integer, never a string.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+    },
+    "raised": {
+      "description": "Whether the swara is raised (suddha / tivra for ma). Forced true for sa (0) and pa (4).",
+      "type": "boolean"
+    },
+    "oct": {
+      "description": "Octave relative to center sa. Integer, may be negative.",
+      "type": "integer"
+    },
+    "logOffset": {
+      "description": "Microtonal log2 offset applied on top of the raga ratio. Defaults to 0.",
+      "type": "number",
+      "default": 0
+    },
+    "ratios": {
+      "description": "LEGACY ONLY. Stratified ratio array inherited from the raga. Omitted in canonical form. If present, treated as fallback context only.",
+      "deprecated": true,
+      "type": "array"
+    },
+    "fundamental": {
+      "description": "LEGACY ONLY. Center-sa frequency in Hz, inherited from the raga. Omitted in canonical form. If present, treated as fallback context only.",
+      "deprecated": true,
+      "type": "number",
+      "exclusiveMinimum": 0
+    }
+  }
+}
