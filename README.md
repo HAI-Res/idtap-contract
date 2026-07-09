@@ -100,7 +100,8 @@ schema bump is caught rather than silently mis-parsed.
 - [x] **Pitch** — schema + 8 fixtures (12-TET, non-default fundamental, just
       intonation, logOffset, legacy-embedded) + reference runner. *This is the
       reference slice; the others follow the same pattern.*
-- [ ] **Raga** — source of truth for `stratifiedRatios` + `fundamental`
+- [x] **Raga** — schema + 3 fixtures pinning `Raga JSON → stratifiedRatios +
+      fundamental`. Surfaced RAGA-1..3 divergences (see `DIVERGENCES.md`).
 - [ ] **Trajectory** — strips `name`/`instrumentation`/`tags`; threads context to pitches
 - [ ] **Phrase** — strips `raga`; threads context to trajectories
 - [ ] **Piece** — strips `durArray`/`sectionCategorization`; extracts + threads raga context; full multi-cycle round-trip fixtures

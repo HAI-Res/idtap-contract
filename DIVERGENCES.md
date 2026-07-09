@@ -1,0 +1,73 @@
+# Known TS ↔ Python divergences
+
+Divergences discovered while building the contract. **These are design questions
+to resolve before "fixing" the Python client** — patching Python to match TS
+would bake in TS behavior that may itself be wrong. Each needs an explicit
+decision on the canonical behavior; the fixtures then encode that decision and
+both implementations are held to it.
+
+Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforced by fixtures
+
+---
+
+## PITCH-1 🔴 Python `from_json` doesn't thread raga context (the Yaman bug)
+
+- **TS** `Pitch.fromJSON(obj, ratios?, fundamental?)` threads raga context in.
+- **Python** `Pitch.from_json(obj)` takes no context params → stripped JSON falls
+  back to constructor defaults (12-TET, 261.63 Hz).
+- **Effect:** a Yaman pitch (fundamental 246 Hz) loads at 261.63 Hz in Python.
+- **Canonical:** context must be threaded; embedded values are fallback.
+- **Fix (deferred):** `SERIALIZATION_SYNC_SPEC.md` — add `ratios`/`fundamental`
+  params to Python `from_json` at every level and thread from the piece raga.
+- **Fixtures:** `fixtures/pitch/stripped-nondefault-fundamental-*`,
+  `fixtures/pitch/stripped-just-intonation-*` (fail on Python until fixed).
+
+## PITCH-2 🔴 Python `to_json` still emits `ratios` + `fundamental`
+
+- **TS** strips them (canonical); **Python** still writes them.
+- **Effect:** Python-produced JSON is bloated and non-canonical; a strict
+  canonical-form validator would reject it.
+- **Canonical:** stripped — `{swara, raised, oct, logOffset}` only.
+- **Fix (deferred):** remove both from Python `Pitch.to_json()`.
+
+## RAGA-1 🔴 `ruleSet` is not serialized; both default to Yaman
+
+- Neither `to_json()` includes `ruleSet`. On load both default to the Yaman rule
+  set. `stratifiedRatios` (threaded into Pitch) depends on the rule set's
+  structure (which swaras are single vs lowered/raised pairs).
+- **Effect:** a **non-Yaman** raga cannot be faithfully reconstructed from its
+  serialization alone — the rule-set structure is lost.
+- **Open question:** should `ruleSet` be added to the serialized form? (Cleanest
+  fix.) Or is rule-set structure always recoverable from `name` + a rules table?
+- **Scope note:** contract Raga fixtures are Yaman-only until this is decided.
+
+## RAGA-2 🔴 Mismatched ratios count: TS regenerates, Python preserves
+
+- On load, if `ratios.length !== ruleSetNumPitches`:
+  - **TS** `Raga` constructor **discards** the serialized ratios and regenerates
+    from the (default Yaman) rule set (`setRatios`).
+  - **Python** `Raga.from_json` passes `preserve_ratios=True` → **keeps** the
+    serialized ratios, and `stratified_ratios` has a separate mismatch branch
+    that builds from `tuning`.
+- **Effect:** identical serialized raga → **different `stratifiedRatios`** →
+  different Pitch frequencies across the two implementations.
+- **Open question:** which is canonical — preserve (Python) or regenerate (TS)?
+  Preserving transcription-specific ratios seems more correct, but then TS is
+  wrong. Needs an explicit decision.
+
+## RAGA-3 🔴 Python has a DB rule-set fetch path; TS does not
+
+- **Python** `Raga.__init__` can fetch the rule set from the server by `name`
+  (`client.get_raga_rules(name)`) when no `rule_set` is given and a client is
+  present. **TS** has no equivalent — always defaults to Yaman.
+- **Effect:** for named non-Yaman ragas, Python (with a client) can reconstruct
+  the correct rule set while TS cannot. Compounds RAGA-1/RAGA-2.
+
+---
+
+## Resolution workflow
+
+1. Finish modeling every entity in the contract (surface all divergences here).
+2. For each 🔴, decide the canonical behavior with the project owner.
+3. Encode the decision as golden fixtures (→ 🟡).
+4. Apply fixes to both implementations; wire conformance suites into CI (→ 🟢).

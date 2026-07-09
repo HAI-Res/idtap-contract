@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/raga.schema.json",
+  "title": "Raga",
+  "description": "Serialized form of a Raga. It is the source of truth for the (stratifiedRatios, fundamental) context threaded into every Pitch. NOTE: `ruleSet` is intentionally NOT serialized — both implementations default it to Yaman on load. See DIVERGENCES.md for the consequences for non-Yaman ragas.",
+  "type": "object",
+  "required": ["name", "fundamental", "ratios", "tuning"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string" },
+    "fundamental": {
+      "description": "Center-sa frequency in Hz.",
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "ratios": {
+      "description": "Flat ratio array, one entry per pitch present in the rule set, in rule-set key order. Max 12.",
+      "type": "array",
+      "items": { "type": "number", "exclusiveMinimum": 0 },
+      "maxItems": 12
+    },
+    "tuning": { "$ref": "#/$defs/tuning" }
+  },
+  "$defs": {
+    "numOrPair": {
+      "oneOf": [
+        { "type": "number", "exclusiveMinimum": 0 },
+        {
+          "type": "object",
+          "required": ["lowered", "raised"],
+          "additionalProperties": false,
+          "properties": {
+            "lowered": { "type": "number", "exclusiveMinimum": 0 },
+            "raised": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        }
+      ]
+    },
+    "tuning": {
+      "type": "object",
+      "required": ["sa", "re", "ga", "ma", "pa", "dha", "ni"],
+      "additionalProperties": false,
+      "properties": {
+        "sa": { "type": "number", "exclusiveMinimum": 0 },
+        "re": { "$ref": "#/$defs/numOrPair" },
+        "ga": { "$ref": "#/$defs/numOrPair" },
+        "ma": { "$ref": "#/$defs/numOrPair" },
+        "pa": { "type": "number", "exclusiveMinimum": 0 },
+        "dha": { "$ref": "#/$defs/numOrPair" },
+        "ni": { "$ref": "#/$defs/numOrPair" }
+      }
+    }
+  }
+}

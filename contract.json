@@ -7,7 +7,14 @@
       "schema": "schemas/pitch.schema.json",
       "fixtures": "fixtures/pitch/",
       "status": "complete"
+    },
+    "raga": {
+      "schema": "schemas/raga.schema.json",
+      "fixtures": "fixtures/raga/",
+      "status": "complete",
+      "notes": "Yaman-only until RAGA-1..3 in DIVERGENCES.md are resolved"
     }
   },
-  "roadmap": ["raga", "trajectory", "phrase", "piece"]
+  "roadmap": ["trajectory", "phrase", "piece"],
+  "divergences": "DIVERGENCES.md"
 }

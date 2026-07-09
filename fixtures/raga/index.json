@@ -1,0 +1,17 @@
+{
+  "entity": "raga",
+  "fixtures": [
+    {
+      "name": "yaman-12tet-default-fundamental",
+      "description": "Yaman, 12-TET, default 261.63Hz fundamental. stratifiedRatios equals the Pitch default 12-TET stratified array."
+    },
+    {
+      "name": "yaman-12tet-nondefault-fundamental",
+      "description": "Yaman, 12-TET, fundamental 246Hz. Same ratios, different fundamental (the value that must be threaded into every Pitch)."
+    },
+    {
+      "name": "yaman-just-intonation",
+      "description": "Yaman with JUST-INTONATION ratios for its raised pitches (re 9/8, ga 5/4, ma 45/32, dha 27/16, ni 15/8), fundamental 240Hz."
+    }
+  ]
+}
