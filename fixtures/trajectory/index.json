@@ -1,0 +1,25 @@
+{
+  "entity": "trajectory",
+  "fixtures": [
+    {
+      "name": "stripped-fixed-single-pitch",
+      "scenario": "stripped",
+      "description": "id=0 (Fixed), single sa pitch, Yaman fundamental 246Hz. Pitch freq must be reconstructed from threaded context (not the 261.63 default)."
+    },
+    {
+      "name": "stripped-bend-two-pitches-just",
+      "scenario": "stripped",
+      "description": "id=1 (Bend), ga-komal -> pa, just-intonation, fundamental 240Hz. Both pitch frequencies must reflect threaded JUST ratios, not 12-TET."
+    },
+    {
+      "name": "stripped-logoffset-pitch",
+      "scenario": "stripped",
+      "description": "id=6 with a microtonal logOffset pitch, fundamental 246Hz"
+    },
+    {
+      "name": "legacy-embedded-with-stripped-fields",
+      "scenario": "legacy",
+      "description": "Legacy trajectory: name/instrumentation/tags present AND ratios/fundamental embedded in pitches, no context threaded. Must still reconstruct correct frequencies; stripped fields ignored on canonical out."
+    }
+  ]
+}

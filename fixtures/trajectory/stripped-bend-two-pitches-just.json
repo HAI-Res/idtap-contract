@@ -1,0 +1,70 @@
+{
+  "name": "stripped-bend-two-pitches-just",
+  "description": "id=1 (Bend), ga-komal -> pa, just-intonation, fundamental 240Hz. Both pitch frequencies must reflect threaded JUST ratios, not 12-TET.",
+  "scenario": "stripped",
+  "trajectoryJson": {
+    "id": 1,
+    "pitches": [
+      {
+        "swara": 2,
+        "raised": false,
+        "oct": 0,
+        "logOffset": 0.0
+      },
+      {
+        "swara": 4,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0
+      }
+    ],
+    "durTot": 2.0,
+    "durArray": [
+      0.5,
+      0.5
+    ],
+    "slope": 0,
+    "num": 0,
+    "uniqueId": "fixture-stripped-bend-two-pitches-just"
+  },
+  "context": {
+    "ratios": [
+      1,
+      [
+        1.0666666666666667,
+        1.125
+      ],
+      [
+        1.2,
+        1.25
+      ],
+      [
+        1.3333333333333333,
+        1.40625
+      ],
+      1.5,
+      [
+        1.6,
+        1.6666666666666667
+      ],
+      [
+        1.7777777777777777,
+        1.875
+      ]
+    ],
+    "fundamental": 240.0
+  },
+  "expected": {
+    "id": 1,
+    "durTot": 2.0,
+    "derivedName": "Bend: Simple",
+    "tagsDefault": [],
+    "pitchFrequencies": [
+      288.0,
+      360.0
+    ]
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

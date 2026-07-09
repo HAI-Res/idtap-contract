@@ -93,7 +93,23 @@ def check_raga(fx):
     return ok, f"fund={rj['fundamental']}Hz"
 
 
-CHECKERS = {"pitch": check_pitch, "raga": check_raga}
+# --------------------------------------------------------------------------- trajectory
+def check_trajectory(fx):
+    ctx = fx.get("context") or {}
+    tj = fx["trajectoryJson"]
+    rel = fx.get("tolerance", {}).get("rel", 1e-9)
+    got = []
+    for p in tj["pitches"]:
+        ratios = ctx.get("ratios", p.get("ratios"))
+        fundamental = ctx.get("fundamental", p.get("fundamental"))
+        got.append(pitch_frequency(p, ratios, fundamental))
+    want = fx["expected"]["pitchFrequencies"]
+    ok = len(got) == len(want) and all(close(a, b, rel) for a, b in zip(got, want))
+    ok = ok and tj["id"] == fx["expected"]["id"]
+    return ok, f"freqs={[round(x, 2) for x in got]}"
+
+
+CHECKERS = {"pitch": check_pitch, "raga": check_raga, "trajectory": check_trajectory}
 
 
 def main():

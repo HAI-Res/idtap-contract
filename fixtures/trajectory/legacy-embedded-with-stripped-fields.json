@@ -1,0 +1,99 @@
+{
+  "name": "legacy-embedded-with-stripped-fields",
+  "description": "Legacy trajectory: name/instrumentation/tags present AND ratios/fundamental embedded in pitches, no context threaded. Must still reconstruct correct frequencies; stripped fields ignored on canonical out.",
+  "scenario": "legacy",
+  "trajectoryJson": {
+    "id": 3,
+    "pitches": [
+      {
+        "swara": 2,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0,
+        "ratios": [
+          1,
+          [
+            1.0594630943592953,
+            1.122462048309373
+          ],
+          [
+            1.189207115002721,
+            1.2599210498948732
+          ],
+          [
+            1.3348398541700344,
+            1.4142135623730951
+          ],
+          1.4983070768766815,
+          [
+            1.5874010519681994,
+            1.681792830507429
+          ],
+          [
+            1.7817974362806785,
+            1.8877486253633868
+          ]
+        ],
+        "fundamental": 246.0
+      },
+      {
+        "swara": 5,
+        "raised": false,
+        "oct": 1,
+        "logOffset": 0.0,
+        "ratios": [
+          1,
+          [
+            1.0594630943592953,
+            1.122462048309373
+          ],
+          [
+            1.189207115002721,
+            1.2599210498948732
+          ],
+          [
+            1.3348398541700344,
+            1.4142135623730951
+          ],
+          1.4983070768766815,
+          [
+            1.5874010519681994,
+            1.681792830507429
+          ],
+          [
+            1.7817974362806785,
+            1.8877486253633868
+          ]
+        ],
+        "fundamental": 246.0
+      }
+    ],
+    "durTot": 2.0,
+    "durArray": [
+      0.5,
+      0.5
+    ],
+    "slope": 0,
+    "num": 0,
+    "uniqueId": "fixture-legacy-embedded-with-stripped-fields",
+    "name": "Bend: Sloped End",
+    "instrumentation": "Sitar",
+    "tags": [
+      "legacy-annotation"
+    ]
+  },
+  "context": null,
+  "expected": {
+    "id": 3,
+    "durTot": 2.0,
+    "derivedName": "Bend: Sloped End",
+    "tagsDefault": [],
+    "pitchFrequencies": [
+      309.94057827413883,
+      781.0013175683541
+    ]
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

@@ -102,7 +102,8 @@ schema bump is caught rather than silently mis-parsed.
       reference slice; the others follow the same pattern.*
 - [x] **Raga** — schema + 3 fixtures pinning `Raga JSON → stratifiedRatios +
       fundamental`. Surfaced RAGA-1..3 divergences (see `DIVERGENCES.md`).
-- [ ] **Trajectory** — strips `name`/`instrumentation`/`tags`; threads context to pitches
+- [x] **Trajectory** — schema + 4 fixtures (pitch-frequency preservation through
+      context threading; stripped name/instrumentation/tags). Surfaced TRAJ-1/2.
 - [ ] **Phrase** — strips `raga`; threads context to trajectories
 - [ ] **Piece** — strips `durArray`/`sectionCategorization`; extracts + threads raga context; full multi-cycle round-trip fixtures
 - [ ] Wire conformance suites into `idtap` and `idtap-api` CI

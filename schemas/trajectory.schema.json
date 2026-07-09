@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/trajectory.schema.json",
+  "title": "Trajectory",
+  "description": "Serialized form of a Trajectory (a continuous melodic gesture). CANONICAL form omits `name` (derived from `id`), `instrumentation` (inherited from the piece), and `tags` (defaults []). Those may appear only in LEGACY data. On load, (ratios, fundamental) from the raga context are threaded into every nested Pitch.",
+  "type": "object",
+  "required": ["id", "pitches", "durTot"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "description": "Trajectory type 0-13 (0=Fixed, 1=Bend:Simple, … 13=Vibrato). `name` is names[id].", "type": "integer", "minimum": 0, "maximum": 13 },
+    "pitches": { "type": "array", "items": { "$ref": "pitch.schema.json" } },
+    "durTot": { "type": "number" },
+    "durArray": { "type": ["array", "null"], "items": { "type": "number" } },
+    "slope": { "type": "number" },
+    "articulations": {
+      "description": "Map of position-key -> Articulation. (Articulation schema TODO.)",
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    },
+    "startTime": { "type": ["number", "null"] },
+    "num": { "type": ["integer", "null"] },
+    "fundID12": { "type": ["number", "null"] },
+    "vibObj": { "description": "Vibrato parameters (schema TODO).", "type": "object" },
+    "vowel": { "type": ["string", "null"] },
+    "startConsonant": { "type": ["string", "null"] },
+    "startConsonantHindi": { "type": ["string", "null"] },
+    "startConsonantIpa": { "type": ["string", "null"] },
+    "startConsonantEngTrans": { "type": ["string", "null"] },
+    "endConsonant": { "type": ["string", "null"] },
+    "endConsonantHindi": { "type": ["string", "null"] },
+    "endConsonantIpa": { "type": ["string", "null"] },
+    "endConsonantEngTrans": { "type": ["string", "null"] },
+    "groupId": { "type": ["string", "null"] },
+    "automation": { "description": "Automation curve or null (schema TODO).", "type": ["object", "null"] },
+    "uniqueId": { "type": ["string", "null"] },
+
+    "name": { "description": "LEGACY ONLY — derived from id in canonical form.", "deprecated": true, "type": "string" },
+    "instrumentation": { "description": "LEGACY ONLY — inherited from piece.", "deprecated": true },
+    "tags": { "description": "LEGACY ONLY — defaults to [].", "deprecated": true, "type": "array" }
+  }
+}

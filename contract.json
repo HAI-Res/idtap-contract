@@ -13,8 +13,14 @@
       "fixtures": "fixtures/raga/",
       "status": "complete",
       "notes": "Yaman-only until RAGA-1..3 in DIVERGENCES.md are resolved"
+    },
+    "trajectory": {
+      "schema": "schemas/trajectory.schema.json",
+      "fixtures": "fixtures/trajectory/",
+      "status": "complete",
+      "notes": "Articulation/Automation/vibObj sub-schemas still TODO"
     }
   },
-  "roadmap": ["trajectory", "phrase", "piece"],
+  "roadmap": ["phrase", "piece", "articulation", "automation"],
   "divergences": "DIVERGENCES.md"
 }

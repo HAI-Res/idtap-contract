@@ -63,6 +63,21 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
 - **Effect:** for named non-Yaman ragas, Python (with a client) can reconstruct
   the correct rule set while TS cannot. Compounds RAGA-1/RAGA-2.
 
+## TRAJ-1 🔴 Python `to_json` still emits `name`, `instrumentation`, `tags`
+
+- **TS** `Trajectory.toJSON()` strips all three (name derived from id,
+  instrumentation inherited, tags default []). **Python** still writes them.
+- **Canonical:** stripped. `name = names[id]`, `tags = []`, instrumentation from piece.
+- **Fix (deferred):** remove the three keys from Python `Trajectory.to_json()`.
+
+## TRAJ-2 🔴 Python `from_json` doesn't thread context to pitches
+
+- **TS** `Trajectory.fromJSON(obj, ratios?, fundamental?)` passes context into
+  `Pitch.fromJSON`. **Python** `from_json(obj)` has no context params and calls
+  `Pitch.from_json(p)` bare — so **PITCH-1 propagates through every trajectory**.
+- **Fix (deferred):** add `ratios`/`fundamental` params, thread to each pitch.
+- **Fixtures:** `fixtures/trajectory/stripped-*` fail on Python until fixed.
+
 ---
 
 ## Resolution workflow
