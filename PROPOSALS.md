@@ -103,3 +103,47 @@ PIECE-2.
   - [ ] Python — emit tz-aware UTC ISO; stop stripping `Z`; parse as UTC.
   - [ ] Server — parse incoming ISO → BSON Date on save.
   - [ ] `piece.schema.json` — pin `dateCreated`/`dateModified` as ISO-8601 date-time strings.
+
+---
+
+## PROP-3 — Chikari tuning: single source of truth = raga
+
+**Decision (2026-07-10):** chikari drone tuning must derive from the piece's raga,
+making the `Chikari` model's own pitch/fundamental data unnecessary. Corrects SEM-2.
+
+### Finding
+Chikari **playback is already correctly tuned**: both `Piece.chikariFreqs` (TS) and
+`Piece.chikari_freqs` (Python) return `raga.chikariPitches` frequencies — derived from
+the raga's `stratifiedRatios` + `fundamental`, so correct even for non-12-TET ragas.
+The synth reads these, not the Chikari instances' pitches. **No audible bug.**
+
+**But** the `Chikari` model carries vestigial 12-TET default `pitches` and its own
+`fundamental`. Correctness depends on every consumer *knowing* to bypass
+`chikari.pitches` and read `raga.chikariPitches`. Any consumer that reads
+`chikari.pitches[i].frequency` directly (Python client, JSON export, analysis) silently
+gets 12-TET — the exact "correct only if you know the secret handshake" fragility this
+contract exists to remove. Identical structure in TS and Python.
+
+### Decision — one source of truth
+- Chikari drone pitches/frequencies **derive from `raga.chikariPitches`** wherever needed
+  (as `piece.chikariFreqs` already does). The raga owns which strings sound (sa always,
+  pa if present, ga if exactly one variant) and their tuning.
+- The `Chikari` model's own `pitches` should not default to 12-TET; and its stored
+  `fundamental` is redundant (== raga fundamental). Canonical serialized chikari shrinks
+  toward just `{uniqueId}` (its time position is the `phrase.chikaris` dict key).
+- **No audible change** — this hardens the data model and non-synth consumers and
+  removes the footgun.
+
+### Notes / dependency
+- Deriving `chikariPitches` needs the full raga (ratios + fundamental + ruleSet, since
+  "which strings" depends on the rule set). **PROP-1** (ruleSet in the piece) makes the
+  raga fully reconstructable, so chikari pitches can be derived on load / on demand.
+
+### Implementation checklist (deferred)
+- [ ] TS `Chikari` — derive pitches from raga (or drop them); remove stored `fundamental`
+      (or keep only as a cache).
+- [ ] Python `Chikari` — same.
+- [ ] Anywhere reading `chikari.pitches` for frequency → route through `raga.chikariPitches`.
+- [ ] `chikari.schema.json` — canonical form → `{uniqueId}` (pitches/fundamental derived).
+- [ ] Contract fixtures — a non-12-TET raga chikari fixture: raga context → expected
+      `chikariPitches` frequencies (proves both derive the same drone tuning).

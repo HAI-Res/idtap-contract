@@ -172,12 +172,14 @@ canonical form and self-containment are noted in SEM-2. Meter's nested
   the raised variant uses the **ET-tuned lowered slot** of `stratifiedRatios`
   (the absent variant falls back to `tuning`, not to any transcription ratio).
   Both implementations agree; fixtures encode it (`fixtures/piece/*-just-intonation`).
-- **SEM-2** `Chikari` is self-contained: it serializes its OWN `fundamental` and
-  applies it to its drone pitches on load; **neither** implementation threads raga
-  ratios into chikari pitches (both use default/embedded ratios + the chikari
-  fundamental). So chikari is NOT part of the Yaman context chain — consistent
-  across TS/Python. (Chikari pitches in a non-12-TET raga therefore use 12-TET
-  ratios in both; a separate design question, but not a TS↔Python divergence.)
+- **SEM-2** ~~Chikari is self-contained…~~ **SUPERSEDED → PROP-3.** Re-examined
+  2026-07-10: playback is actually correct (both `Piece.chikariFreqs` /
+  `chikari_freqs` derive drone frequencies from `raga.chikariPitches` — raga-tuned,
+  non-12-TET-aware), so there is **no audible bug**. BUT the `Chikari` model's own
+  `.pitches` (12-TET defaults) + stored `fundamental` are **vestigial for tuning** —
+  a footgun: any consumer reading `chikari.pitches[i].frequency` directly (Python
+  client, exports, analysis) silently gets 12-TET. Fix = single source of truth
+  (chikari tuning derives from the raga). See PROP-3.
 
 ---
 
