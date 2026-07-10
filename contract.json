@@ -65,5 +65,6 @@
   },
   "roadmap": [],
   "divergences": "DIVERGENCES.md",
-  "status": "model complete \u2014 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes"
+  "status": "model complete \u2014 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes",
+  "proposals": "PROPOSALS.md"
 }
