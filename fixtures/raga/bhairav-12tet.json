@@ -1,47 +1,47 @@
 {
-  "name": "yaman-just-intonation",
-  "description": "Yaman with JUST-INTONATION ratios for its raised pitches (re 9/8, ga 5/4, ma 45/32, dha 27/16, ni 15/8), fundamental 240Hz.",
+  "name": "bhairav-12tet",
+  "description": "Bhairav (komal re + komal dha), 12-TET, 246Hz. Non-Yaman rule set \u2014 only reconstructs because ruleSet is now serialized (PROP-1).",
   "ragaJson": {
-    "name": "Yaman",
-    "fundamental": 240.0,
+    "name": "Bhairav",
+    "fundamental": 246.0,
     "ratios": [
-      1,
-      1.125,
-      1.25,
-      1.40625,
-      1.5,
-      1.6875,
-      1.875
+      1.0,
+      1.0594630943592953,
+      1.2599210498948732,
+      1.4142135623730951,
+      1.4983070768766815,
+      1.5874010519681994,
+      1.8877486253633868
     ],
     "tuning": {
-      "sa": 1,
+      "sa": 1.0,
       "re": {
         "lowered": 1.0594630943592953,
-        "raised": 1.125
+        "raised": 1.122462048309373
       },
       "ga": {
         "lowered": 1.189207115002721,
-        "raised": 1.25
+        "raised": 1.2599210498948732
       },
       "ma": {
         "lowered": 1.3348398541700344,
-        "raised": 1.40625
+        "raised": 1.4142135623730951
       },
-      "pa": 1.5,
+      "pa": 1.4983070768766815,
       "dha": {
         "lowered": 1.5874010519681994,
-        "raised": 1.6875
+        "raised": 1.681792830507429
       },
       "ni": {
         "lowered": 1.7817974362806785,
-        "raised": 1.875
+        "raised": 1.8877486253633868
       }
     },
     "ruleSet": {
       "sa": true,
       "re": {
-        "lowered": false,
-        "raised": true
+        "lowered": true,
+        "raised": false
       },
       "ga": {
         "lowered": false,
@@ -53,8 +53,8 @@
       },
       "pa": true,
       "dha": {
-        "lowered": false,
-        "raised": true
+        "lowered": true,
+        "raised": false
       },
       "ni": {
         "lowered": false,
@@ -63,29 +63,29 @@
     }
   },
   "expected": {
-    "fundamental": 240.0,
+    "fundamental": 246.0,
     "stratifiedRatios": [
-      1,
+      1.0,
       [
         1.0594630943592953,
-        1.125
+        1.122462048309373
       ],
       [
         1.189207115002721,
-        1.25
+        1.2599210498948732
       ],
       [
         1.3348398541700344,
-        1.40625
+        1.4142135623730951
       ],
-      1.5,
+      1.4983070768766815,
       [
         1.5874010519681994,
-        1.6875
+        1.681792830507429
       ],
       [
         1.7817974362806785,
-        1.875
+        1.8877486253633868
       ]
     ]
   },

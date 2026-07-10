@@ -1,7 +1,6 @@
 {
   "name": "yaman-12tet-nondefault-fundamental",
   "description": "Yaman, 12-TET, fundamental 246Hz. Same ratios, different fundamental (the value that must be threaded into every Pitch).",
-  "ruleSet": "yaman (default, not serialized)",
   "ragaJson": {
     "name": "Yaman",
     "fundamental": 246.0,
@@ -36,6 +35,30 @@
       "ni": {
         "lowered": 1.7817974362806785,
         "raised": 1.8877486253633868
+      }
+    },
+    "ruleSet": {
+      "sa": true,
+      "re": {
+        "lowered": false,
+        "raised": true
+      },
+      "ga": {
+        "lowered": false,
+        "raised": true
+      },
+      "ma": {
+        "lowered": false,
+        "raised": true
+      },
+      "pa": true,
+      "dha": {
+        "lowered": false,
+        "raised": true
+      },
+      "ni": {
+        "lowered": false,
+        "raised": true
       }
     }
   },

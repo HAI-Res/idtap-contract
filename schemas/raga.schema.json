@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://idtap.swara.studio/schemas/raga.schema.json",
   "title": "Raga",
-  "description": "Serialized form of a Raga. It is the source of truth for the (stratifiedRatios, fundamental) context threaded into every Pitch. NOTE: `ruleSet` is intentionally NOT serialized — both implementations default it to Yaman on load. See DIVERGENCES.md for the consequences for non-Yaman ragas.",
+  "description": "Serialized form of a Raga, the source of truth for the (stratifiedRatios, fundamental) context threaded into every Pitch. PROP-1: `ruleSet` IS now serialized so a piece's raga is self-contained (interpretable without a DB lookup) and non-Yaman ragas round-trip. `ruleSet` is migrated-optional: emitted for all new data, tolerated-absent on legacy pieces (both implementations then default it to Yaman and heal-forward on next save). See PROPOSALS.md PROP-1.",
   "type": "object",
   "required": ["name", "fundamental", "ratios", "tuning"],
   "additionalProperties": false,
@@ -19,9 +19,36 @@
       "items": { "type": "number", "exclusiveMinimum": 0 },
       "maxItems": 12
     },
-    "tuning": { "$ref": "#/$defs/tuning" }
+    "tuning": { "$ref": "#/$defs/tuning" },
+    "ruleSet": {
+      "description": "Which scale degrees are present. sa/pa are always-present booleans; re/ga/ma/dha/ni carry {lowered,raised} presence flags. Migrated-optional (see title). Determines ratios array length and stratifiedRatios shape.",
+      "$ref": "#/$defs/ruleSet"
+    }
   },
   "$defs": {
+    "presencePair": {
+      "type": "object",
+      "required": ["lowered", "raised"],
+      "additionalProperties": false,
+      "properties": {
+        "lowered": { "type": "boolean" },
+        "raised": { "type": "boolean" }
+      }
+    },
+    "ruleSet": {
+      "type": "object",
+      "required": ["sa", "re", "ga", "ma", "pa", "dha", "ni"],
+      "additionalProperties": false,
+      "properties": {
+        "sa": { "type": "boolean" },
+        "re": { "$ref": "#/$defs/presencePair" },
+        "ga": { "$ref": "#/$defs/presencePair" },
+        "ma": { "$ref": "#/$defs/presencePair" },
+        "pa": { "type": "boolean" },
+        "dha": { "$ref": "#/$defs/presencePair" },
+        "ni": { "$ref": "#/$defs/presencePair" }
+      }
+    },
     "numOrPair": {
       "oneOf": [
         { "type": "number", "exclusiveMinimum": 0 },

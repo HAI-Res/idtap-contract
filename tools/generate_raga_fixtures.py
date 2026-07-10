@@ -113,18 +113,57 @@ def stratified_ratios(rule_set, ratios, tuning):
     return out
 
 
-def make(name, description, raga_name, fundamental, ratios):
-    tuning = build_tuning(YAMAN_RULESET, ratios)
-    strat = stratified_ratios(YAMAN_RULESET, ratios, tuning)
+def et_ratios(rule_set):
+    """12-TET ratios for the present pitches of an arbitrary rule set, in key order."""
+    out = []
+    for s in SARGAM:
+        val, base = rule_set[s], ET_TUNING[s]
+        if isinstance(val, bool):
+            if val:
+                out.append(base)
+        else:
+            if val.get("lowered"):
+                out.append(base["lowered"])
+            if val.get("raised"):
+                out.append(base["raised"])
+    return out
+
+
+# Non-Yaman rule sets (PROP-1: ruleSet is now serialized, so these reconstruct).
+BHAIRAV_RULESET = {
+    "sa": True, "re": {"lowered": True, "raised": False},
+    "ga": {"lowered": False, "raised": True}, "ma": {"lowered": False, "raised": True},
+    "pa": True, "dha": {"lowered": True, "raised": False},
+    "ni": {"lowered": False, "raised": True}}
+TODI_RULESET = {
+    "sa": True, "re": {"lowered": True, "raised": False},
+    "ga": {"lowered": True, "raised": False}, "ma": {"lowered": False, "raised": True},
+    "pa": True, "dha": {"lowered": True, "raised": False},
+    "ni": {"lowered": False, "raised": True}}
+# Both-variants: a raga using BOTH ni komal and ni shuddha (8 pitches).
+BOTH_NI_RULESET = {
+    "sa": True, "re": {"lowered": False, "raised": True},
+    "ga": {"lowered": False, "raised": True}, "ma": {"lowered": False, "raised": True},
+    "pa": True, "dha": {"lowered": False, "raised": True},
+    "ni": {"lowered": True, "raised": True}}
+
+
+def make(name, description, raga_name, fundamental, rule_set=None, ratios=None):
+    rule_set = rule_set or YAMAN_RULESET
+    if ratios is None:
+        ratios = et_ratios(rule_set)
+    tuning = build_tuning(rule_set, ratios)
+    strat = stratified_ratios(rule_set, ratios, tuning)
     return {
         "name": name,
         "description": description,
-        "ruleSet": "yaman (default, not serialized)",
         "ragaJson": {
             "name": raga_name,
             "fundamental": fundamental,
             "ratios": ratios,
             "tuning": tuning,
+            # PROP-1: ruleSet is serialized so non-Yaman ragas reconstruct.
+            "ruleSet": rule_set,
         },
         "expected": {
             "fundamental": fundamental,
@@ -138,15 +177,26 @@ FIXTURES = [
     make("yaman-12tet-default-fundamental",
          "Yaman, 12-TET, default 261.63Hz fundamental. stratifiedRatios equals "
          "the Pitch default 12-TET stratified array.",
-         "Yaman", 261.63, YAMAN_12TET_RATIOS),
+         "Yaman", 261.63, YAMAN_RULESET, YAMAN_12TET_RATIOS),
     make("yaman-12tet-nondefault-fundamental",
          "Yaman, 12-TET, fundamental 246Hz. Same ratios, different fundamental "
          "(the value that must be threaded into every Pitch).",
-         "Yaman", 246.0, YAMAN_12TET_RATIOS),
+         "Yaman", 246.0, YAMAN_RULESET, YAMAN_12TET_RATIOS),
     make("yaman-just-intonation",
          "Yaman with JUST-INTONATION ratios for its raised pitches (re 9/8, "
          "ga 5/4, ma 45/32, dha 27/16, ni 15/8), fundamental 240Hz.",
-         "Yaman", 240.0, YAMAN_JUST_RATIOS),
+         "Yaman", 240.0, YAMAN_RULESET, YAMAN_JUST_RATIOS),
+    make("bhairav-12tet",
+         "Bhairav (komal re + komal dha), 12-TET, 246Hz. Non-Yaman rule set — only "
+         "reconstructs because ruleSet is now serialized (PROP-1).",
+         "Bhairav", 246.0, BHAIRAV_RULESET),
+    make("todi-12tet",
+         "Todi (komal re/ga, tivra ma, komal dha), 12-TET, 240Hz. Non-Yaman rule set.",
+         "Todi", 240.0, TODI_RULESET),
+    make("both-ni-variants",
+         "A raga using BOTH ni komal and ni shuddha (8 pitches). Exercises the "
+         "both-variants stratifiedRatios slot.",
+         "BothNi", 246.0, BOTH_NI_RULESET),
 ]
 
 

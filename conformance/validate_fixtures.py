@@ -85,7 +85,9 @@ def flatten(x):
 def check_raga(fx):
     rj = fx["ragaJson"]
     rel = fx.get("tolerance", {}).get("rel", 1e-9)
-    got = stratified_ratios(YAMAN_RULESET, rj["ratios"], rj["tuning"])
+    # PROP-1: ruleSet is serialized; legacy fixtures fall back to Yaman.
+    rule_set = rj.get("ruleSet", YAMAN_RULESET)
+    got = stratified_ratios(rule_set, rj["ratios"], rj["tuning"])
     want = fx["expected"]["stratifiedRatios"]
     gflat, wflat = list(flatten(got)), list(flatten(want))
     ok = len(gflat) == len(wflat) and all(close(a, b, rel) for a, b in zip(gflat, wflat))
@@ -119,7 +121,7 @@ def check_phrase(fx):
     else:
         # LEGACY fallback: derive context from the phrase's own embedded raga
         rg = ph["raga"]
-        ratios = stratified_ratios(YAMAN_RULESET, rg["ratios"], rg["tuning"])
+        ratios = stratified_ratios(rg.get("ruleSet", YAMAN_RULESET), rg["ratios"], rg["tuning"])
         fundamental = rg["fundamental"]
     got = []
     for row in ph["trajectoryGrid"]:
@@ -137,7 +139,7 @@ def check_piece(fx):
     rel = fx.get("tolerance", {}).get("rel", 1e-9)
     rg = pc["raga"]
     # Piece is the ROOT: extract context from its raga and thread down.
-    ratios = stratified_ratios(YAMAN_RULESET, rg["ratios"], rg["tuning"])
+    ratios = stratified_ratios(rg.get("ruleSet", YAMAN_RULESET), rg["ratios"], rg["tuning"])
     fundamental = rg["fundamental"]
     got = []
     for track in pc["phraseGrid"]:

@@ -54,20 +54,20 @@ today the stored ruleSet just equals the canonical rules in effect at save time 
 user-visible change). A future "customize this raga's pitches" UI/API will have a place
 to store its output (the piece) without polluting the canonical library.
 
-### Implementation checklist (deferred)
-- [ ] TS `Raga.toJSON()` — include `ruleSet`.
-- [ ] TS `Raga.fromJSON`/constructor — use provided `ruleSet`; stop regenerating ratios
-      on mismatch (preserve).
-- [ ] TS app load path — keep DB fetch only as legacy fallback when `ruleSet` absent.
-- [ ] Python `Raga.to_json()` — include `rule_set` (camelCase `ruleSet` on the wire).
-- [ ] Python `Raga.from_json` — use provided ruleSet; DB fetch only as fallback.
-- [ ] Migration: on load, `ruleSet` present → use; absent → heal from DB; persist on save.
-- [ ] Consolidate the two endpoints (`getRaagRule` web / `/ragaRules` Python-API).
-- [ ] `raga.schema.json` — add `ruleSet` (migrated-optional: required for new data,
+### Implementation checklist
+- [x] TS `Raga.toJSON()` — include `ruleSet`. *(PR jon-myers/idtap#2)*
+- [x] TS `Raga.fromJSON`/constructor — use provided `ruleSet`; stop regenerating ratios
+      on mismatch (preserve). *(PR #2; fixes RAGA-2)*
+- [ ] TS app load path — keep DB fetch only as legacy fallback when `ruleSet` absent. *(app-level, not yet)*
+- [x] Python `Raga.to_json()` — include `rule_set` (camelCase `ruleSet` on the wire).
+- [x] Python `Raga.from_json` — use provided ruleSet; DB fetch only as fallback.
+- [ ] Migration: on load, `ruleSet` present → use; absent → heal from DB; persist on save. *(app-level, not yet)*
+- [ ] Consolidate the two endpoints (`getRaagRule` web / `/ragaRules` Python-API). *(app-level, not yet)*
+- [x] `raga.schema.json` — add `ruleSet` (migrated-optional: emitted for new data,
       tolerated-absent for legacy).
-- [ ] Contract fixtures — add **non-Yaman** Raga fixtures (Bhairav [komal re/dha],
-      Todi [komal re/ga, tivra ma, komal dha], a both-variants raga) now that ruleSet
-      is part of the serialized form. Lift the "Yaman-only" scope note.
+- [x] Contract fixtures — added **non-Yaman** Raga fixtures (Bhairav [komal re/dha],
+      Todi [komal re/ga, tivra ma, komal dha], a both-ni-variants raga). "Yaman-only"
+      scope note lifted.
 
 ---
 

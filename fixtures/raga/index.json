@@ -12,6 +12,18 @@
     {
       "name": "yaman-just-intonation",
       "description": "Yaman with JUST-INTONATION ratios for its raised pitches (re 9/8, ga 5/4, ma 45/32, dha 27/16, ni 15/8), fundamental 240Hz."
+    },
+    {
+      "name": "bhairav-12tet",
+      "description": "Bhairav (komal re + komal dha), 12-TET, 246Hz. Non-Yaman rule set \u2014 only reconstructs because ruleSet is now serialized (PROP-1)."
+    },
+    {
+      "name": "todi-12tet",
+      "description": "Todi (komal re/ga, tivra ma, komal dha), 12-TET, 240Hz. Non-Yaman rule set."
+    },
+    {
+      "name": "both-ni-variants",
+      "description": "A raga using BOTH ni komal and ni shuddha (8 pitches). Exercises the both-variants stratifiedRatios slot."
     }
   ]
 }
