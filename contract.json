@@ -19,8 +19,19 @@
       "fixtures": "fixtures/trajectory/",
       "status": "complete",
       "notes": "Articulation/Automation/vibObj sub-schemas still TODO"
+    },
+    "phrase": {
+      "schema": "schemas/phrase.schema.json",
+      "fixtures": "fixtures/phrase/",
+      "status": "complete",
+      "notes": "Chikari sub-schema still TODO"
     }
   },
-  "roadmap": ["phrase", "piece", "articulation", "automation"],
+  "roadmap": [
+    "piece",
+    "articulation",
+    "automation",
+    "chikari"
+  ],
   "divergences": "DIVERGENCES.md"
 }

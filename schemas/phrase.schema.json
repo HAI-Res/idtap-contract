@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/phrase.schema.json",
+  "title": "Phrase",
+  "description": "Serialized form of a Phrase. CANONICAL form omits `raga` (inherited from the piece). On load, (ratios, fundamental) are threaded from the piece raga down through trajectoryGrid; if absent, the phrase's own embedded `raga` (LEGACY) supplies fallback context.",
+  "type": "object",
+  "required": ["durTot", "trajectoryGrid"],
+  "additionalProperties": false,
+  "properties": {
+    "durTot": { "type": "number" },
+    "durArray": { "type": ["array", "null"], "items": { "type": "number" } },
+    "chikaris": {
+      "description": "Map of position-key -> Chikari (schema TODO).",
+      "type": "object",
+      "additionalProperties": { "type": "object" }
+    },
+    "startTime": { "type": ["number", "null"] },
+    "trajectoryGrid": {
+      "description": "String-indexed grid: trajectoryGrid[string][i] = Trajectory. Row 0 = main string.",
+      "type": "array",
+      "items": { "type": "array", "items": { "$ref": "trajectory.schema.json" } }
+    },
+    "instrumentation": { "type": "array", "items": { "type": "string" } },
+    "groupsGrid": { "type": "array" },
+    "categorizationGrid": { "type": "array" },
+    "uniqueId": { "type": ["string", "null"] },
+    "adHocCategorizationGrid": { "type": "array" },
+    "isSectionStart": { "type": ["boolean", "null"] },
+
+    "raga": {
+      "description": "LEGACY ONLY — stripped in canonical form (inherited from piece). If present, used as fallback context for threading.",
+      "deprecated": true,
+      "$ref": "raga.schema.json"
+    }
+  }
+}

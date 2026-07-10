@@ -78,6 +78,24 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
 - **Fix (deferred):** add `ratios`/`fundamental` params, thread to each pitch.
 - **Fixtures:** `fixtures/trajectory/stripped-*` fail on Python until fixed.
 
+## PHRASE-1 🔴 Python `to_json` still emits `raga`
+
+- **TS** `Phrase.toJSON()` omits `raga` (inherited from piece). **Python** writes
+  `'raga': self.raga.to_json()`.
+- **Canonical:** stripped. **Fix (deferred):** remove `raga` from Python output.
+
+## PHRASE-2 🔴 Python `from_json` threads no context and lacks legacy raga fallback
+
+- **TS** `Phrase.fromJSON(obj, ratios?, fundamental?)`: `r = ratios ??
+  phraseRaga.stratifiedRatios`, then threads `r,f` into every `Trajectory.fromJSON`.
+- **Python** `from_json(obj)`: no context params, calls `Trajectory.from_json(t)`
+  bare, and although it parses `obj['raga']`, it never uses it as context.
+- **Effect:** (a) PITCH-1/TRAJ-2 propagate through phrases; (b) legacy phrases
+  with an embedded raga but stripped pitches load at default frequencies.
+- **Fix (deferred):** add params, derive `r,f` from param-or-embedded-raga, thread down.
+- **Fixtures:** `fixtures/phrase/*` (both stripped and legacy-fallback) fail on
+  Python until fixed.
+
 ---
 
 ## Resolution workflow

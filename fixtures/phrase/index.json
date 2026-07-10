@@ -1,0 +1,15 @@
+{
+  "entity": "phrase",
+  "fixtures": [
+    {
+      "name": "stripped-grid-context-threaded",
+      "scenario": "stripped",
+      "description": "Stripped phrase; trajectoryGrid main string has two trajectories (Fixed sa, Bend ga->pa) at just intonation, fundamental 240Hz. All pitch freqs come from threaded context."
+    },
+    {
+      "name": "legacy-embedded-raga-fallback",
+      "scenario": "legacy",
+      "description": "Legacy phrase with an embedded raga (Yaman, 12-TET, fundamental 246Hz) and NO context passed. Pitch freqs must come from the phrase's own raga stratifiedRatios (the fallback path Python currently lacks)."
+    }
+  ]
+}

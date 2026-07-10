@@ -1,0 +1,119 @@
+{
+  "name": "legacy-embedded-raga-fallback",
+  "description": "Legacy phrase with an embedded raga (Yaman, 12-TET, fundamental 246Hz) and NO context passed. Pitch freqs must come from the phrase's own raga stratifiedRatios (the fallback path Python currently lacks).",
+  "scenario": "legacy",
+  "phraseJson": {
+    "durTot": 2.0,
+    "durArray": [
+      1.0,
+      1.0
+    ],
+    "chikaris": {},
+    "startTime": 0.0,
+    "trajectoryGrid": [
+      [
+        {
+          "id": 0,
+          "pitches": [
+            {
+              "swara": 0,
+              "raised": true,
+              "oct": 0,
+              "logOffset": 0.0
+            }
+          ],
+          "durTot": 1.0,
+          "durArray": [
+            1.0
+          ],
+          "slope": 0,
+          "num": 0,
+          "uniqueId": "t0"
+        },
+        {
+          "id": 2,
+          "pitches": [
+            {
+              "swara": 6,
+              "raised": true,
+              "oct": -1,
+              "logOffset": 0.0
+            },
+            {
+              "swara": 1,
+              "raised": true,
+              "oct": 0,
+              "logOffset": 0.0
+            }
+          ],
+          "durTot": 1.0,
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "slope": 0,
+          "num": 0,
+          "uniqueId": "t2"
+        }
+      ]
+    ],
+    "instrumentation": [
+      "Sitar"
+    ],
+    "groupsGrid": [
+      []
+    ],
+    "categorizationGrid": [],
+    "uniqueId": "phr",
+    "adHocCategorizationGrid": [],
+    "isSectionStart": true,
+    "raga": {
+      "name": "Yaman",
+      "fundamental": 246.0,
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "tuning": {
+        "sa": 1.0,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "pa": 1.4983070768766815,
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        }
+      }
+    }
+  },
+  "context": null,
+  "expected": {
+    "pitchFrequencies": [
+      246.0,
+      232.19308091969657,
+      276.12566388410573
+    ]
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

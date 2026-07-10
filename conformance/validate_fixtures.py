@@ -109,7 +109,30 @@ def check_trajectory(fx):
     return ok, f"freqs={[round(x, 2) for x in got]}"
 
 
-CHECKERS = {"pitch": check_pitch, "raga": check_raga, "trajectory": check_trajectory}
+# --------------------------------------------------------------------------- phrase
+def check_phrase(fx):
+    ctx = fx.get("context")
+    ph = fx["phraseJson"]
+    rel = fx.get("tolerance", {}).get("rel", 1e-9)
+    if ctx:
+        ratios, fundamental = ctx["ratios"], ctx["fundamental"]
+    else:
+        # LEGACY fallback: derive context from the phrase's own embedded raga
+        rg = ph["raga"]
+        ratios = stratified_ratios(YAMAN_RULESET, rg["ratios"], rg["tuning"])
+        fundamental = rg["fundamental"]
+    got = []
+    for row in ph["trajectoryGrid"]:
+        for t in row:
+            for p in t["pitches"]:
+                got.append(pitch_frequency(p, ratios, fundamental))
+    want = fx["expected"]["pitchFrequencies"]
+    ok = len(got) == len(want) and all(close(a, b, rel) for a, b in zip(got, want))
+    return ok, f"freqs={[round(x, 2) for x in got]}"
+
+
+CHECKERS = {"pitch": check_pitch, "raga": check_raga,
+            "trajectory": check_trajectory, "phrase": check_phrase}
 
 
 def main():

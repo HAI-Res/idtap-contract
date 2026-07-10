@@ -104,7 +104,8 @@ schema bump is caught rather than silently mis-parsed.
       fundamental`. Surfaced RAGA-1..3 divergences (see `DIVERGENCES.md`).
 - [x] **Trajectory** — schema + 4 fixtures (pitch-frequency preservation through
       context threading; stripped name/instrumentation/tags). Surfaced TRAJ-1/2.
-- [ ] **Phrase** — strips `raga`; threads context to trajectories
+- [x] **Phrase** — schema + 2 fixtures (grid context-threading + legacy
+      raga-fallback). Surfaced PHRASE-1/2.
 - [ ] **Piece** — strips `durArray`/`sectionCategorization`; extracts + threads raga context; full multi-cycle round-trip fixtures
 - [ ] Wire conformance suites into `idtap` and `idtap-api` CI
 - [ ] Publish contract version + compatibility assertion in both repos
