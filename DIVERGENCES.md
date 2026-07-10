@@ -30,38 +30,55 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
 - **Canonical:** stripped — `{swara, raised, oct, logOffset}` only.
 - **Fix (deferred):** remove both from Python `Pitch.to_json()`.
 
-## RAGA-1 🔴 `ruleSet` is not serialized; both default to Yaman
+## RAGA-1 🟡 `ruleSet` is not serialized — it's fetched from the DB by name (BY DESIGN)
 
-- Neither `to_json()` includes `ruleSet`. On load both default to the Yaman rule
-  set. `stratifiedRatios` (threaded into Pitch) depends on the rule set's
-  structure (which swaras are single vs lowered/raised pairs).
-- **Effect:** a **non-Yaman** raga cannot be faithfully reconstructed from its
-  serialization alone — the rule-set structure is lost.
-- **Open question:** should `ruleSet` be added to the serialized form? (Cleanest
-  fix.) Or is rule-set structure always recoverable from `name` + a rules table?
-- **Scope note:** contract Raga fixtures are Yaman-only until this is decided.
+- Neither `to_json()` includes `ruleSet`. It is **recovered from the DB by raga
+  name at load time** and injected BEFORE deserialization. Confirmed in the web app
+  (`EditorComponent.getPieceFromJson` + `analysis.instantiatePiece`):
+  ```
+  const rsRes = await getRaagRule(piece.raga.name);  // DB fetch by name
+  piece.raga.ruleSet = rsRes.rules;                  // inject into raw JSON
+  this.piece = Piece.fromJSON(piece);                // then deserialize
+  ```
+  `getRaagRule` -> server `getRaagRule?name=X` -> `ragas` collection -> `{rules}`.
+- **So the open question is ANSWERED:** rule-set structure IS recoverable from
+  `name` + the rules table. Non-Yaman ragas reconstruct fine — the ruleSet is
+  fetched first. **Not a data-loss bug.**
+- **Contract implication:** model `ruleSet` as **load-context for Raga** (exactly
+  like ratios/fundamental are threaded into Pitch). Then non-Yaman Raga fixtures
+  become possible: fixture carries {name, fundamental, ratios, tuning} + the
+  fetched ruleSet as context -> expected stratifiedRatios.
+- **Decision for owner:** keep the DB-fetch-by-name design (works), OR additionally
+  serialize `ruleSet` for self-contained portability (belt-and-suspenders). Either
+  way this is a choice, not a forced fix.
 
-## RAGA-2 🔴 Mismatched ratios count: TS regenerates, Python preserves
+## RAGA-2 🟡 Mismatched ratios count: TS regenerates, Python preserves (EDGE CASE)
 
 - On load, if `ratios.length !== ruleSetNumPitches`:
   - **TS** `Raga` constructor **discards** the serialized ratios and regenerates
-    from the (default Yaman) rule set (`setRatios`).
-  - **Python** `Raga.from_json` passes `preserve_ratios=True` → **keeps** the
-    serialized ratios, and `stratified_ratios` has a separate mismatch branch
-    that builds from `tuning`.
-- **Effect:** identical serialized raga → **different `stratifiedRatios`** →
-  different Pitch frequencies across the two implementations.
-- **Open question:** which is canonical — preserve (Python) or regenerate (TS)?
-  Preserving transcription-specific ratios seems more correct, but then TS is
-  wrong. Needs an explicit decision.
+    from the rule set (`setRatios`).
+  - **Python** `Raga.from_json` passes `preserve_ratios=True` → **keeps** them.
+- **BUT with the correct ruleSet injected (RAGA-1), counts MATCH** (the ratios were
+  generated for that ruleSet) → both take the preserve path → no divergence in
+  normal operation. This only bites in the **degenerate/error case**: ruleSet fetch
+  skipped or failed, or the default Yaman ruleSet applied to a non-Yaman raga's
+  ratios. Then TS regenerates (wrong raga) vs Python preserves.
+- **Decision for owner:** pick the canonical mismatch behavior for the error path
+  (preserve seems safer), and ideally make the ruleSet always available so the
+  path is never hit. Low urgency given RAGA-1.
 
-## RAGA-3 🔴 Python has a DB rule-set fetch path; TS does not
+## RAGA-3 🟡 ruleSet is fetched at DIFFERENT LAYERS — not a data divergence
 
-- **Python** `Raga.__init__` can fetch the rule set from the server by `name`
-  (`client.get_raga_rules(name)`) when no `rule_set` is given and a client is
-  present. **TS** has no equivalent — always defaults to Yaman.
-- **Effect:** for named non-Yaman ragas, Python (with a client) can reconstruct
-  the correct rule set while TS cannot. Compounds RAGA-1/RAGA-2.
+- Both sides recover the ruleSet from the DB by name; the layer differs:
+  - **TS:** the **app layer** fetches (`getRaagRule(name)`) and injects into the raw
+    JSON before `Piece.fromJSON`. The Raga constructor never fetches.
+  - **Python:** the **Raga constructor** fetches (`client.get_raga_rules(name)`) when
+    a client is passed.
+- **Same outcome, different point.** Not a data-loss divergence.
+- **Decision for owner:** align the pattern — e.g. Python client mirrors TS's
+  fetch-then-inject-then-deserialize (or TS moves the fetch into a shared loader).
+  Also: TWO endpoints do this job — web `getRaagRule` (server.ts) and
+  Python-API `/ragaRules` (apiRoutes.ts). Consolidate during the endpoint merge.
 
 ## TRAJ-1 🔴 Python `to_json` still emits `name`, `instrumentation`, `tags`
 
