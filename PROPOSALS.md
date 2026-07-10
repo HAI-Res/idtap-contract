@@ -68,3 +68,38 @@ to store its output (the piece) without polluting the canonical library.
 - [ ] Contract fixtures — add **non-Yaman** Raga fixtures (Bhairav [komal re/dha],
       Todi [komal re/ga, tivra ma, komal dha], a both-variants raga) now that ruleSet
       is part of the serialized form. Lift the "Yaman-only" scope note.
+
+---
+
+## PROP-2 — Piece metadata: `collections` and date format
+
+**Decision (2026-07-10):** pin two `to_json` details for Piece. Neither affects
+frequencies; both are about a clean, safe, language-neutral wire shape. Resolves
+PIECE-2.
+
+### `collections` — exclude from the piece serialization
+- `collections` is **transcription-document metadata**, not part of the musical
+  Piece. Membership is bidirectional (collection docs list transcriptions;
+  transcription docs carry the reverse `collections:[colIds]`) and is maintained
+  ONLY by dedicated endpoints (`/addTranscriptionToCollection`, `/remove...`).
+- `updateTranscription` uses `$set` (not `replaceOne`), so a piece save that omits
+  `collections` leaves the DB field untouched — **no data loss.** TS (which omits
+  it) is correct.
+- **Python including it is a liability:** read-then-write can clobber
+  server-managed membership back to a stale value.
+- **Canonical:** exclude `collections` from Piece serialization on both sides.
+  - [ ] Python `Piece.to_json()` — remove `collections`.
+  - [ ] Keep membership solely under the add/remove endpoints.
+
+### Dates — ISO 8601 UTC strings on the wire
+- Today TS emits inconsistent values (JS `Date` → ISO via JSON.stringify, but Mongo
+  `{$date}` stays `{$date}`); Python emits `.isoformat()` (naive, no offset) and
+  strips `Z` on read. Both are sloppy about timezone.
+- **Canonical:** `dateCreated`/`dateModified` are **ISO 8601 UTC strings** with an
+  explicit `Z` (e.g. `2026-07-10T14:30:00.000Z`) on the wire. BSON `Date` is a
+  **server-only storage detail** — the server parses ISO → Date on write (preserving
+  date indexing/range queries) and emits ISO on read. Never leak `{$date}` into the API.
+  - [ ] TS — ensure dates serialize as ISO UTC, never `{$date}`.
+  - [ ] Python — emit tz-aware UTC ISO; stop stripping `Z`; parse as UTC.
+  - [ ] Server — parse incoming ISO → BSON Date on save.
+  - [ ] `piece.schema.json` — pin `dateCreated`/`dateModified` as ISO-8601 date-time strings.

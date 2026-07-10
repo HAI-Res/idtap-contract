@@ -126,14 +126,27 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
   (the top of the chain; must be done together with the per-level param additions).
 - **Fixtures:** `fixtures/piece/stripped-*` fail on Python until the whole chain is fixed.
 
-## PIECE-2 🟡 Minor field-set drift in `to_json`
+## PIECE-2 🟡 Field-set drift in `to_json` — RESOLVED → PROP-2
 
-- **Python** emits a `collections` field; **TS** does not.
-- **Dates:** Python serializes `dateCreated`/`dateModified` as ISO strings;
-  TS emits the raw stored value (often a Mongo `{$date}` or Date). Not
-  frequency-affecting, but the canonical wire shape should be pinned.
+Investigated 2026-07-10. Decisions captured in PROPOSALS.md (PROP-2).
+
+- **`collections`** — **NO data loss** from TS omitting it. Membership is stored
+  bidirectionally (collection docs hold `transcriptions:[ids]`; transcription docs
+  hold the reverse `collections:[colIds]`), maintained ONLY by dedicated endpoints
+  (`/addTranscriptionToCollection` etc.). Critically, `updateTranscription` uses
+  `$set` (not `replaceOne`), so a piece save with no `collections` key leaves the
+  DB field untouched. **`collections` is transcription-document metadata, not part
+  of the musical Piece** → it should be OUT of the serialization (TS is correct).
+  Python *including* it is the liability (risks clobbering server-managed membership
+  back to a stale value on save). → **Python should drop it from `to_json`.**
+- **Dates** — TS's "raw value" is inconsistent (JS `Date` → ISO via JSON.stringify,
+  but Mongo `{$date}` → stays `{$date}`; Python even has defensive `$date` parsing).
+  → **Canonical: ISO 8601 UTC strings on the wire** (`...Z`), BSON Date is a
+  server-only storage detail. Fix timezone sloppiness on both sides (Python emits
+  naive/no-offset and strips `Z`).
 - Piece-level *stripping* is otherwise already aligned — both omit `durArray`,
-  `sectionCategorization`, `sectionStarts`, `sectionStartsGrid`, `phrases`.
+  `sectionCategorization`, `sectionStarts`, `sectionStartsGrid`, `phrases` (server
+  also `$unset`s these on every save).
 
 ## METER-1 🔴 PulseStructure `offsets` differs
 
