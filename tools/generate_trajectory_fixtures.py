@@ -53,7 +53,7 @@ def make(name, description, scenario, traj_id, pitches, dur_tot, dur_array,
                     for p in pitches],
         "durTot": dur_tot,
         "durArray": dur_array,
-        "slope": 0,
+        "slope": 2.0,
         "num": 0,
         "uniqueId": f"fixture-{name}",
     }

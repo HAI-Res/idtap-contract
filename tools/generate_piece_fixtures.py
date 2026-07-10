@@ -74,7 +74,7 @@ def traj(tid, pitches):
     n = len(pitches)
     return {"id": tid, "pitches": pitches, "durTot": 1.0,
             "durArray": [1.0 / n] * n if n > 1 else [1.0],
-            "slope": 0, "num": 0, "uniqueId": f"t{tid}"}
+            "slope": 2.0, "num": 0, "uniqueId": f"t{tid}"}
 
 
 def phrase(trajs, section_start=False):

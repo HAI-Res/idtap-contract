@@ -26,7 +26,7 @@
           "durArray": [
             1.0
           ],
-          "slope": 0,
+          "slope": 2.0,
           "num": 0,
           "uniqueId": "t0"
         },
@@ -51,7 +51,7 @@
             0.5,
             0.5
           ],
-          "slope": 0,
+          "slope": 2.0,
           "num": 0,
           "uniqueId": "t2"
         }

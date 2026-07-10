@@ -67,7 +67,7 @@ def pj(swara, raised, oct, log_offset=0.0, embed=None):
 def traj(tid, pitches, dur_tot=1.0):
     return {"id": tid, "pitches": pitches, "durTot": dur_tot,
             "durArray": [1.0 / len(pitches)] * len(pitches) if len(pitches) > 1 else [1.0],
-            "slope": 0, "num": 0, "uniqueId": f"t{tid}"}
+            "slope": 2.0, "num": 0, "uniqueId": f"t{tid}"}
 
 
 def phrase_base(grid):
