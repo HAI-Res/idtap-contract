@@ -6,7 +6,22 @@ would bake in TS behavior that may itself be wrong. Each needs an explicit
 decision on the canonical behavior; the fixtures then encode that decision and
 both implementations are held to it.
 
-Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforced by fixtures
+Status legend: 🔧 decided (mechanical — Python matches TS, no judgment needed) ·
+🟡 decided via proposal (see PROPOSALS.md) · 🟢 enforced by fixtures in both repos'
+CI · ~~superseded~~
+
+**STATUS (2026-07-10): all items decided — nothing awaits an owner decision.**
+- Design decisions → **PROP-1** (RAGA-1/2/3), **PROP-2** (PIECE-2), **PROP-3** (Chikari/SEM-2).
+- Everything else is 🔧 **mechanical**: PITCH-1/2, TRAJ-1/2, PHRASE-1/2, PIECE-1
+  (thread raga context + stop emitting stripped fields — Python matches TS) and
+  METER-1 (Python emit real offsets). No decisions required, only implementation.
+- Caveat: this catalog is a static field-level read. Running the conformance
+  fixtures against both real implementations (CI wiring) is what *proves*
+  completeness and may surface deeper behavioral diffs (number precision,
+  articulation dict-key formatting, humps edge cases).
+
+The 🔴 markers on individual headings below mean "not yet implemented," NOT
+"undecided" — read them as 🔧.
 
 ---
 
