@@ -88,8 +88,8 @@ PIECE-2.
 - **Python including it is a liability:** read-then-write can clobber
   server-managed membership back to a stale value.
 - **Canonical:** exclude `collections` from Piece serialization on both sides.
-  - [ ] Python `Piece.to_json()` — remove `collections`.
-  - [ ] Keep membership solely under the add/remove endpoints.
+  - [x] Python `Piece.to_json()` — remove `collections`.
+  - [x] Keep membership solely under the add/remove endpoints. *(unchanged; TS already excluded)*
 
 ### Dates — ISO 8601 UTC strings on the wire
 - Today TS emits inconsistent values (JS `Date` → ISO via JSON.stringify, but Mongo
@@ -99,10 +99,10 @@ PIECE-2.
   explicit `Z` (e.g. `2026-07-10T14:30:00.000Z`) on the wire. BSON `Date` is a
   **server-only storage detail** — the server parses ISO → Date on write (preserving
   date indexing/range queries) and emits ISO on read. Never leak `{$date}` into the API.
-  - [ ] TS — ensure dates serialize as ISO UTC, never `{$date}`.
-  - [ ] Python — emit tz-aware UTC ISO; stop stripping `Z`; parse as UTC.
-  - [ ] Server — parse incoming ISO → BSON Date on save.
-  - [ ] `piece.schema.json` — pin `dateCreated`/`dateModified` as ISO-8601 date-time strings.
+  - [x] TS — ensure dates serialize as ISO UTC, never `{$date}`. *(PR jon-myers/idtap#2)*
+  - [x] Python — emit tz-aware UTC ISO; stop stripping `Z`; parse as UTC. *(`_iso_utc`/`_parse_utc`)*
+  - [ ] Server — parse incoming ISO → BSON Date on save. *(app-level, not yet)*
+  - [x] `piece.schema.json` — pin `dateCreated`/`dateModified` as ISO-8601 date-time strings.
 
 ---
 
@@ -149,14 +149,21 @@ Piece→Phrase→Chikari — a deeper change with no bug driving it. **Deferred 
 design pass.** PROP-1/2 shipped on TS; PROP-3 remains the Python-side footgun (its
 constructor populates 12-TET default pitches) + this optional TS cleanup.
 
-### Implementation checklist (deferred)
-- [ ] TS `Chikari` — derive pitches from raga (or drop them); remove stored `fundamental`
-      (or keep only as a cache).
-- [ ] Python `Chikari` — same.
-- [ ] Anywhere reading `chikari.pitches` for frequency → route through `raga.chikariPitches`.
-- [ ] `chikari.schema.json` — canonical form → `{uniqueId}` (pitches/fundamental derived).
+### Implementation checklist
+**Footgun removed (shipped):** the concrete divergence — canonical load left TS `chikari.pitches`
+empty but Python synthesized 12-TET defaults — is closed. Both now leave `pitches` empty on
+canonical load; readers already route through `raga.chikariPitches`. The deeper "derive
+pitches from raga into the model" cleanup remains deferred (needs the full raga threaded
+Piece→Phrase→Chikari; no bug drives it).
+- [ ] TS `Chikari` — derive pitches from raga (or drop them); remove stored `fundamental`. *(deferred — TS already empty/harmless)*
+- [x] Python `Chikari.from_json` — stop synthesizing 12-TET default pitches on canonical
+      load (leave empty, matching TS). Full derive-from-raga still deferred.
+- [x] Anywhere reading `chikari.pitches` for frequency → route through `raga.chikariPitches`.
+      *(already the case on both sides; verified in Python — `Piece.chikari_freqs`)*
+- [x] `chikari.schema.json` — canonical form is `{fundamental, uniqueId}`; description updated
+      to say `pitches` stays empty on load. *(dropping stored `fundamental` deferred)*
 - [ ] Contract fixtures — a non-12-TET raga chikari fixture: raga context → expected
-      `chikariPitches` frequencies (proves both derive the same drone tuning).
+      `chikariPitches` frequencies (proves both derive the same drone tuning). *(deferred)*
 
 ---
 

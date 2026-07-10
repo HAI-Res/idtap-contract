@@ -23,6 +23,21 @@ CI · ~~superseded~~
 The 🔴 markers on individual headings below mean "not yet implemented," NOT
 "undecided" — read them as 🔧.
 
+**IMPLEMENTED (2026-07-10):** the loop is closed on the client models.
+- **Python** (`fix/serialization-sync-conformance`): mechanical fixes PITCH-1/2,
+  TRAJ-1/2, PHRASE-1/2, PIECE-1, METER-1, plus **PROP-1** (serialize `ruleSet`),
+  **PROP-2** (drop `collections`; ISO-UTC dates via `_iso_utc`/`_parse_utc`), and
+  **PROP-3** (chikari no longer synthesizes 12-TET defaults on canonical load).
+  Verified by `test_contract_conformance.py` (67) + offline model tests (269 total).
+- **TS** (`feat/contract-conformance-ts` → PR jon-myers/idtap#2): **PROP-1** (emit
+  `ruleSet`, preserve stored ratios — fixes RAGA-2) + **PROP-2** (ISO dates). Verified
+  by the TS conformance suite (55).
+- **Contract**: `ruleSet` added to the raga schema + non-Yaman fixtures (Bhairav, Todi,
+  both-ni); schemas for dates/collections/chikari updated. 61/61 fixtures consistent.
+- **Still open (app-level / deferred, no bug driving):** server ISO→BSON date parsing;
+  legacy `ruleSet` heal-on-load + endpoint consolidation; the deep chikari
+  derive-pitches-from-raga cleanup + its non-12-TET fixture; STRING-SYNC (structural).
+
 ---
 
 ## PITCH-1 🔴 Python `from_json` doesn't thread raga context (the Yaman bug)

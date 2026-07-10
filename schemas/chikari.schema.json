@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://idtap.swara.studio/schemas/chikari.schema.json",
   "title": "Chikari",
-  "description": "A chikari (drone-string) definition. CANONICAL form is {fundamental, uniqueId} only — its drone pitches are NOT serialized; they are reconstructed as the default drone at `fundamental` on load. Self-contained: not part of the raga context chain (see DIVERGENCES SEM-2). Legacy data may include a `pitches` array. TS and Python agree.",
+  "description": "A chikari (drone-string) definition. CANONICAL form is {fundamental, uniqueId} only — its drone pitches are NOT serialized. PROP-3: on canonical load, `pitches` is left EMPTY on both sides (no 12-TET default synthesized); the audible drone tuning is owned by the raga (Piece.chikariFreqs -> raga.chikariPitches). Legacy data may include a `pitches` array (preserved on read). TS and Python agree.",
   "type": "object",
   "required": ["fundamental", "uniqueId"],
   "additionalProperties": false,
