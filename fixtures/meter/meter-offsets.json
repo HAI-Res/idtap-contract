@@ -1,0 +1,35 @@
+{
+  "name": "meter-offsets",
+  "description": "A PulseStructure with expressive (non-zero) proportional offsets. Pulse realTimes deviate from the 1.0s grid; the serialized `offsets` must reflect them: offset[i] = (realTime[i] - startTime - i*pulseDur) / pulseDur. Catches METER-1 (Python hardcodes offsets to zeros, losing expressive micro-timing).",
+  "scenario": "behavioral",
+  "entity": "meter",
+  "meterJson": {
+    "uniqueId": "m1",
+    "hierarchy": [4],
+    "startTime": 0.0,
+    "tempo": 60.0,
+    "repetitions": 1,
+    "talaName": null,
+    "vibhaga": null,
+    "pulseStructures": [
+      [
+        {
+          "pulses": [
+            {"realTime": 0.1, "uniqueId": "p0", "affiliations": [], "meterId": "m1", "corporeal": true},
+            {"realTime": 1.0, "uniqueId": "p1", "affiliations": [], "meterId": "m1", "corporeal": true},
+            {"realTime": 2.0, "uniqueId": "p2", "affiliations": [], "meterId": "m1", "corporeal": true},
+            {"realTime": 2.9, "uniqueId": "p3", "affiliations": [], "meterId": "m1", "corporeal": true}
+          ],
+          "tempo": 60.0, "pulseDur": 1.0, "size": 4, "startTime": 0.0,
+          "uniqueId": "ps0", "frontWeighted": true, "layer": 0,
+          "parentPulseID": null, "primary": true, "segmentedMeterIdx": 0,
+          "meterId": "m1", "offsets": [0.1, 0.0, 0.0, -0.1]
+        }
+      ]
+    ]
+  },
+  "expected": {
+    "pulseStructureOffsets": [[0.1, 0.0, 0.0, -0.1]]
+  },
+  "tolerance": {"rel": 1e-9}
+}

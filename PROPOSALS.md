@@ -147,3 +147,32 @@ contract exists to remove. Identical structure in TS and Python.
 - [ ] `chikari.schema.json` — canonical form → `{uniqueId}` (pitches/fundamental derived).
 - [ ] Contract fixtures — a non-12-TET raga chikari fixture: raga context → expected
       `chikariPitches` frequencies (proves both derive the same drone tuning).
+
+---
+
+## PROP-4 — Meter offsets: serialize real proportional offsets (METER-1)
+
+**Decision (2026-07-10):** Python's PulseStructure must serialize the real
+proportional offsets, not zeros. **DONE (serialization)**; one deeper behavioral
+follow-up noted.
+
+### Finding
+`PulseStructure.to_json` hardcoded `offsets: [0.0]*size`, while TS emits the real
+`proportionalOffsets`. Web-app impact is nil (render + playback use `pulse.realTime`,
+which IS preserved in both — like chikari SEM-2), but the `offsets` array is real
+data a Python consumer would read, and it was being zeroed.
+
+### Fix (applied to serialization)
+Derive at `to_json` from the (preserved) pulse real_times:
+`offset[i] = (realTime[i] - startTime - i*pulseDur) / pulseDur`. The pulses'
+real_times round-trip correctly (constructor keeps input pulses; Pulse.to_json emits
+realTime), so this makes the serialized offsets conformant. Fixture
+`fixtures/meter/meter-offsets.json` (behavioral) pins it; was RED, now GREEN.
+
+### Deeper behavioral follow-up (NOT serialization — separate)
+Python's `set_tempo`/`set_start_time` recompute `real_time = start_time + i*pulse_dur`
+(snap to grid), **discarding** offsets. TS's use `proportionalOffsets` to preserve
+expressive timing across a tempo/start change. So Python can't faithfully *re-tempo*
+an expressively-timed meter — it flattens it. Out of scope for the serialization
+contract; worth a follow-up if Python ever needs to re-tempo.
+  - [ ] (later) Python: maintain/apply proportional offsets in set_tempo/set_start_time.

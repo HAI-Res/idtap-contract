@@ -162,12 +162,34 @@ def check_structural(fx):
     return ok, ("ok" if ok else f"missing {missing}")
 
 
+# --------------------------------------------------------------------------- meter
+def check_meter(fx):
+    """behavioral: derive each PulseStructure's proportional offsets from its
+    pulses' realTimes (offset[i] = (realTime[i]-startTime-i*pulseDur)/pulseDur)
+    and compare to expected. structural: fall back to the required-keys check."""
+    if fx.get("scenario") != "behavioral":
+        return check_structural(fx)
+    mj = fx["meterJson"]
+    rel = fx.get("tolerance", {}).get("rel", 1e-9)
+    got = []
+    for layer in mj["pulseStructures"]:
+        for ps in layer:
+            st, pd = ps["startTime"], ps["pulseDur"]
+            got.append([(ps["pulses"][i]["realTime"] - st - i * pd) / pd
+                        for i in range(ps["size"])])
+    want = fx["expected"]["pulseStructureOffsets"]
+    ok = len(got) == len(want) and all(
+        len(g) == len(w) and all(close(a, b, rel) for a, b in zip(g, w))
+        for g, w in zip(got, want))
+    return ok, f"offsets={[[round(x, 3) for x in g] for g in got]}"
+
+
 CHECKERS = {"pitch": check_pitch, "raga": check_raga,
             "trajectory": check_trajectory, "phrase": check_phrase,
             "piece": check_piece,
             "articulation": check_structural, "automation": check_structural,
             "chikari": check_structural, "group": check_structural,
-            "meter": check_structural}
+            "meter": check_meter}
 
 
 def main():
