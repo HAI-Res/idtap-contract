@@ -142,9 +142,10 @@ def check_piece(fx):
     got = []
     for track in pc["phraseGrid"]:
         for ph in track:
-            for t in ph["trajectoryGrid"][0]:  # main string
-                for p in t["pitches"]:
-                    got.append(pitch_frequency(p, ratios, fundamental))
+            for string in ph["trajectoryGrid"]:  # ALL strings (polyphonic)
+                for t in string:
+                    for p in t["pitches"]:
+                        got.append(pitch_frequency(p, ratios, fundamental))
     want = fx["expected"]["allPitchFrequencies"]
     ok = len(got) == len(want) and all(close(a, b, rel) for a, b in zip(got, want))
     ok = ok and fundamental == fx["expected"]["fundamental"]

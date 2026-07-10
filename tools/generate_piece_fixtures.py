@@ -111,12 +111,23 @@ def piece_json(rj, phrases, embed_legacy=False):
 
 
 def all_pitch_freqs(phrases, ratios, fundamental):
+    """Traverse EVERY string of the trajectory grid (polyphonic / dual-string),
+    not just the main string [0]."""
     freqs = []
     for ph in phrases:
-        for t in ph["trajectoryGrid"][0]:
-            for p in t["pitches"]:
-                freqs.append(pitch_freq(p, ratios, fundamental))
+        for string in ph["trajectoryGrid"]:
+            for t in string:
+                for p in t["pitches"]:
+                    freqs.append(pitch_freq(p, ratios, fundamental))
     return freqs
+
+
+def phrase_dual(string0, string1, section_start=False):
+    """A phrase whose trajectory grid has TWO strings (sitar main + jor, or
+    sarangi main + second string)."""
+    ph = phrase(string0, section_start)
+    ph["trajectoryGrid"] = [string0, string1]
+    return ph
 
 
 def make(name, description, scenario, fundamental, flat_ratios, phrases,
@@ -158,6 +169,15 @@ FIXTURES = [
          "all frequencies (fundamental 246Hz) via backward-compat paths.",
          "legacy", 246.0, YAMAN_12TET_RATIOS, demo_phrases(),
          embed_legacy=True),
+    make("stripped-dual-string-polyphonic",
+         "DUAL-STRING (polyphonic): one phrase with a main string (melody) and a "
+         "second string (jor/drone), each with its own trajectories. Context must "
+         "thread to BOTH strings. Yaman just-intonation, fundamental 240Hz.",
+         "stripped", 240.0, YAMAN_JUST_RATIOS,
+         [phrase_dual(
+             [traj(0, [pj(0, True, 0)]), traj(1, [pj(2, False, 0), pj(4, True, 0)])],
+             [traj(0, [pj(0, True, 1)]), traj(0, [pj(4, True, 1)])],
+             section_start=True)]),
 ]
 
 
