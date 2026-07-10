@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/piece.schema.json",
+  "title": "Piece",
+  "description": "Serialized form of a Piece (a full transcription). The raga here is the SOURCE of the (stratifiedRatios, fundamental) context threaded down phraseGrid -> phrase -> trajectory -> pitch on load. CANONICAL form omits durArray, sectionCategorization, sectionStarts, sectionStartsGrid, and phrases (all derivable). durArrayGrid[0]/sectionCatGrid[0]/phraseGrid[0] are the sources of truth.",
+  "type": "object",
+  "required": ["raga", "phraseGrid", "instrumentation"],
+  "additionalProperties": true,
+  "properties": {
+    "raga": { "$ref": "raga.schema.json" },
+    "phraseGrid": {
+      "description": "Per-instrument grid of phrases: phraseGrid[track][i] = Phrase.",
+      "type": "array",
+      "items": { "type": "array", "items": { "$ref": "phrase.schema.json" } }
+    },
+    "instrumentation": { "type": "array", "items": { "type": "string" } },
+    "durTot": { "type": "number" },
+    "durArrayGrid": { "type": "array", "items": { "type": "array" } },
+    "sectionCatGrid": { "type": "array" },
+    "adHocSectionCatGrid": { "type": "array" },
+    "meters": { "type": "array", "items": { "type": "object" } },
+    "trackTitles": { "type": ["array", "null"] },
+    "title": { "type": ["string", "null"] },
+    "dateCreated": {},
+    "dateModified": {},
+    "location": {},
+    "_id": { "type": ["string", "null"] },
+    "audioID": { "type": ["string", "null"] },
+    "userID": { "type": ["string", "null"] },
+    "permissions": {},
+    "explicitPermissions": { "type": ["object", "null"] },
+    "name": { "type": ["string", "null"] },
+    "family_name": { "type": ["string", "null"] },
+    "given_name": { "type": ["string", "null"] },
+    "soloist": { "type": ["string", "null"] },
+    "soloInstrument": { "type": ["string", "null"] },
+    "excerptRange": { "type": ["object", "null"] },
+    "assemblageDescriptors": { "type": "array" },
+    "collections": { "description": "Python-only field; not emitted by TS (see PIECE-2).", "type": ["array", "null"] },
+
+    "durArray": { "description": "LEGACY ONLY — = durArrayGrid[0].", "deprecated": true },
+    "sectionCategorization": { "description": "LEGACY ONLY — = sectionCatGrid[0].", "deprecated": true },
+    "sectionStarts": { "description": "LEGACY ONLY — computed from phrase.isSectionStart.", "deprecated": true },
+    "sectionStartsGrid": { "description": "LEGACY ONLY — computed from phrase.isSectionStart.", "deprecated": true },
+    "phrases": { "description": "LEGACY ONLY — = phraseGrid[0].", "deprecated": true }
+  }
+}

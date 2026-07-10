@@ -131,8 +131,29 @@ def check_phrase(fx):
     return ok, f"freqs={[round(x, 2) for x in got]}"
 
 
+# --------------------------------------------------------------------------- piece
+def check_piece(fx):
+    pc = fx["pieceJson"]
+    rel = fx.get("tolerance", {}).get("rel", 1e-9)
+    rg = pc["raga"]
+    # Piece is the ROOT: extract context from its raga and thread down.
+    ratios = stratified_ratios(YAMAN_RULESET, rg["ratios"], rg["tuning"])
+    fundamental = rg["fundamental"]
+    got = []
+    for track in pc["phraseGrid"]:
+        for ph in track:
+            for t in ph["trajectoryGrid"][0]:  # main string
+                for p in t["pitches"]:
+                    got.append(pitch_frequency(p, ratios, fundamental))
+    want = fx["expected"]["allPitchFrequencies"]
+    ok = len(got) == len(want) and all(close(a, b, rel) for a, b in zip(got, want))
+    ok = ok and fundamental == fx["expected"]["fundamental"]
+    return ok, f"{len(got)} pitches, fund={fundamental}Hz"
+
+
 CHECKERS = {"pitch": check_pitch, "raga": check_raga,
-            "trajectory": check_trajectory, "phrase": check_phrase}
+            "trajectory": check_trajectory, "phrase": check_phrase,
+            "piece": check_piece}
 
 
 def main():

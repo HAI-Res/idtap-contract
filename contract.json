@@ -25,13 +25,20 @@
       "fixtures": "fixtures/phrase/",
       "status": "complete",
       "notes": "Chikari sub-schema still TODO"
+    },
+    "piece": {
+      "schema": "schemas/piece.schema.json",
+      "fixtures": "fixtures/piece/",
+      "status": "complete",
+      "notes": "Group/Meter/Assemblage sub-schemas still TODO"
     }
   },
   "roadmap": [
-    "piece",
     "articulation",
     "automation",
-    "chikari"
+    "chikari",
+    "group",
+    "meter"
   ],
   "divergences": "DIVERGENCES.md"
 }

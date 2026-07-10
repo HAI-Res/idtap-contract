@@ -1,0 +1,20 @@
+{
+  "entity": "piece",
+  "fixtures": [
+    {
+      "name": "stripped-full-piece-nondefault-fundamental",
+      "scenario": "stripped",
+      "description": "Full stripped Piece, Yaman 12-TET, fundamental 246Hz. Every pitch frequency must reflect 246Hz threaded from the piece raga \u2014 not the 261.63 default. This is the end-to-end integration test for the bug."
+    },
+    {
+      "name": "stripped-full-piece-just-intonation",
+      "scenario": "stripped",
+      "description": "Full stripped Piece, Yaman just-intonation ratios, fundamental 240Hz."
+    },
+    {
+      "name": "legacy-full-embedded",
+      "scenario": "legacy",
+      "description": "Legacy Piece: raga embedded on each phrase, durArray + sectionCategorization present at piece level. Must still reconstruct all frequencies (fundamental 246Hz) via backward-compat paths."
+    }
+  ]
+}

@@ -106,6 +106,9 @@ schema bump is caught rather than silently mis-parsed.
       context threading; stripped name/instrumentation/tags). Surfaced TRAJ-1/2.
 - [x] **Phrase** — schema + 2 fixtures (grid context-threading + legacy
       raga-fallback). Surfaced PHRASE-1/2.
-- [ ] **Piece** — strips `durArray`/`sectionCategorization`; extracts + threads raga context; full multi-cycle round-trip fixtures
+- [x] **Piece** — schema + 3 fixtures (full-piece frequency preservation through
+      the whole threading chain; legacy full-embedded). Surfaced PIECE-1/2, SEM-1.
+- [ ] **Supporting sub-schemas** — Articulation, Automation, Chikari, Group, Meter
+      (structural; no frequency semantics)
 - [ ] Wire conformance suites into `idtap` and `idtap-api` CI
 - [ ] Publish contract version + compatibility assertion in both repos

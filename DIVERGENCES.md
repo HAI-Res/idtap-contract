@@ -96,6 +96,37 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
 - **Fixtures:** `fixtures/phrase/*` (both stripped and legacy-fallback) fail on
   Python until fixed.
 
+## PIECE-1 🔴 Python `Piece.from_json` never extracts/threads the raga context
+
+- **TS** `Piece.fromJSON`: `const ratios = raga.stratifiedRatios; const fundamental
+  = raga.fundamental;` then `Phrase.fromJSON(p, ratios, fundamental)`. **This is
+  where the context chain originates.**
+- **Python** `Piece.from_json` parses `raga` but calls `Phrase.from_json(p)` with
+  no context → **the entire threading chain is dead from the top.** Combined with
+  PITCH/TRAJ/PHRASE `from_json` not accepting params, every pitch in every
+  Python-loaded stripped piece uses default (12-TET / 261.63 Hz) context.
+- **Fix (deferred):** extract `stratifiedRatios`/`fundamental` and thread down
+  (the top of the chain; must be done together with the per-level param additions).
+- **Fixtures:** `fixtures/piece/stripped-*` fail on Python until the whole chain is fixed.
+
+## PIECE-2 🟡 Minor field-set drift in `to_json`
+
+- **Python** emits a `collections` field; **TS** does not.
+- **Dates:** Python serializes `dateCreated`/`dateModified` as ISO strings;
+  TS emits the raw stored value (often a Mongo `{$date}` or Date). Not
+  frequency-affecting, but the canonical wire shape should be pinned.
+- Piece-level *stripping* is otherwise already aligned — both omit `durArray`,
+  `sectionCategorization`, `sectionStarts`, `sectionStartsGrid`, `phrases`.
+
+---
+
+## Semantic notes (agreed behavior — preserve, don't "fix")
+
+- **SEM-1** A komal (lowered) pitch of a swara whose raga rule set only defines
+  the raised variant uses the **ET-tuned lowered slot** of `stratifiedRatios`
+  (the absent variant falls back to `tuning`, not to any transcription ratio).
+  Both implementations agree; fixtures encode it (`fixtures/piece/*-just-intonation`).
+
 ---
 
 ## Resolution workflow
