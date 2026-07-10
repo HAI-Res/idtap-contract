@@ -170,7 +170,13 @@ Investigated 2026-07-10. Decisions captured in PROPOSALS.md (PROP-2).
   (always zeros).
 - **Effect:** micro-timing offsets are lost on the Python side.
 - **Structural only** (no frequency impact); low severity but a real drift.
-- **Fix (deferred):** Python should serialize the actual proportional offsets.
+- **Fix (DEFERRED — deeper than mechanical):** Python's `PulseStructure` does NOT
+  maintain a `proportional_offsets` array (TS does, updated as offsets apply). Python
+  only has offset *methods* that mutate `pulse.real_time`. So the fix requires adding
+  proportional-offset tracking/derivation to the Python meter logic (compute from
+  pulse real_times vs the ideal grid, or maintain incrementally) — a focused change
+  with its own tests, not a serialization one-liner. Not attempted with the mechanical
+  frequency-chain fixes (2026-07-10).
 
 ## Supporting classes — CONSISTENT (no divergence found)
 
