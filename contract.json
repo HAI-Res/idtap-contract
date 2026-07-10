@@ -31,14 +31,39 @@
       "fixtures": "fixtures/piece/",
       "status": "complete",
       "notes": "Group/Meter/Assemblage sub-schemas still TODO"
+    },
+    "articulation": {
+      "schema": "schemas/articulation.schema.json",
+      "fixtures": "fixtures/articulation/",
+      "status": "complete",
+      "kind": "structural"
+    },
+    "automation": {
+      "schema": "schemas/automation.schema.json",
+      "fixtures": "fixtures/automation/",
+      "status": "complete",
+      "kind": "structural"
+    },
+    "chikari": {
+      "schema": "schemas/chikari.schema.json",
+      "fixtures": "fixtures/chikari/",
+      "status": "complete",
+      "kind": "structural"
+    },
+    "group": {
+      "schema": "schemas/group.schema.json",
+      "fixtures": "fixtures/group/",
+      "status": "complete",
+      "kind": "structural"
+    },
+    "meter": {
+      "schema": "schemas/meter.schema.json",
+      "fixtures": "fixtures/meter/",
+      "status": "complete",
+      "kind": "structural"
     }
   },
-  "roadmap": [
-    "articulation",
-    "automation",
-    "chikari",
-    "group",
-    "meter"
-  ],
-  "divergences": "DIVERGENCES.md"
+  "roadmap": [],
+  "divergences": "DIVERGENCES.md",
+  "status": "model complete \u2014 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes"
 }

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/automation.schema.json",
+  "title": "Automation",
+  "description": "A normalized automation curve (e.g. pitch-bend envelope) on a Trajectory. Structural — no frequency semantics. TS and Python agree.",
+  "type": "object",
+  "required": ["values"],
+  "additionalProperties": false,
+  "properties": {
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["normTime", "value"],
+        "additionalProperties": false,
+        "properties": {
+          "normTime": { "description": "Normalized time 0..1.", "type": "number", "minimum": 0, "maximum": 1 },
+          "value": { "type": "number" }
+        }
+      }
+    }
+  }
+}

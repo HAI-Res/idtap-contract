@@ -1,0 +1,27 @@
+{
+  "name": "automation-example",
+  "description": "A three-point normalized automation curve.",
+  "scenario": "structural",
+  "entity": "automation",
+  "instance": {
+    "values": [
+      {
+        "normTime": 0.0,
+        "value": 1.0
+      },
+      {
+        "normTime": 0.5,
+        "value": 0.8
+      },
+      {
+        "normTime": 1.0,
+        "value": 1.0
+      }
+    ]
+  },
+  "expected": {
+    "requiredKeys": [
+      "values"
+    ]
+  }
+}

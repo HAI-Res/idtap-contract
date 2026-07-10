@@ -118,6 +118,22 @@ Status legend: 🔴 unresolved · 🟡 decided, not yet enforced · 🟢 enforce
 - Piece-level *stripping* is otherwise already aligned — both omit `durArray`,
   `sectionCategorization`, `sectionStarts`, `sectionStartsGrid`, `phrases`.
 
+## METER-1 🔴 PulseStructure `offsets` differs
+
+- **TS** `PulseStructure.toJSON()` emits `offsets: this.proportionalOffsets` (the
+  real per-pulse proportional offsets). **Python** emits `'offsets': [0.0]*size`
+  (always zeros).
+- **Effect:** micro-timing offsets are lost on the Python side.
+- **Structural only** (no frequency impact); low severity but a real drift.
+- **Fix (deferred):** Python should serialize the actual proportional offsets.
+
+## Supporting classes — CONSISTENT (no divergence found)
+
+`Articulation`, `Automation`, `Chikari`, `Group` all serialize identically in TS
+and Python (verified field-by-field). Chikari's `{fundamental, uniqueId}`-only
+canonical form and self-containment are noted in SEM-2. Meter's nested
+`Meter -> PulseStructure -> Pulse` shapes match except METER-1.
+
 ---
 
 ## Semantic notes (agreed behavior — preserve, don't "fix")

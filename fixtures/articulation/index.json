@@ -1,0 +1,10 @@
+{
+  "entity": "articulation",
+  "fixtures": [
+    {
+      "name": "articulation-example",
+      "scenario": "structural",
+      "description": "A pluck articulation with stroke 'd' -> nickname 'da'."
+    }
+  ]
+}

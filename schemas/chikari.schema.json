@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/chikari.schema.json",
+  "title": "Chikari",
+  "description": "A chikari (drone-string) definition. CANONICAL form is {fundamental, uniqueId} only — its drone pitches are NOT serialized; they are reconstructed as the default drone at `fundamental` on load. Self-contained: not part of the raga context chain (see DIVERGENCES SEM-2). Legacy data may include a `pitches` array. TS and Python agree.",
+  "type": "object",
+  "required": ["fundamental", "uniqueId"],
+  "additionalProperties": false,
+  "properties": {
+    "fundamental": { "description": "Center-sa frequency (Hz) applied to the drone pitches.", "type": "number", "exclusiveMinimum": 0 },
+    "uniqueId": { "type": ["string", "null"] },
+    "pitches": { "description": "LEGACY ONLY — omitted in canonical form (reconstructed from defaults).", "deprecated": true, "type": "array", "items": { "$ref": "pitch.schema.json" } }
+  }
+}

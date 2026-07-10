@@ -13,9 +13,9 @@
     "durArray": { "type": ["array", "null"], "items": { "type": "number" } },
     "slope": { "type": "number" },
     "articulations": {
-      "description": "Map of position-key -> Articulation. (Articulation schema TODO.)",
+      "description": "Map of position-key -> Articulation.",
       "type": "object",
-      "additionalProperties": { "type": "object" }
+      "additionalProperties": { "$ref": "articulation.schema.json" }
     },
     "startTime": { "type": ["number", "null"] },
     "num": { "type": ["integer", "null"] },
@@ -31,7 +31,7 @@
     "endConsonantIpa": { "type": ["string", "null"] },
     "endConsonantEngTrans": { "type": ["string", "null"] },
     "groupId": { "type": ["string", "null"] },
-    "automation": { "description": "Automation curve or null (schema TODO).", "type": ["object", "null"] },
+    "automation": { "description": "Automation curve or null.", "anyOf": [ { "$ref": "automation.schema.json" }, { "type": "null" } ] },
     "uniqueId": { "type": ["string", "null"] },
 
     "name": { "description": "LEGACY ONLY — derived from id in canonical form.", "deprecated": true, "type": "string" },

@@ -1,0 +1,10 @@
+{
+  "entity": "chikari",
+  "fixtures": [
+    {
+      "name": "chikari-example",
+      "scenario": "structural",
+      "description": "Canonical chikari: fundamental + uniqueId only (pitches reconstructed)."
+    }
+  ]
+}

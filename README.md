@@ -108,7 +108,7 @@ schema bump is caught rather than silently mis-parsed.
       raga-fallback). Surfaced PHRASE-1/2.
 - [x] **Piece** — schema + 3 fixtures (full-piece frequency preservation through
       the whole threading chain; legacy full-embedded). Surfaced PIECE-1/2, SEM-1.
-- [ ] **Supporting sub-schemas** — Articulation, Automation, Chikari, Group, Meter
-      (structural; no frequency semantics)
+- [x] **Supporting sub-schemas** — Articulation, Automation, Chikari, Group, Meter
+      (structural). All consistent except METER-1 (PulseStructure.offsets).
 - [ ] Wire conformance suites into `idtap` and `idtap-api` CI
 - [ ] Publish contract version + compatibility assertion in both repos

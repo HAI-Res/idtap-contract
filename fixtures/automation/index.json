@@ -1,0 +1,10 @@
+{
+  "entity": "automation",
+  "fixtures": [
+    {
+      "name": "automation-example",
+      "scenario": "structural",
+      "description": "A three-point normalized automation curve."
+    }
+  ]
+}

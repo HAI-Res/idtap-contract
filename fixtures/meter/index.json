@@ -1,0 +1,10 @@
+{
+  "entity": "meter",
+  "fixtures": [
+    {
+      "name": "meter-example",
+      "scenario": "structural",
+      "description": "A minimal single-pulse meter (one layer, one PulseStructure)."
+    }
+  ]
+}

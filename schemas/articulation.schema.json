@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/articulation.schema.json",
+  "title": "Articulation",
+  "description": "A single articulation (pluck, hammer-off/on, slide, dampen, …) attached to a position key on a Trajectory. Structural — no frequency semantics. TS and Python agree; only defined fields are emitted.",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "description": "Articulation type, e.g. pluck, hammer-off, hammer-on, slide, dampen.", "type": "string" },
+    "stroke": { "type": ["string", "null"] },
+    "hindi": { "type": ["string", "null"] },
+    "ipa": { "type": ["string", "null"] },
+    "engTrans": { "type": ["string", "null"] },
+    "strokeNickname": { "type": ["string", "null"] }
+  }
+}

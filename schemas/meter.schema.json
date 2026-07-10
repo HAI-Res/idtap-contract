@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/meter.schema.json",
+  "title": "Meter",
+  "description": "A rhythmic meter: a tala hierarchy realized as layers of PulseStructures, each a sequence of Pulses. Structural — no frequency semantics. TS and Python largely agree; see DIVERGENCES METER-1 (PulseStructure.offsets: TS emits proportionalOffsets, Python emits zeros).",
+  "type": "object",
+  "required": ["uniqueId", "hierarchy", "tempo", "pulseStructures"],
+  "additionalProperties": true,
+  "properties": {
+    "uniqueId": { "type": ["string", "null"] },
+    "hierarchy": {
+      "description": "Tala hierarchy, e.g. [[4,4,4,4],4] — array of numbers and/or number-arrays.",
+      "type": "array",
+      "items": { "type": ["number", "array"] }
+    },
+    "startTime": { "type": ["number", "null"] },
+    "tempo": { "type": "number" },
+    "repetitions": { "type": ["number", "null"] },
+    "talaName": { "type": ["string", "null"] },
+    "vibhaga": { "type": ["array", "null"] },
+    "pulseStructures": {
+      "description": "Layered grid: pulseStructures[layer][i] = PulseStructure.",
+      "type": "array",
+      "items": { "type": "array", "items": { "$ref": "#/$defs/pulseStructure" } }
+    }
+  },
+  "$defs": {
+    "pulseStructure": {
+      "type": "object",
+      "required": ["pulses", "tempo", "pulseDur", "size"],
+      "additionalProperties": true,
+      "properties": {
+        "pulses": { "type": "array", "items": { "$ref": "#/$defs/pulse" } },
+        "tempo": { "type": ["number", "null"] },
+        "pulseDur": { "type": "number" },
+        "size": { "type": "integer" },
+        "startTime": { "type": ["number", "null"] },
+        "uniqueId": { "type": ["string", "null"] },
+        "frontWeighted": { "type": ["boolean", "null"] },
+        "layer": { "type": ["integer", "null"] },
+        "parentPulseID": { "type": ["string", "null"] },
+        "primary": { "type": ["boolean", "null"] },
+        "segmentedMeterIdx": { "type": ["integer", "null"] },
+        "meterId": { "type": ["string", "null"] },
+        "offsets": { "description": "TS: proportionalOffsets; Python: zeros (METER-1).", "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "pulse": {
+      "type": "object",
+      "required": ["realTime", "uniqueId"],
+      "additionalProperties": true,
+      "properties": {
+        "realTime": { "type": ["number", "null"] },
+        "uniqueId": { "type": ["string", "null"] },
+        "affiliations": { "type": "array" },
+        "meterId": { "type": ["string", "null"] },
+        "corporeal": { "type": ["boolean", "null"] }
+      }
+    }
+  }
+}

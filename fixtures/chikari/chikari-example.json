@@ -1,0 +1,16 @@
+{
+  "name": "chikari-example",
+  "description": "Canonical chikari: fundamental + uniqueId only (pitches reconstructed).",
+  "scenario": "structural",
+  "entity": "chikari",
+  "instance": {
+    "fundamental": 246.0,
+    "uniqueId": "chik-1"
+  },
+  "expected": {
+    "requiredKeys": [
+      "fundamental",
+      "uniqueId"
+    ]
+  }
+}

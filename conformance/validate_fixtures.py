@@ -151,9 +151,23 @@ def check_piece(fx):
     return ok, f"{len(got)} pitches, fund={fundamental}Hz"
 
 
+# --------------------------------------------------------------------------- structural
+def check_structural(fx):
+    """Supporting classes: no computation — verify the example instance has all
+    required keys. Full shape validation is the JSON Schema's job."""
+    inst = fx["instance"]
+    req = fx["expected"]["requiredKeys"]
+    missing = [k for k in req if k not in inst]
+    ok = not missing
+    return ok, ("ok" if ok else f"missing {missing}")
+
+
 CHECKERS = {"pitch": check_pitch, "raga": check_raga,
             "trajectory": check_trajectory, "phrase": check_phrase,
-            "piece": check_piece}
+            "piece": check_piece,
+            "articulation": check_structural, "automation": check_structural,
+            "chikari": check_structural, "group": check_structural,
+            "meter": check_structural}
 
 
 def main():

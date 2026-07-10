@@ -18,7 +18,7 @@
     "durArrayGrid": { "type": "array", "items": { "type": "array" } },
     "sectionCatGrid": { "type": "array" },
     "adHocSectionCatGrid": { "type": "array" },
-    "meters": { "type": "array", "items": { "type": "object" } },
+    "meters": { "type": "array", "items": { "$ref": "meter.schema.json" } },
     "trackTitles": { "type": ["array", "null"] },
     "title": { "type": ["string", "null"] },
     "dateCreated": {},

@@ -1,0 +1,10 @@
+{
+  "entity": "group",
+  "fixtures": [
+    {
+      "name": "group-example",
+      "scenario": "structural",
+      "description": "A group of two adjacent trajectories (reconnected by num on load)."
+    }
+  ]
+}

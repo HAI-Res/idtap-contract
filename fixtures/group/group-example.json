@@ -1,0 +1,45 @@
+{
+  "name": "group-example",
+  "description": "A group of two adjacent trajectories (reconnected by num on load).",
+  "scenario": "structural",
+  "entity": "group",
+  "instance": {
+    "trajectories": [
+      {
+        "id": 0,
+        "pitches": [
+          {
+            "swara": 0,
+            "raised": true,
+            "oct": 0,
+            "logOffset": 0
+          }
+        ],
+        "durTot": 1.0,
+        "num": 0,
+        "uniqueId": "t0"
+      },
+      {
+        "id": 1,
+        "pitches": [
+          {
+            "swara": 2,
+            "raised": true,
+            "oct": 0,
+            "logOffset": 0
+          }
+        ],
+        "durTot": 1.0,
+        "num": 1,
+        "uniqueId": "t1"
+      }
+    ],
+    "id": "grp-1"
+  },
+  "expected": {
+    "requiredKeys": [
+      "trajectories",
+      "id"
+    ]
+  }
+}

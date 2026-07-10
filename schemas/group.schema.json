@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/group.schema.json",
+  "title": "Group",
+  "description": "A group of adjacent trajectories within a phrase. On load, the serialized trajectories are reconnected by their `num` to the phrase's actual Trajectory instances. Structural — no frequency semantics. TS and Python agree.",
+  "type": "object",
+  "required": ["trajectories", "id"],
+  "additionalProperties": false,
+  "properties": {
+    "trajectories": { "type": "array", "items": { "$ref": "trajectory.schema.json" } },
+    "id": { "type": ["string", "null"] }
+  }
+}

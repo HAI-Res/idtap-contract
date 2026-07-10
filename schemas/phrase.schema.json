@@ -10,9 +10,9 @@
     "durTot": { "type": "number" },
     "durArray": { "type": ["array", "null"], "items": { "type": "number" } },
     "chikaris": {
-      "description": "Map of position-key -> Chikari (schema TODO).",
+      "description": "Map of position-key -> Chikari.",
       "type": "object",
-      "additionalProperties": { "type": "object" }
+      "additionalProperties": { "$ref": "chikari.schema.json" }
     },
     "startTime": { "type": ["number", "null"] },
     "trajectoryGrid": {

@@ -1,0 +1,16 @@
+{
+  "name": "articulation-example",
+  "description": "A pluck articulation with stroke 'd' -> nickname 'da'.",
+  "scenario": "structural",
+  "entity": "articulation",
+  "instance": {
+    "name": "pluck",
+    "stroke": "d",
+    "strokeNickname": "da"
+  },
+  "expected": {
+    "requiredKeys": [
+      "name"
+    ]
+  }
+}
