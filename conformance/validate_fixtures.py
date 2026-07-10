@@ -144,6 +144,8 @@ def check_piece(fx):
         for ph in track:
             for string in ph["trajectoryGrid"]:  # ALL strings (polyphonic)
                 for t in string:
+                    if t.get("id") == 12:  # skip Silent trajs (string-sync)
+                        continue
                     for p in t["pitches"]:
                         got.append(pitch_frequency(p, ratios, fundamental))
     want = fx["expected"]["allPitchFrequencies"]

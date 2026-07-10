@@ -202,6 +202,23 @@ canonical form and self-containment are noted in SEM-2. Meter's nested
   client, exports, analysis) silently gets 12-TET. Fix = single source of truth
   (chikari tuning derives from the raga). See PROP-3.
 
+## STRING-SYNC 🔴 Python lacks `ensureStringSynchronization` (polyphonic 2nd string)
+
+- **TS** `Piece.fromJSON` calls `ensureStringSynchronization()`, which synthesizes a
+  **silent second string** (`trajectoryGrid[1]`, a single id-12 Silent trajectory) for
+  polyphonic instruments (Sitar jor, Sarangi 2nd) when that string has no content.
+- **Python** `Piece.from_json` has silent trajectories only for **duration-filling** on
+  the main string — **no second-string synthesis** (no `ensure_string_synchronization`).
+- **Effect:** after loading the same single-string Sitar piece, TS has 2 strings, Python
+  has 1. Structural, not a frequency bug — the synthesized string is silent (no melody).
+  Surfaced by the TS conformance suite (single-string pieces loaded 8 pitches vs 6).
+- **Round-trip nuance:** once TS saves, the silent 2nd string is in the JSON, so Python
+  then sees it too. The gap only shows for data never saved by TS-with-sync.
+- **Decision for owner:** should the Python client implement `ensure_string_synchronization`
+  to match TS structure? (It's a data client, not a synth — may not need it.)
+- **Contract handling:** frequency conformance compares MELODIC pitches only (excludes
+  id-12 Silent trajectories) so it's robust to this on both sides.
+
 ---
 
 ## Resolution workflow
