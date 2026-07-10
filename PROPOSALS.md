@@ -101,7 +101,8 @@ PIECE-2.
   date indexing/range queries) and emits ISO on read. Never leak `{$date}` into the API.
   - [x] TS — ensure dates serialize as ISO UTC, never `{$date}`. *(PR jon-myers/idtap#2)*
   - [x] Python — emit tz-aware UTC ISO; stop stripping `Z`; parse as UTC. *(`_iso_utc`/`_parse_utc`)*
-  - [ ] Server — parse incoming ISO → BSON Date on save. *(app-level, not yet)*
+  - [x] Server — parse incoming ISO → BSON Date on save. *(already done: `server.ts`
+        `insertNewTranscription`/`updateTranscription` do `new Date(...)` before write)*
   - [x] `piece.schema.json` — pin `dateCreated`/`dateModified` as ISO-8601 date-time strings.
 
 ---

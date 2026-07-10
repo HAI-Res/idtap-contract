@@ -26,17 +26,26 @@ The 🔴 markers on individual headings below mean "not yet implemented," NOT
 **IMPLEMENTED (2026-07-10):** the loop is closed on the client models.
 - **Python** (`fix/serialization-sync-conformance`): mechanical fixes PITCH-1/2,
   TRAJ-1/2, PHRASE-1/2, PIECE-1, METER-1, plus **PROP-1** (serialize `ruleSet`),
-  **PROP-2** (drop `collections`; ISO-UTC dates via `_iso_utc`/`_parse_utc`), and
-  **PROP-3** (chikari no longer synthesizes 12-TET defaults on canonical load).
+  **PROP-2** (drop `collections`; ISO-UTC dates via `_iso_utc`/`_parse_utc`),
+  **PROP-3** (chikari no longer synthesizes 12-TET defaults on canonical load), and
+  **STRING-SYNC** (`ensure_string_synchronization` ported, idempotent).
   Verified by `test_contract_conformance.py` (67) + offline model tests (269 total).
+- **Server (idtap):** `Piece.to_json` ISO-UTC dates are already parsed to BSON `Date`
+  on save — `server.ts` `insertNewTranscription`/`updateTranscription` do `new Date(...)`.
+  So the PROP-2 "server parse ISO→BSON" item needs no change.
 - **TS** (`feat/contract-conformance-ts` → PR jon-myers/idtap#2): **PROP-1** (emit
   `ruleSet`, preserve stored ratios — fixes RAGA-2) + **PROP-2** (ISO dates). Verified
   by the TS conformance suite (55).
 - **Contract**: `ruleSet` added to the raga schema + non-Yaman fixtures (Bhairav, Todi,
   both-ni); schemas for dates/collections/chikari updated. 61/61 fixtures consistent.
-- **Still open (app-level / deferred, no bug driving):** server ISO→BSON date parsing;
-  legacy `ruleSet` heal-on-load + endpoint consolidation; the deep chikari
-  derive-pitches-from-raga cleanup + its non-12-TET fixture; STRING-SYNC (structural).
+- **Still open (app-level / deferred, cosmetic — no bug driving):** legacy `ruleSet`
+  heal-on-load is already handled on the web (EditorComponent fetches `getRaagRule` and
+  injects before `Piece.fromJSON`; post-PR#2 `Raga.toJSON` emits `ruleSet` so a web
+  load→save heals forward) — only the endpoint consolidation (`getRaagRule` /
+  `/ragaRules`) + the "skip DB fetch when ruleSet already present" optimization remain,
+  best bundled with the repo restructure. Dropping the redundant `chikari.fundamental`
+  from the wire (nothing reads it) + a non-12-TET chikari fixture are cosmetic and also
+  deferred to the restructure.
 
 ---
 
@@ -217,7 +226,18 @@ canonical form and self-containment are noted in SEM-2. Meter's nested
   client, exports, analysis) silently gets 12-TET. Fix = single source of truth
   (chikari tuning derives from the raga). See PROP-3.
 
-## STRING-SYNC 🔴 Python lacks `ensureStringSynchronization` (polyphonic 2nd string)
+## STRING-SYNC 🟢 RESOLVED — Python now implements `ensure_string_synchronization`
+
+**Resolution (2026-07-10):** the Python client now ports `ensure_string_synchronization`
+(`Piece.from_json` calls it; `Python-API` PR #1). For Sitar/Sarangi tracks it synthesizes
+a single silent id-12 second-string trajectory when that string has no non-silent content
+— structurally identical to TS. Ported idempotently: an existing silent trajectory is
+preserved (uniqueId kept), a fresh one is created only when the 2nd string is empty, so
+`to_json → from_json → to_json` stays byte-stable (verified by the idempotence test).
+Frequency conformance still compares MELODIC pitches only (excludes id-12) by design.
+Original divergence below for history.
+
+### (original) Python lacked `ensureStringSynchronization` (polyphonic 2nd string)
 
 - **TS** `Piece.fromJSON` calls `ensureStringSynchronization()`, which synthesizes a
   **silent second string** (`trajectoryGrid[1]`, a single id-12 Silent trajectory) for
