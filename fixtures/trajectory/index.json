@@ -22,6 +22,16 @@
       "description": "Legacy trajectory: name/instrumentation/tags present AND ratios/fundamental embedded in pitches, no context threaded. Must still reconstruct correct frequencies; stripped fields ignored on canonical out."
     },
     {
+      "name": "sub-objects-articulations-automation",
+      "scenario": "stripped",
+      "description": "Trajectory carrying articulations (pluck w/ stroke at 0.00) AND an automation envelope. Both sub-objects must round-trip through from_json (idtap-contract E)."
+    },
+    {
+      "name": "hygiene-null-durarray",
+      "scenario": "stripped",
+      "description": "durArray explicitly null (hygiene F): must load without error and reconstruct pitch frequencies from context."
+    },
+    {
       "name": "enum-id-00-fixed",
       "scenario": "stripped",
       "description": "Trajectory id=0 (Fixed), 1 pitch(es), 12-TET 246Hz."

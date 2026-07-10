@@ -20,6 +20,11 @@
       "name": "stripped-dual-string-polyphonic",
       "scenario": "stripped",
       "description": "DUAL-STRING (polyphonic): one phrase with a main string (melody) and a second string (jor/drone), each with its own trajectories. Context must thread to BOTH strings. Yaman just-intonation, fundamental 240Hz."
+    },
+    {
+      "name": "hygiene-unicode-title",
+      "scenario": "stripped",
+      "description": "Piece with a Unicode title \u2014 must survive serialization round-trip."
     }
   ]
 }

@@ -180,6 +180,13 @@ FIXTURES = [
              section_start=True)]),
 ]
 
+# F: Unicode-title piece (Devanagari + diacritics + emoji) — must round-trip.
+_uni = make("hygiene-unicode-title",
+            "Piece with a Unicode title — must survive serialization round-trip.",
+            "stripped", 246.0, YAMAN_12TET_RATIOS, demo_phrases())
+_uni["pieceJson"]["title"] = "राग यमन — Rāg Yaman \U0001F3B5"
+FIXTURES.append(_uni)
+
 
 def main():
     os.makedirs(OUT, exist_ok=True)

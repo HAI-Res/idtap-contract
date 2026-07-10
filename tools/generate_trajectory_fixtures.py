@@ -103,6 +103,21 @@ FIXTURES = [
          2.0, [0.5, 0.5], TWELVE_TET, 246.0,
          extra={"name": "Bend: Sloped End", "instrumentation": "Sitar",
                 "tags": ["legacy-annotation"]}),
+    make("sub-objects-articulations-automation",
+         "Trajectory carrying articulations (pluck w/ stroke at 0.00) AND an "
+         "automation envelope. Both sub-objects must round-trip through from_json "
+         "(idtap-contract E).",
+         "stripped", 0, [dict(swara=0, raised=True, oct=0)], 1.0, [1.0],
+         TWELVE_TET, 246.0,
+         extra={"articulations": {"0.00": {"name": "pluck", "stroke": "d"}},
+                "automation": {"values": [{"normTime": 0.0, "value": 1.0},
+                                          {"normTime": 0.5, "value": 0.6},
+                                          {"normTime": 1.0, "value": 0.9}]}}),
+    make("hygiene-null-durarray",
+         "durArray explicitly null (hygiene F): must load without error and "
+         "reconstruct pitch frequencies from context.",
+         "stripped", 0, [dict(swara=0, raised=True, oct=0)], 1.0, None,
+         TWELVE_TET, 246.0),
 ]
 
 # D: enumerate every trajectory id 0-13 (skip 11 == 7). Bend ids 4-10 take 2
