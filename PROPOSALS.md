@@ -139,6 +139,16 @@ contract exists to remove. Identical structure in TS and Python.
   "which strings" depends on the rule set). **PROP-1** (ruleSet in the piece) makes the
   raga fully reconstructable, so chikari pitches can be derived on load / on demand.
 
+### TS finding (2026-07-10) — TS already correct; cleanup deferred
+Confirmed on TS: `Chikari.fromJSON` with no `pitches` in the JSON (the canonical
+`{fundamental, uniqueId}` form) passes `pitches:[]`, so **`chikari.pitches` ends up EMPTY**
+after a canonical load — and the synth reads tuning from `raga.chikariPitches` (correct).
+So there is **no audible/behavioral bug on TS**; `chikari.pitches` is simply vestigial. The
+real cleanup (make `chikari.pitches` authoritative) needs the **full raga** threaded down
+Piece→Phrase→Chikari — a deeper change with no bug driving it. **Deferred as a focused
+design pass.** PROP-1/2 shipped on TS; PROP-3 remains the Python-side footgun (its
+constructor populates 12-TET default pitches) + this optional TS cleanup.
+
 ### Implementation checklist (deferred)
 - [ ] TS `Chikari` — derive pitches from raga (or drop them); remove stored `fundamental`
       (or keep only as a cache).
