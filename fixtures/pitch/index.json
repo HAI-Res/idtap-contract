@@ -40,6 +40,81 @@
       "name": "legacy-embedded-just-pa",
       "scenario": "legacy",
       "description": "Legacy embedded just-intonation pa, fundamental 220Hz"
+    },
+    {
+      "name": "enum-chromatic-sa",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: sa (swara 0, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-re-komal",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: re-komal (swara 1, raised False), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-re",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: re (swara 1, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ga-komal",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ga-komal (swara 2, raised False), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ga",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ga (swara 2, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ma",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ma (swara 3, raised False), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ma-tivra",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ma-tivra (swara 3, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-pa",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: pa (swara 4, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-dha-komal",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: dha-komal (swara 5, raised False), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-dha",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: dha (swara 5, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ni-komal",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ni-komal (swara 6, raised False), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-chromatic-ni",
+      "scenario": "stripped",
+      "description": "Chromatic enumeration: ni (swara 6, raised True), 12-TET, 246Hz"
+    },
+    {
+      "name": "enum-sa-raised-override",
+      "scenario": "stripped",
+      "description": "sa (swara 0) input raised=false \u2014 constructor forces raised=true (sa/pa override); override-invariant frequency/letter."
+    },
+    {
+      "name": "enum-deep-negative-oct",
+      "scenario": "stripped",
+      "description": "ga at oct -3 (deep low), 246Hz"
+    },
+    {
+      "name": "enum-high-oct",
+      "scenario": "stripped",
+      "description": "ni at oct +2 (high), 246Hz"
     }
   ]
 }

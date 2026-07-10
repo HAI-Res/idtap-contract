@@ -20,6 +20,71 @@
       "name": "legacy-embedded-with-stripped-fields",
       "scenario": "legacy",
       "description": "Legacy trajectory: name/instrumentation/tags present AND ratios/fundamental embedded in pitches, no context threaded. Must still reconstruct correct frequencies; stripped fields ignored on canonical out."
+    },
+    {
+      "name": "enum-id-00-fixed",
+      "scenario": "stripped",
+      "description": "Trajectory id=0 (Fixed), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-01-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=1 (Bend: Simple), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-02-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=2 (Bend: Sloped Start), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-03-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=3 (Bend: Sloped End), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-04-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=4 (Bend: Ladle), 2 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-05-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=5 (Bend: Reverse Ladle), 2 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-06-bend",
+      "scenario": "stripped",
+      "description": "Trajectory id=6 (Bend: Simple Multiple), 2 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-07-krintin",
+      "scenario": "stripped",
+      "description": "Trajectory id=7 (Krintin), 2 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-08-krintin-slide",
+      "scenario": "stripped",
+      "description": "Trajectory id=8 (Krintin Slide), 3 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-09-krintin-slide-hammer",
+      "scenario": "stripped",
+      "description": "Trajectory id=9 (Krintin Slide Hammer), 4 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-10-dense-krintin-slide-hammer",
+      "scenario": "stripped",
+      "description": "Trajectory id=10 (Dense Krintin Slide Hammer), 6 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-12-silent",
+      "scenario": "stripped",
+      "description": "Trajectory id=12 (Silent), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "enum-id-13-vibrato",
+      "scenario": "stripped",
+      "description": "Trajectory id=13 (Vibrato), 1 pitch(es), 12-TET 246Hz."
     }
   ]
 }

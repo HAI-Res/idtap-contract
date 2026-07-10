@@ -105,6 +105,22 @@ FIXTURES = [
                 "tags": ["legacy-annotation"]}),
 ]
 
+# D: enumerate every trajectory id 0-13 (skip 11 == 7). Bend ids 4-10 take 2
+# pitches; others take 1. 12=Silent, 13=Vibrato are the special ones.
+# Minimum pitch count per id (derived from the constructor's starts[N] usage):
+# krintin-slide variants need more segments — id 8→3, id 9→4, id 10→6.
+_ID_MIN_PITCHES = {8: 3, 9: 4, 10: 6}
+for _tid in range(14):
+    if _tid == 11:
+        continue
+    _n = _ID_MIN_PITCHES.get(_tid, 2 if 4 <= _tid <= 10 else 1)
+    _pitches = [dict(swara=s, raised=True, oct=0) for s in range(_n)]
+    _durarr = [1.0 / _n] * _n if _n > 1 else [1.0]
+    FIXTURES.append(make(
+        f"enum-id-{_tid:02d}-{NAMES[_tid].split(':')[0].replace(' ', '-').lower()}",
+        f"Trajectory id={_tid} ({NAMES[_tid]}), {_n} pitch(es), 12-TET 246Hz.",
+        "stripped", _tid, _pitches, 1.0, _durarr, TWELVE_TET, 246.0))
+
 
 def main():
     os.makedirs(OUT, exist_ok=True)

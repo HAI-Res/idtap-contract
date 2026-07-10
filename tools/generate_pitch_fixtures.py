@@ -132,6 +132,30 @@ FIXTURES = [
          "legacy", 4, True, 0, 0.0, JUST, 220.0, True),
 ]
 
+# D: full chromatic enumeration — every swara/raised combination, 12-TET, 246Hz
+_CHROMATIC = [
+    ("sa", 0, True), ("re-komal", 1, False), ("re", 1, True),
+    ("ga-komal", 2, False), ("ga", 2, True), ("ma", 3, False),
+    ("ma-tivra", 3, True), ("pa", 4, True), ("dha-komal", 5, False),
+    ("dha", 5, True), ("ni-komal", 6, False), ("ni", 6, True),
+]
+for _label, _sw, _rz in _CHROMATIC:
+    FIXTURES.append(make(
+        f"enum-chromatic-{_label}",
+        f"Chromatic enumeration: {_label} (swara {_sw}, raised {_rz}), 12-TET, 246Hz",
+        "stripped", _sw, _rz, 0, 0.0, TWELVE_TET, 246.0, False))
+# sa/pa raised-override edge: swara 0 with raised=false must load as raised=true
+FIXTURES.append(make(
+    "enum-sa-raised-override",
+    "sa (swara 0) input raised=false — constructor forces raised=true (sa/pa override); "
+    "override-invariant frequency/letter.",
+    "stripped", 0, False, 0, 0.0, TWELVE_TET, 246.0, False))
+# deep negative + high octaves
+FIXTURES.append(make("enum-deep-negative-oct",
+    "ga at oct -3 (deep low), 246Hz", "stripped", 2, True, -3, 0.0, TWELVE_TET, 246.0, False))
+FIXTURES.append(make("enum-high-oct",
+    "ni at oct +2 (high), 246Hz", "stripped", 6, True, 2, 0.0, TWELVE_TET, 246.0, False))
+
 
 def main():
     os.makedirs(OUT, exist_ok=True)

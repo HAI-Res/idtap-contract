@@ -1,0 +1,48 @@
+{
+  "name": "enum-chromatic-re",
+  "description": "Chromatic enumeration: re (swara 1, raised True), 12-TET, 246Hz",
+  "scenario": "stripped",
+  "pitchJson": {
+    "swara": 1,
+    "raised": true,
+    "oct": 0,
+    "logOffset": 0.0
+  },
+  "context": {
+    "ratios": [
+      1,
+      [
+        1.0594630943592953,
+        1.122462048309373
+      ],
+      [
+        1.189207115002721,
+        1.2599210498948732
+      ],
+      [
+        1.3348398541700344,
+        1.4142135623730951
+      ],
+      1.4983070768766815,
+      [
+        1.5874010519681994,
+        1.681792830507429
+      ],
+      [
+        1.7817974362806785,
+        1.8877486253633868
+      ]
+    ],
+    "fundamental": 246.0
+  },
+  "expected": {
+    "frequency": 276.12566388410573,
+    "logFreq": 8.109181172005906,
+    "numberedPitch": 2,
+    "chroma": 2,
+    "sargamLetter": "R"
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}
