@@ -5,6 +5,11 @@
       "name": "chikari-example",
       "scenario": "structural",
       "description": "Canonical chikari: fundamental + uniqueId only (pitches reconstructed)."
+    },
+    {
+      "name": "chikari-legacy-non-12tet",
+      "scenario": "structural",
+      "description": "Legacy chikari: deprecated pitches array present with non-12-TET (just-intonation) tuning; preserved on read."
     }
   ]
 }

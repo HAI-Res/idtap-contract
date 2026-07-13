@@ -10,6 +10,22 @@ Status legend: 🔧 decided (mechanical — Python matches TS, no judgment neede
 🟡 decided via proposal (see PROPOSALS.md) · 🟢 enforced by fixtures in both repos'
 CI · ~~superseded~~
 
+**✅ STATUS (2026-07-13): DRIFT CLOSED — both client PRs MERGED to main.**
+- **TS** `jon-myers/idtap#2` merged (PROP-1/2 + conformance harness). **Python**
+  `jon-myers/Python-API#1` merged (all 🔴 mechanical fixes PITCH/TRAJ/PHRASE/PIECE/METER
+  + PROP-1/2/3 + STRING-SYNC). During the Python merge, a stale Feb sync (`#65`) was
+  reconciled and a real serialization non-idempotence was fixed (`trajectory.py`
+  `vert_offset` int→float). Contract conformance is now enforced in **both** repos' CI.
+  So every 🔴 heading below is now **implemented + merged** (read as 🟢).
+- **`chikari.fundamental` assessment (2026-07-13):** it is **vestigial for behavior** —
+  in both langs it's only applied to the chikari's own `pitches`, which are (a) not
+  serialized (PROP-3) and (b) not used for playback (`Piece.chikariFreqs` derives the
+  drone from `raga.chikariPitches`, not the chikari). But it is still a *serialized,
+  schema-canonical* field, so dropping it is a wire-format change → **harmless to keep;
+  drop deferred to the restructure.** Added a legacy non-12-TET chikari fixture.
+- **Remaining (restructure-bound, non-conformance):** endpoint consolidation
+  (`getRaagRule`/`/ragaRules`) + "skip DB fetch when ruleSet present" optimization.
+
 **STATUS (2026-07-10): all items decided — nothing awaits an owner decision.**
 - Design decisions → **PROP-1** (RAGA-1/2/3), **PROP-2** (PIECE-2), **PROP-3** (Chikari/SEM-2).
 - Everything else is 🔧 **mechanical**: PITCH-1/2, TRAJ-1/2, PHRASE-1/2, PIECE-1
