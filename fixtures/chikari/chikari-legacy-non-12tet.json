@@ -1,0 +1,31 @@
+{
+  "name": "chikari-legacy-non-12tet",
+  "description": "LEGACY chikari (pre-PROP-3): the deprecated `pitches` array is present and carries a non-12-TET (just-intonation) tuning + a non-A440 fundamental. Canonical form omits `pitches`; legacy data is preserved on read (both TS and Python). requiredKeys still hold.",
+  "scenario": "structural",
+  "entity": "chikari",
+  "instance": {
+    "fundamental": 246.0,
+    "uniqueId": "chik-legacy-ji-1",
+    "pitches": [
+      {
+        "swara": 0,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0,
+        "fundamental": 246.0,
+        "ratios": [1, 1.125, 1.25, 1.3333333333333333, 1.5, 1.6666666666666667, 1.875]
+      },
+      {
+        "swara": 4,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0,
+        "fundamental": 246.0,
+        "ratios": [1, 1.125, 1.25, 1.3333333333333333, 1.5, 1.6666666666666667, 1.875]
+      }
+    ]
+  },
+  "expected": {
+    "requiredKeys": ["fundamental", "uniqueId"]
+  }
+}

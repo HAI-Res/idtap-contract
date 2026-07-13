@@ -1,7 +1,10 @@
-# Proposals (decided, not yet implemented)
+# Proposals
 
-Design decisions made during contract review, to be applied to the TS and Python
-implementations later. No implementation has changed yet.
+Design decisions made during contract review.
+
+**✅ STATUS (2026-07-13): PROP-1/2/3 IMPLEMENTED + MERGED in both clients** — TS via
+`jon-myers/idtap#2`, Python via `jon-myers/Python-API#1`. Enforced by contract
+conformance in both repos' CI. The text below is retained as the rationale/record.
 
 ---
 
