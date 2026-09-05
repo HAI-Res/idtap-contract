@@ -1,0 +1,826 @@
+{
+  "description": "insertNewPhraseDiv at 1.2 s, inside phrase 0's silence: the silence splits at the exact time on both strings, chikari at 1.0 stays with phrase 0, the new phrase is not a section start.",
+  "expected": {
+    "durTot": 5,
+    "phraseStarts": [
+      0,
+      1.2,
+      3
+    ],
+    "phrases": [
+      {
+        "chikariKeys": [
+          "1.00"
+        ],
+        "durTot": 1.2,
+        "isSectionStart": true,
+        "strings": [
+          [
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durArray": [
+                1
+              ],
+              "durTot": 1,
+              "id": 1,
+              "pitchFrequencies": [
+                240,
+                359.59369845
+              ]
+            },
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durTot": 0.2,
+              "id": 12
+            }
+          ],
+          [
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durTot": 1.2,
+              "id": 12
+            }
+          ]
+        ]
+      },
+      {
+        "chikariKeys": [],
+        "durTot": 1.8,
+        "isSectionStart": false,
+        "strings": [
+          [
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durTot": 0.3,
+              "id": 12
+            },
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durArray": [
+                1
+              ],
+              "durTot": 1.5,
+              "id": 0,
+              "pitchFrequencies": [
+                359.59369845
+              ]
+            }
+          ],
+          [
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durTot": 1.8,
+              "id": 12
+            }
+          ]
+        ]
+      },
+      {
+        "chikariKeys": [],
+        "durTot": 2,
+        "isSectionStart": false,
+        "strings": [
+          [
+            {
+              "articulations": {
+                "0.00": "pluck",
+                "0.2": "hammer-off"
+              },
+              "durArray": [
+                0.2,
+                0.8
+              ],
+              "durTot": 1,
+              "id": 7,
+              "pitchFrequencies": [
+                359.59369845,
+                302.381051975
+              ]
+            },
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durArray": [
+                1
+              ],
+              "durTot": 1,
+              "id": 0,
+              "pitchFrequencies": [
+                240
+              ]
+            }
+          ],
+          [
+            {
+              "articulations": {
+                "0.00": "pluck"
+              },
+              "durArray": [
+                1
+              ],
+              "durTot": 2,
+              "id": 0,
+              "pitchFrequencies": [
+                480
+              ]
+            }
+          ]
+        ]
+      }
+    ],
+    "survivingTrajectoryIds": [
+      "t0",
+      "t1",
+      "j0",
+      "t2",
+      "t3",
+      "t4",
+      "j1"
+    ]
+  },
+  "name": "phrase-division-inside-silence",
+  "operation": {
+    "op": "insertPhraseDivision",
+    "phraseIdx": 0,
+    "time": 1.2,
+    "track": 0
+  },
+  "pieceJson": {
+    "_id": "fixture000000000000000000",
+    "adHocSectionCatGrid": [
+      [
+        []
+      ]
+    ],
+    "assemblageDescriptors": [],
+    "dateCreated": "2026-01-01T00:00:00.000Z",
+    "dateModified": "2026-01-01T00:00:00.000Z",
+    "durArrayGrid": [
+      [
+        0.6,
+        0.4
+      ]
+    ],
+    "durTot": 5,
+    "explicitPermissions": {
+      "edit": [],
+      "publicView": true,
+      "view": []
+    },
+    "instrumentation": [
+      "Sitar"
+    ],
+    "location": "Santa Cruz",
+    "meters": [],
+    "phraseGrid": [
+      [
+        {
+          "adHocCategorizationGrid": [],
+          "categorizationGrid": [
+            {
+              "Elaboration": {
+                "Barhat": false,
+                "Behlava": false,
+                "Bol Alap": false,
+                "Bol Banao": false,
+                "Bol Bandt": false,
+                "Chakradar": false,
+                "Gat-kari": false,
+                "Laykari": false,
+                "Prastar": false,
+                "Tan (Gamak)": false,
+                "Tan (Sapat)": false,
+                "Tihai": false,
+                "Vistar": false
+              },
+              "Incidental": {
+                "Pause": false,
+                "Praise ('Vah')": false,
+                "Talk/Conversation": false,
+                "Tuning": false
+              },
+              "Instrumental Articulation": {
+                "Bol": false,
+                "Non-Bol": false
+              },
+              "Phrase": {
+                "Abhog": false,
+                "Antara": false,
+                "Asthai": false,
+                "Jhala": false,
+                "Manjha": false,
+                "Mohra": false,
+                "Mukra": false,
+                "Sanchari": false
+              },
+              "Vocal Articulation": {
+                "Aakar": false,
+                "Bol": false,
+                "Non-Tom": false,
+                "Sargam": false,
+                "Tarana": false
+              }
+            },
+            {
+              "Elaboration": {
+                "Barhat": false,
+                "Behlava": false,
+                "Bol Alap": false,
+                "Bol Banao": false,
+                "Bol Bandt": false,
+                "Chakradar": false,
+                "Gat-kari": false,
+                "Laykari": false,
+                "Prastar": false,
+                "Tan (Gamak)": false,
+                "Tan (Sapat)": false,
+                "Tihai": false,
+                "Vistar": false
+              },
+              "Incidental": {
+                "Pause": false,
+                "Praise ('Vah')": false,
+                "Talk/Conversation": false,
+                "Tuning": false
+              },
+              "Instrumental Articulation": {
+                "Bol": false,
+                "Non-Bol": false
+              },
+              "Phrase": {
+                "Abhog": false,
+                "Antara": false,
+                "Asthai": false,
+                "Jhala": false,
+                "Manjha": false,
+                "Mohra": false,
+                "Mukra": false,
+                "Sanchari": false
+              },
+              "Vocal Articulation": {
+                "Aakar": false,
+                "Bol": false,
+                "Non-Tom": false,
+                "Sargam": false,
+                "Tarana": false
+              }
+            }
+          ],
+          "chikaris": {
+            "1.00": {
+              "fundamental": 240,
+              "uniqueId": "c0"
+            }
+          },
+          "durArray": [
+            0.3333333333333333,
+            0.16666666666666666,
+            0.5
+          ],
+          "durTot": 3,
+          "groupsGrid": [
+            []
+          ],
+          "instrumentation": [
+            "Sitar"
+          ],
+          "isSectionStart": true,
+          "startTime": 0,
+          "trajectoryGrid": [
+            [
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "automation": {
+                  "values": [
+                    {
+                      "normTime": 0,
+                      "value": 1
+                    },
+                    {
+                      "normTime": 1,
+                      "value": 1
+                    }
+                  ]
+                },
+                "durArray": [
+                  1
+                ],
+                "durTot": 1,
+                "id": 1,
+                "num": 0,
+                "pitches": [
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 0
+                  },
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 4
+                  }
+                ],
+                "slope": 2,
+                "startTime": 0,
+                "uniqueId": "t0",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              },
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "durTot": 0.5,
+                "fundID12": 240,
+                "id": 12,
+                "num": 1,
+                "pitches": [],
+                "slope": 2,
+                "startTime": 1,
+                "uniqueId": "t1",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              },
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "automation": {
+                  "values": [
+                    {
+                      "normTime": 0,
+                      "value": 1
+                    },
+                    {
+                      "normTime": 1,
+                      "value": 1
+                    }
+                  ]
+                },
+                "durArray": [
+                  1
+                ],
+                "durTot": 1.5,
+                "id": 0,
+                "num": 2,
+                "pitches": [
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 4
+                  }
+                ],
+                "slope": 2,
+                "startTime": 1.5,
+                "uniqueId": "t2",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              }
+            ],
+            [
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "durTot": 3,
+                "fundID12": 240,
+                "id": 12,
+                "num": 0,
+                "pitches": [],
+                "slope": 2,
+                "startTime": 0,
+                "uniqueId": "j0",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              }
+            ]
+          ],
+          "uniqueId": "p0"
+        },
+        {
+          "adHocCategorizationGrid": [],
+          "categorizationGrid": [
+            {
+              "Elaboration": {
+                "Barhat": false,
+                "Behlava": false,
+                "Bol Alap": false,
+                "Bol Banao": false,
+                "Bol Bandt": false,
+                "Chakradar": false,
+                "Gat-kari": false,
+                "Laykari": false,
+                "Prastar": false,
+                "Tan (Gamak)": false,
+                "Tan (Sapat)": false,
+                "Tihai": false,
+                "Vistar": false
+              },
+              "Incidental": {
+                "Pause": false,
+                "Praise ('Vah')": false,
+                "Talk/Conversation": false,
+                "Tuning": false
+              },
+              "Instrumental Articulation": {
+                "Bol": false,
+                "Non-Bol": false
+              },
+              "Phrase": {
+                "Abhog": false,
+                "Antara": false,
+                "Asthai": false,
+                "Jhala": false,
+                "Manjha": false,
+                "Mohra": false,
+                "Mukra": false,
+                "Sanchari": false
+              },
+              "Vocal Articulation": {
+                "Aakar": false,
+                "Bol": false,
+                "Non-Tom": false,
+                "Sargam": false,
+                "Tarana": false
+              }
+            },
+            {
+              "Elaboration": {
+                "Barhat": false,
+                "Behlava": false,
+                "Bol Alap": false,
+                "Bol Banao": false,
+                "Bol Bandt": false,
+                "Chakradar": false,
+                "Gat-kari": false,
+                "Laykari": false,
+                "Prastar": false,
+                "Tan (Gamak)": false,
+                "Tan (Sapat)": false,
+                "Tihai": false,
+                "Vistar": false
+              },
+              "Incidental": {
+                "Pause": false,
+                "Praise ('Vah')": false,
+                "Talk/Conversation": false,
+                "Tuning": false
+              },
+              "Instrumental Articulation": {
+                "Bol": false,
+                "Non-Bol": false
+              },
+              "Phrase": {
+                "Abhog": false,
+                "Antara": false,
+                "Asthai": false,
+                "Jhala": false,
+                "Manjha": false,
+                "Mohra": false,
+                "Mukra": false,
+                "Sanchari": false
+              },
+              "Vocal Articulation": {
+                "Aakar": false,
+                "Bol": false,
+                "Non-Tom": false,
+                "Sargam": false,
+                "Tarana": false
+              }
+            }
+          ],
+          "chikaris": {},
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "durTot": 2,
+          "groupsGrid": [
+            []
+          ],
+          "instrumentation": [
+            "Sitar"
+          ],
+          "startTime": 3,
+          "trajectoryGrid": [
+            [
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  },
+                  "0.2": {
+                    "name": "hammer-off"
+                  }
+                },
+                "automation": {
+                  "values": [
+                    {
+                      "normTime": 0,
+                      "value": 1
+                    },
+                    {
+                      "normTime": 1,
+                      "value": 1
+                    }
+                  ]
+                },
+                "durArray": [
+                  0.2,
+                  0.8
+                ],
+                "durTot": 1,
+                "id": 7,
+                "num": 0,
+                "pitches": [
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 4
+                  },
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 2
+                  }
+                ],
+                "slope": 2,
+                "startTime": 0,
+                "uniqueId": "t3",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              },
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "automation": {
+                  "values": [
+                    {
+                      "normTime": 0,
+                      "value": 1
+                    },
+                    {
+                      "normTime": 1,
+                      "value": 1
+                    }
+                  ]
+                },
+                "durArray": [
+                  1
+                ],
+                "durTot": 1,
+                "id": 0,
+                "num": 1,
+                "pitches": [
+                  {
+                    "logOffset": 0,
+                    "oct": 0,
+                    "raised": true,
+                    "swara": 0
+                  }
+                ],
+                "slope": 2,
+                "startTime": 1,
+                "uniqueId": "t4",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              }
+            ],
+            [
+              {
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d",
+                    "strokeNickname": "da"
+                  }
+                },
+                "automation": {
+                  "values": [
+                    {
+                      "normTime": 0,
+                      "value": 1
+                    },
+                    {
+                      "normTime": 1,
+                      "value": 1
+                    }
+                  ]
+                },
+                "durArray": [
+                  1
+                ],
+                "durTot": 2,
+                "id": 0,
+                "num": 0,
+                "pitches": [
+                  {
+                    "logOffset": 0,
+                    "oct": 1,
+                    "raised": true,
+                    "swara": 0
+                  }
+                ],
+                "slope": 2,
+                "startTime": 0,
+                "uniqueId": "j1",
+                "vibObj": {
+                  "extent": 0.05,
+                  "initUp": true,
+                  "periods": 8,
+                  "vertOffset": 0
+                }
+              }
+            ]
+          ],
+          "uniqueId": "p1"
+        }
+      ]
+    ],
+    "raga": {
+      "fundamental": 240,
+      "name": "Yaman",
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "ruleSet": {
+        "dha": {
+          "lowered": false,
+          "raised": true
+        },
+        "ga": {
+          "lowered": false,
+          "raised": true
+        },
+        "ma": {
+          "lowered": false,
+          "raised": true
+        },
+        "ni": {
+          "lowered": false,
+          "raised": true
+        },
+        "pa": true,
+        "re": {
+          "lowered": false,
+          "raised": true
+        },
+        "sa": true
+      },
+      "tuning": {
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        },
+        "pa": 1.4983070768766815,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "sa": 1
+      }
+    },
+    "sectionCatGrid": [
+      [
+        {
+          "Alap": {
+            "Alap": false,
+            "Alap-Jhala": false,
+            "Jor": false
+          },
+          "Comp.-section/Tempo": {
+            "Ati Drut": false,
+            "Ati Vilambit": false,
+            "Drut": false,
+            "Jhala": false,
+            "Madhya": false,
+            "Vilambit": false
+          },
+          "Composition Type": {
+            "Bandish": false,
+            "Bhajan": false,
+            "Dhrupad": false,
+            "Dhun": false,
+            "Ferozkhani Gat": false,
+            "Ghazal": false,
+            "Kirtan": false,
+            "Kriti": false,
+            "Masitkhani Gat": false,
+            "Qawwali": false,
+            "Razakhani Gat": false,
+            "Tappa": false,
+            "Thumri": false
+          },
+          "Improvisation": {
+            "Improvisation": false
+          },
+          "Other": {
+            "Other": false
+          },
+          "Pre-Chiz Alap": {
+            "Pre-Chiz Alap": false
+          },
+          "Tala": {
+            "Ektal": false,
+            "Rupak": false,
+            "Tintal": false
+          },
+          "Top Level": "None"
+        }
+      ]
+    ],
+    "title": "Contract Edit Fixture",
+    "trackTitles": [
+      ""
+    ]
+  },
+  "scenario": "edit",
+  "tolerance": {
+    "rel": 1e-9
+  }
+}
