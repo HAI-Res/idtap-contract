@@ -1,0 +1,106 @@
+{
+  "description": "Yaman just-intonation ratios (7) stored with a rule set that has gained komal re (8 pitches). RAGA-2 canonical: the stored ratios are NOT regenerated; the count mismatch makes stratifiedRatios fall back to `tuning`, which carries the stored just ratios for every present degree and the tuning's own value (12-TET here) for the new one.",
+  "expected": {
+    "fundamental": 240,
+    "ratiosPreserved": [
+      1,
+      1.125,
+      1.25,
+      1.40625,
+      1.5,
+      1.6875,
+      1.875
+    ],
+    "ruleSetNumPitches": 8,
+    "stratifiedRatios": [
+      1,
+      [
+        1.0594630943592953,
+        1.125
+      ],
+      [
+        1.189207115002721,
+        1.25
+      ],
+      [
+        1.3348398541700344,
+        1.40625
+      ],
+      1.5,
+      [
+        1.5874010519681994,
+        1.6875
+      ],
+      [
+        1.7817974362806785,
+        1.875
+      ]
+    ]
+  },
+  "name": "ruleset-mismatch-more-rules-than-ratios",
+  "ragaJson": {
+    "fundamental": 240,
+    "name": "Yaman",
+    "ratios": [
+      1,
+      1.125,
+      1.25,
+      1.40625,
+      1.5,
+      1.6875,
+      1.875
+    ],
+    "ruleSet": {
+      "dha": {
+        "lowered": false,
+        "raised": true
+      },
+      "ga": {
+        "lowered": false,
+        "raised": true
+      },
+      "ma": {
+        "lowered": false,
+        "raised": true
+      },
+      "ni": {
+        "lowered": false,
+        "raised": true
+      },
+      "pa": true,
+      "re": {
+        "lowered": true,
+        "raised": true
+      },
+      "sa": true
+    },
+    "tuning": {
+      "dha": {
+        "lowered": 1.5874010519681994,
+        "raised": 1.6875
+      },
+      "ga": {
+        "lowered": 1.189207115002721,
+        "raised": 1.25
+      },
+      "ma": {
+        "lowered": 1.3348398541700344,
+        "raised": 1.40625
+      },
+      "ni": {
+        "lowered": 1.7817974362806785,
+        "raised": 1.875
+      },
+      "pa": 1.5,
+      "re": {
+        "lowered": 1.0594630943592953,
+        "raised": 1.125
+      },
+      "sa": 1
+    }
+  },
+  "scenario": "stripped",
+  "tolerance": {
+    "rel": 1e-9
+  }
+}

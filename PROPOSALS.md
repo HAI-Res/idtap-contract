@@ -197,3 +197,54 @@ expressive timing across a tempo/start change. So Python can't faithfully *re-te
 an expressively-timed meter — it flattens it. Out of scope for the serialization
 contract; worth a follow-up if Python ever needs to re-tempo.
   - [ ] (later) Python: maintain/apply proportional offsets in set_tempo/set_start_time.
+
+
+## PROP-5 — Edit round-trip fixtures and the RAGA-2 mismatch cases (from the Swift port)
+
+**Proposal (2026-09-05):** add two fixture families so the three implementations agree not
+only on how a document loads but on what the editor's operations do to it.
+
+### Why
+- The Swift port (`idtap-swift`, `IDTAPCore`) reimplements the editor's model operations
+  (insert/delete trajectories, phrase divisions, drag dots) from `TranscriptionLayer.vue`.
+  Porting them exposed several places where the TypeScript's result depends on incidental
+  details (ULP-level rescaling in the Phrase constructor, articulation keys not re-keyed after
+  a duration change, `uniqueId`s minted on every load). Each was resolved with a documented
+  divergence in `idtap-swift/Sources/IDTAPCore/HANDOFF.md`. Without fixtures, the next port
+  (or the next refactor of the web) will resolve them differently.
+- RAGA-2 recorded the ratios/rule-set count mismatch as an open edge case with no fixture.
+  With PROP-1 the mismatch cannot arise from a save, but a hand-edited rule set or a stale
+  document still hits it, and the canonical decision ("preserve stored ratios; the guard
+  serves `tuning`") has never been pinned.
+
+### The `edit` entity
+A fixture is `pieceJson` (before, deterministic ids) + `operation` + `expected`
+observables (see `Fixtures/contract-proposals/README.md` for the shape). The eight proposed
+cases cover: delete → silence merge; silent/fixed insert carving; phrase division inside a
+silence (split at the exact time on both strings, chikari stays) and snapping to a trajectory
+end (second string split); division deletion merging both strings and re-basing chikari keys;
+an inner drag dot reshaping `durArray` and re-keying the krintin's hammer; an end drag dot
+moving the boundary with the next trajectory.
+
+Observables deliberately exclude created `uniqueId`s and the `startTime`/`num` bookkeeping
+(derived), so an implementation is free in how it mints ids and settles, and pinned in what
+the music becomes.
+
+### The RAGA-2 cases
+`ruleset-mismatch-more-rules-than-ratios` (Yaman just ratios, komal re added) and
+`ruleset-mismatch-fewer-rules-than-ratios` (pa removed). Expected: `ratiosPreserved` equals
+the stored ratios byte for byte; `stratifiedRatios` comes from `tuning`, which carries the
+stored just ratios for the degrees that had one and the tuning's own value for the new one.
+This is the "preserve" behaviour PROP-1 chose; the TS regeneration path (`setRatios`) would
+fail both.
+
+### Implementation checklist
+- [ ] Copy `edit/*.json`, `edit/index.json` to `fixtures/edit/`; `raga/*.json` into
+      `fixtures/raga/` and extend `fixtures/raga/index.json`.
+- [ ] `schemas/edit.schema.json` for the fixture shape (operation vocabulary above).
+- [ ] TS adapter: `Piece.fromJSON(pieceJson)` → the matching `TranscriptionLayer` operation
+      (they are component methods today; PROP-5 is also an argument for lifting them onto the
+      model, where the Swift port has them).
+- [ ] Python adapter: skip `edit` until the editor ops exist there; run the raga cases now.
+- [ ] `validate_fixtures.py`: `expected.durTot == sum(phrase durTots)`, `phraseStarts`
+      cumulative, every string spans its phrase.

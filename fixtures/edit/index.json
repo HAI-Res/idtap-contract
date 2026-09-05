@@ -1,0 +1,45 @@
+{
+  "entity": "edit",
+  "fixtures": [
+    {
+      "description": "deleteTrajs on the bend (track 0, phrase 0, main string, index 0): it becomes silence of the same length and merges with the silence after it.",
+      "name": "delete-trajectory-merges-silence",
+      "scenario": "edit"
+    },
+    {
+      "description": "insertSilentTrajLeft on the bend with the default 0.1 s: 0.1 s of silence before it, the bend 0.9 s, the piece unchanged in length.",
+      "name": "insert-silent-left-carves-the-start",
+      "scenario": "edit"
+    },
+    {
+      "description": "insertFixedTrajRight on the bend: a 0.1 s fixed trajectory on P follows it with no articulations; the bend keeps its pluck.",
+      "name": "insert-fixed-right-takes-the-last-pitch",
+      "scenario": "edit"
+    },
+    {
+      "description": "insertNewPhraseDiv at 1.2 s, inside phrase 0's silence: the silence splits at the exact time on both strings, chikari at 1.0 stays with phrase 0, the new phrase is not a section start.",
+      "name": "phrase-division-inside-silence",
+      "scenario": "edit"
+    },
+    {
+      "description": "insertNewPhraseDiv at 3.9 s inside phrase 1's fixed S: snaps to the nearer trajectory end (4.0); the second string's S' (3-5) is split 1 s / 1 s.",
+      "name": "phrase-division-snaps-to-trajectory-end",
+      "scenario": "edit"
+    },
+    {
+      "description": "deletePhraseDiv of phrase 1: its trajectories append to phrase 0 on both strings; the chikari keys are re-based by phrase 0's duration.",
+      "name": "delete-phrase-division-merges",
+      "scenario": "edit"
+    },
+    {
+      "description": "dragDot on the krintin's inner dot (dot 1 of phrase 1 trajectory 0) from 3.2 s to 3.5 s at G: durArray becomes [0.5, 0.5], the hammer-off re-keys to '0.5', pitch 1 becomes G.",
+      "name": "drag-dot-inner-reshapes-durarray",
+      "scenario": "edit"
+    },
+    {
+      "description": "dragDot on the krintin's last dot from 4.0 s to 4.3 s: the krintin grows to 1.3 s (last segment absorbs it), the fixed S shrinks to 0.7 s, the phrase keeps 2 s.",
+      "name": "drag-dot-end-moves-the-boundary",
+      "scenario": "edit"
+    }
+  ]
+}
