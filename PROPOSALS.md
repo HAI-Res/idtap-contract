@@ -231,6 +231,10 @@ Observables deliberately exclude created `uniqueId`s and the `startTime`/`num` b
 the music becomes.
 
 ### The RAGA-2 cases
+These live under `fixtures/raga-ruleset-mismatch/` (their own entity) because the self-check's
+canonical raga rule regenerates ratios positionally and would index past the stored list on
+exactly the mismatch these fixtures pin; the validator needs a PROP-1-aware rule before they
+can join `fixtures/raga/`.
 `ruleset-mismatch-more-rules-than-ratios` (Yaman just ratios, komal re added) and
 `ruleset-mismatch-fewer-rules-than-ratios` (pa removed). Expected: `ratiosPreserved` equals
 the stored ratios byte for byte; `stratifiedRatios` comes from `tuning`, which carries the

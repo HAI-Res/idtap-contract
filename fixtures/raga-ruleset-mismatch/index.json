@@ -1,0 +1,15 @@
+{
+  "entity": "raga",
+  "fixtures": [
+    {
+      "description": "Yaman just-intonation ratios (7) stored with a rule set that has gained komal re (8 pitches). RAGA-2 canonical: the stored ratios are NOT regenerated; the count mismatch makes stratifiedRatios fall back to `tuning`, which carries the stored just ratios for every present degree and the tuning's own value (12-TET here) for the new one.",
+      "name": "ruleset-mismatch-more-rules-than-ratios",
+      "scenario": "stripped"
+    },
+    {
+      "description": "Yaman just-intonation ratios (7) stored with a rule set that lost pa (6 pitches). Count mismatch: stratifiedRatios comes from `tuning`; pa's tuning is still served (a pitch that says swara 4 keeps its frequency) even though the rule set no longer lists it.",
+      "name": "ruleset-mismatch-fewer-rules-than-ratios",
+      "scenario": "stripped"
+    }
+  ]
+}
