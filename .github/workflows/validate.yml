@@ -1,0 +1,34 @@
+name: Validate fixtures
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Self-check: every fixture's `expected` re-derives from the canonical
+      # rule, and contract.json's version matches the runner's CONTRACT_VERSION.
+      - name: Run conformance self-check
+        run: python3 conformance/validate_fixtures.py
+
+      # Schema sanity: every schema parses and compiles under Draft 2020-12.
+      - name: Compile schemas
+        run: |
+          pip install -q jsonschema
+          python3 - <<'PY'
+          import glob, json, jsonschema
+          for p in sorted(glob.glob("schemas/*.schema.json")):
+              jsonschema.Draft202012Validator.check_schema(json.load(open(p)))
+              print("ok", p)
+          PY
