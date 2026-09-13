@@ -197,3 +197,168 @@ expressive timing across a tempo/start change. So Python can't faithfully *re-te
 an expressively-timed meter — it flattens it. Out of scope for the serialization
 contract; worth a follow-up if Python ever needs to re-tempo.
   - [ ] (later) Python: maintain/apply proportional offsets in set_tempo/set_start_time.
+
+---
+
+## PROP-6 — Vibrato v2: rate in Hz, extent ramp, continuous phase (id 13 stays)
+
+**Decision (Jon, 2026-09-12):** update the vibrato spec. Every stored vibrato is
+translated; the web editor's vibrato panel is rebuilt. Evidence and reasoning are in
+the lab journal (`autotranscribe-synth-loss` thread, ATS-17 → ATS-19) and in
+`autotranscribe-synth-loss:feat/vibrato-articulation → VIBRATO.md`. Status: **APPROVED by
+Jon 2026-09-13, implementation starting** (branches `vibrato-v2` in idtap-client,
+idtap-contract, idtap-platform, then idtap-swift). This section is the spec and the plan. (Numbered PROP-5 until 2026-09-13; renumbered because PROP-5 already exists on branch `prop5/edit-and-ruleset-fixtures`.)
+
+### Why
+- **`periods` is the wrong parameter.** It is an integer count over the whole
+  trajectory, so the achievable rate is quantised to multiples of `1/durTot` Hz: on a
+  0.5 s ornament that is 2 Hz steps, a worst-case ±25 % rate error (ATS-17, 30 of 32
+  measured runs). It also couples rate to duration: stretching a note slows its vibrato.
+- **Real vibrato blooms.** On Begum Akhtar's Babul Mora (37.2–39.3 s) the extent grows
+  from ~0 to ~40 c over two seconds; Jon's ear picked the drifting-extent render over
+  the rigid one. A linear extent ramp captures nearly all of that gain.
+- **The centre does not need to move.** Measured (ATS-19): median carrier drift under a
+  vibrato is 10–17 c, 90th percentile under 45 c, on two pieces. So vibrato stays a
+  fixed-centre type — id 13 keeps its meaning and no trajectory renumbering is needed.
+- **Machine transcriptions need a target.** The autotranscriber's vibrato token is
+  {centre, rate, start extent, end extent, phase}; v2 makes export exact instead of
+  falling back to a cosine chain.
+
+### The v2 `vibObj`
+Wire keys, camelCase (Python: snake_case via humps, as today):
+
+| key | type | units | meaning |
+|---|---|---|---|
+| `rate` | number > 0 | Hz | oscillation rate, independent of `durTot` |
+| `extentStart` | number ≥ 0 | log2 (as `extent` today) | peak-to-peak excursion at x = 0 |
+| `extentEnd` | number ≥ 0 | log2 | peak-to-peak excursion at x = 1; linear in x between |
+| `vertOffset` | number | log2 | centre offset from `logFreqs[0]`, unchanged from v1 |
+| `phase` | number | radians, [0, 2π) | phase at x = 0; v1 `initUp` becomes 0 or π |
+
+`additionalProperties: false`. Units stay log2 on the wire because `vertOffset` and
+`logFreqs` are log2; the UI displays cents (1 log2 = 1200 c; today's default 0.05 = 60 c).
+
+### The curve (normative)
+With `P = rate · durTot` (cycles over the trajectory, not necessarily an integer) and
+`A(x) = (extentStart + (extentEnd − extentStart)·x) / 2`:
+
+```
+core(x) = logFreqs[0] + clamp(vertOffset, ±A(x)) + A(x) · cos(2π·P·x + phase)
+```
+
+**Ends: the curve always attaches at an extreme.** A trajectory must start and end on
+its notated pitch, because that is how trajectories chain. v1 achieved this by
+rescaling the first and last half-period, which silently relied on `phase ∈ {0, π}`
+putting an extreme exactly at x = 0. With continuous phase the rule is stated on the
+oscillation itself:
+
+- `x₁` = the first extreme of the cosine (crest or trough) with `x₁ ≥ 1/(4P)`, i.e. at
+  least a quarter period in. `x₂` = the last extreme with `x₂ ≤ 1 − 1/(4P)`.
+- For `x ≤ x₁`: raised cosine from `logFreqs[0]` at x = 0 to `core(x₁)` at `x₁`:
+  `y = logFreqs[0] + (core(x₁) − logFreqs[0]) · (1 − cos(π·x/x₁)) / 2`.
+- For `x₁ ≤ x ≤ x₂`: `y = core(x)`.
+- For `x ≥ x₂`: raised cosine from `core(x₂)` back to `logFreqs[0]` at x = 1.
+
+Both joins are at points where the oscillation has zero slope, and the raised cosine
+has zero slope at both of its ends, so the attach is smooth (C¹) for every phase: the
+note sits on its pitch, swings out to the first extreme, oscillates, and comes home from
+the last. The attack lasts between a quarter and three-quarters of a period depending on
+phase. For `phase ∈ {0, π}` the first extreme after a quarter period is exactly at the
+half-period, and the raised cosine over `[0, 1/(2P)]` is term-for-term the v1 rescaled
+cosine — which is what keeps the heal lossless. If `P < 1` (fewer than one cycle),
+compute with `P = 1` (not stored). If `x₂ ≤ x₁` (very short trajectory), the middle
+section is empty and the two tapers meet at the single extreme. Return `2 ** y(x)` in Hz.
+
+### Heal (v1 → v2), lossless
+Detect v1 by the presence of `periods`. Then:
+```
+rate        = periods / durTot
+extentStart = extentEnd = extent
+vertOffset  = vertOffset
+phase       = initUp ? π : 0
+```
+Real stored data carries the v1 fields as **strings** as often as numbers (the old slider
+had no `.number` modifier; Babul Mora has `{periods: '3.5', extent: '0.055'}`), and
+`periods` is frequently non-integer. The heal coerces all four fields with `Number()` and
+uses the stored `periods` as-is. A migrated vibrato renders byte-identically (golden-test
+this; the TS reference golden is `idtap-platform/src/ts/tests/fixtures/vibrato-v2-golden.json`). Python's `int(periods)`
+truncation and Swift's `Double` already disagree on non-integer v1 periods; the heal
+uses the stored number as-is, so whichever value was stored is what migrates.
+Behavioural change to state plainly: after migration, **changing `durTot` keeps the
+rate and changes the cycle count**, where v1 kept the count and changed the rate.
+
+### Canonical form (PROP-6b, separable)
+`vibObj` is emitted **only when `id === 13`**. Today all three implementations write a
+default `{periods: 8, …}` on every trajectory of every type, so presence carries no
+information and the DB carries thousands of meaningless copies. Loaders accept a
+`vibObj` on any id and ignore it. This is the same stripping philosophy as PR #887.
+Kept separable because it changes the wire shape of every trajectory and trips the
+encode-stability tests; do it in the same release or not at all.
+
+### Editor UI (web, then Swift)
+- **Rate** slider, 1–12 Hz, step 0.1, default 5.5. Replaces Periods.
+- **Extent** in cents, 0–200, step 1, default 60. A **Ramp** toggle exposes a second
+  slider for the end extent; off means `extentEnd = extentStart`.
+- **Offset** slider unchanged in behaviour; fix the existing bug where the fractional
+  slider is written back with the absolute `vertOffset` (TS `TrajSelectPanel.vue:692`,
+  `EditorComponent.vue:2009`), and the two read-only sliders bound to `periods`.
+- **Starts upward** checkbox stays and writes `phase = π` / `0`. A continuous phase
+  control is not exposed; the wire allows it for machine transcriptions.
+- Help text and keyboard table (`EditorInstructions.vue`) updated; thumbnail unchanged.
+- Web Audio envelopes sample at 50 Hz, adequate to 12 Hz.
+
+### Rollout order (hard constraint first)
+1. **Python client tolerant read, released first.** `idtap` ≤ 0.1.54 raises
+   `ValueError` on any unknown `vib_obj` key, so a v2 document crashes every installed
+   client. Ship a release that accepts v1 and v2 (heal v1 on load, write v2), then gate
+   the rest on it being installed where it matters (cluster, Jon's machine).
+2. **Contract:** this PROP; `schemas/trajectory.schema.json` `vibObj` sub-schema (v2
+   strict, v1 accepted as LEGACY); fixtures under `fixtures/trajectory/`:
+   `vib-v1-legacy-heals`, `vib-v2-equals-v1-golden` (the lossless proof: 21 sample
+   points), `vib-v2-ramp`, `vib-v2-noninteger-cycles`; regenerate `index.json`; bump
+   `contract.json` version to 0.2.0 and finally add the version assertion README:114
+   promises. `tools/generate_trajectory_fixtures.py` gets the v2 formula.
+3. **TypeScript (reference implementation):** `trajectory.ts` `id13` → v2 formula,
+   constructor default, `fromJSON` heal, `toJSON`; `shared/types.ts` `VibObjType`;
+   rewrite the mirror test at `trajectory.test.ts:113-146`; fixture
+   `serialization_test.json` (one id 13, 34 default vibObjs); `Piece.fromJSON` needs no
+   change (heal is per trajectory). Then the editor panel (above). Mirror in the
+   duplicate model `src/js/classes.ts` and rebuild `server/extract.js`. Server: no
+   validation exists, nothing to change; add `vibObj` handling to nothing.
+4. **Swift:** regenerate `Tests/IDTAPCoreTests/Golden/TrajectoryGolden.swift` from the
+   updated TS via `scripts/gen-trajectory-golden.ts` (Swift is downstream of TS);
+   `VibratoObject` → v2 with v1 heal in `fromJSON`; `MixPanel.swift` vibrato controls;
+   `DocumentSession.swift` defaults.
+5. **Stored data:** house style is lazy heal-on-load + write-v2-on-save, which needs no
+   DB script and heals every piece the first time anyone opens it. Optionally run a
+   one-off `database_tools/*.js` `updateMany` (precedent: `updateTranscriptionFormat.js`)
+   once steps 1–4 are deployed, so analysis queries over unopened pieces see v2 too.
+   Size it first: there is no aggregation endpoint, so count id-13 trajectories by
+   iterating `get_viewable_transcriptions()` → `get_piece()` from Jon's machine.
+6. **autotranscribe-synth-loss:** `export_idtap.py` maps the vibrato token straight to
+   v2 (`rate`, `extentStart/End`, `phase`); the cosine-chain fallback stays only for runs
+   the collapse move rejected. `decompose_trajectory` in the Python client gains the v2
+   branch (still exact: one cosine per half-period between consecutive extremes).
+
+### Things that must not be forgotten
+- Three TS code paths rebuild a trajectory from a hand-written field list and already
+  drop `vibObj` (`TranscriptionLayer.vue:5784, 7312, 7416`, and `insertFixedTraj*`).
+  Switch them to `toJSON()`-based copies or the migrated field is lost on phrase splits.
+- Saved analysis queries persist numeric trajectory ids; untouched because 13 stays.
+- `durationsOfFixedPitches` and the drag-dot "fixed-like" rules already treat 13 as
+  fixed; unchanged.
+- Web picker's index-collapse hack around id 12/13 is untouched by this PROP; it is a
+  separate cleanup.
+
+### Resolved (Jon, 2026-09-13)
+- **Extent units on the wire: log2.** UI displays cents.
+- **PROP-6b ships in the same release.** `vibObj` is written only for id 13. In-memory
+  objects keep the constructor default on every id, so retyping 0 ↔ 13 is unaffected;
+  the one behavioural change is that a tuned vibrato no longer survives being retyped to
+  fixed, saved, and retyped back.
+- **Rate is bounded only in the UI, 1–12 Hz.** The wire requires `rate > 0` and nothing
+  more, as `periods > 0` today. Musical bounds for the machine transcriber's token stay
+  in autotranscribe-synth-loss. Rationale for 1–12: measured vibrato here is 3.3–7.3 Hz
+  and the token uses 3–9; below ~1 Hz a sub-second note holds less than a cycle and reads
+  as a bend; above ~12 Hz it is trill or buzz, and the 50 Hz Web Audio pitch envelope
+  cannot render past 25 Hz anyway.
