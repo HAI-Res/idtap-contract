@@ -2,40 +2,247 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://idtap.swara.studio/schemas/trajectory.schema.json",
   "title": "Trajectory",
-  "description": "Serialized form of a Trajectory (a continuous melodic gesture). CANONICAL form omits `name` (derived from `id`), `instrumentation` (inherited from the piece), and `tags` (defaults []). Those may appear only in LEGACY data. On load, (ratios, fundamental) from the raga context are threaded into every nested Pitch.",
+  "description": "Serialized form of a Trajectory (a continuous melodic gesture). CANONICAL form omits `name` (derived from `id`), `instrumentation` (inherited from the piece), and `tags` (defaults []). Those may appear only in LEGACY data. On load, (ratios, fundamental) from the raga context are threaded into every nested Pitch. `vibObj` (PROP-6): canonical form emits it ONLY when id == 13 (Vibrato) and always in the v2 shape {rate, extentStart, extentEnd, vertOffset, phase}; the LEGACY v1 shape {periods, vertOffset, initUp, extent} is accepted on load and healed losslessly (rate = periods/durTot, extentStart = extentEnd = extent, phase = initUp ? pi : 0). Loaders accept a vibObj on any id and ignore it when id != 13.",
   "type": "object",
-  "required": ["id", "pitches", "durTot"],
+  "required": [
+    "id",
+    "pitches",
+    "durTot"
+  ],
   "additionalProperties": false,
   "properties": {
-    "id": { "description": "Trajectory type 0-13 (0=Fixed, 1=Bend:Simple, … 13=Vibrato). `name` is names[id].", "type": "integer", "minimum": 0, "maximum": 13 },
-    "pitches": { "type": "array", "items": { "$ref": "pitch.schema.json" } },
-    "durTot": { "type": "number" },
-    "durArray": { "type": ["array", "null"], "items": { "type": "number" } },
-    "slope": { "type": "number" },
+    "id": {
+      "description": "Trajectory type 0-13 (0=Fixed, 1=Bend:Simple, … 13=Vibrato). `name` is names[id].",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 13
+    },
+    "pitches": {
+      "type": "array",
+      "items": {
+        "$ref": "pitch.schema.json"
+      }
+    },
+    "durTot": {
+      "type": "number"
+    },
+    "durArray": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "number"
+      }
+    },
+    "slope": {
+      "type": "number"
+    },
     "articulations": {
       "description": "Map of position-key -> Articulation.",
       "type": "object",
-      "additionalProperties": { "$ref": "articulation.schema.json" }
+      "additionalProperties": {
+        "$ref": "articulation.schema.json"
+      }
     },
-    "startTime": { "type": ["number", "null"] },
-    "num": { "type": ["integer", "null"] },
-    "fundID12": { "type": ["number", "null"] },
-    "vibObj": { "description": "Vibrato parameters (schema TODO).", "type": "object" },
-    "vowel": { "type": ["string", "null"] },
-    "startConsonant": { "type": ["string", "null"] },
-    "startConsonantHindi": { "type": ["string", "null"] },
-    "startConsonantIpa": { "type": ["string", "null"] },
-    "startConsonantEngTrans": { "type": ["string", "null"] },
-    "endConsonant": { "type": ["string", "null"] },
-    "endConsonantHindi": { "type": ["string", "null"] },
-    "endConsonantIpa": { "type": ["string", "null"] },
-    "endConsonantEngTrans": { "type": ["string", "null"] },
-    "groupId": { "type": ["string", "null"] },
-    "automation": { "description": "Automation curve or null.", "anyOf": [ { "$ref": "automation.schema.json" }, { "type": "null" } ] },
-    "uniqueId": { "type": ["string", "null"] },
-
-    "name": { "description": "LEGACY ONLY — derived from id in canonical form.", "deprecated": true, "type": "string" },
-    "instrumentation": { "description": "LEGACY ONLY — inherited from piece.", "deprecated": true },
-    "tags": { "description": "LEGACY ONLY — defaults to [].", "deprecated": true, "type": "array" }
+    "startTime": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "num": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "fundID12": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "vibObj": {
+      "description": "Vibrato parameters (PROP-6). CANONICAL: present only when id == 13, v2 shape. LEGACY: v1 shape accepted on any load and healed.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/vibObjV2"
+        },
+        {
+          "$ref": "#/$defs/vibObjV1"
+        }
+      ]
+    },
+    "vowel": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startConsonant": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startConsonantHindi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startConsonantIpa": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startConsonantEngTrans": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endConsonant": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endConsonantHindi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endConsonantIpa": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "endConsonantEngTrans": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "groupId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "automation": {
+      "description": "Automation curve or null.",
+      "anyOf": [
+        {
+          "$ref": "automation.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "uniqueId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "description": "LEGACY ONLY — derived from id in canonical form.",
+      "deprecated": true,
+      "type": "string"
+    },
+    "instrumentation": {
+      "description": "LEGACY ONLY — inherited from piece.",
+      "deprecated": true
+    },
+    "tags": {
+      "description": "LEGACY ONLY — defaults to [].",
+      "deprecated": true,
+      "type": "array"
+    }
+  },
+  "$defs": {
+    "vibObjV2": {
+      "title": "VibObj (v2, canonical)",
+      "description": "PROP-6 vibrato parameters. Units are log2 (1 log2 = 1200 cents) except rate (Hz) and phase (radians). The curve is normative in PROPOSALS.md PROP-6: with P = rate*durTot (computed with P = 1 when P < 1) and A(x) = (extentStart + (extentEnd - extentStart)*x)/2, core(x) = logFreqs[0] + clamp(vertOffset, +-A(x)) + A(x)*cos(2*pi*P*x + phase); raised-cosine tapers attach the curve to logFreqs[0] at x = 0 and x = 1 via the first/last cosine extreme at least a quarter period in from each end.",
+      "type": "object",
+      "required": [
+        "rate",
+        "extentStart",
+        "extentEnd",
+        "vertOffset",
+        "phase"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rate": {
+          "description": "Oscillation rate in Hz, independent of durTot. Bounded only in the UI (1-12 Hz).",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "extentStart": {
+          "description": "Peak-to-peak excursion (log2) at x = 0.",
+          "type": "number",
+          "minimum": 0
+        },
+        "extentEnd": {
+          "description": "Peak-to-peak excursion (log2) at x = 1; linear in x between.",
+          "type": "number",
+          "minimum": 0
+        },
+        "vertOffset": {
+          "description": "Centre offset (log2) from logFreqs[0]; clamped to +-A(x) when rendering.",
+          "type": "number"
+        },
+        "phase": {
+          "description": "Phase at x = 0 in radians; the UI writes 0 or pi (v1 initUp).",
+          "type": "number"
+        }
+      }
+    },
+    "vibObjV1": {
+      "title": "VibObj (v1, LEGACY ONLY)",
+      "description": "LEGACY ONLY — pre-PROP-6 shape, detected by the presence of `periods`. Healed on load: rate = periods/durTot, extentStart = extentEnd = extent, vertOffset unchanged, phase = initUp ? pi : 0. Real stored data carries periods/extent/vertOffset as STRINGS as often as numbers (the old sliders had no .number modifier) and periods is frequently non-integer; loaders coerce with Number() and use the stored value as-is. Never emitted in canonical form.",
+      "deprecated": true,
+      "type": "object",
+      "required": [
+        "periods",
+        "vertOffset",
+        "initUp",
+        "extent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "periods": {
+          "description": "Cycle count over the whole trajectory (v1 quantised the rate to multiples of 1/durTot).",
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "vertOffset": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "initUp": {
+          "description": "true -> phase pi (starts upward), false -> phase 0.",
+          "type": "boolean"
+        },
+        "extent": {
+          "description": "Peak-to-peak excursion (log2), constant over the trajectory.",
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      }
+    }
   }
 }

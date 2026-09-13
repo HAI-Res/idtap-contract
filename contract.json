@@ -1,6 +1,15 @@
 {
   "name": "idtap-contract",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "versionPolicy": {
+    "assert": "Each implementation keeps a constant CONTRACT_VERSION and asserts it equals contract.json `version` in its conformance suite (see README 'Versioning').",
+    "minor": "bumped when wire semantics change (a client built against an older minor must not load newer data without the matching heal); clients assert exact match.",
+    "patch": "reserved for fixture/doc additions that change no semantics.",
+    "changelog": {
+      "0.2.0": "PROP-6 vibrato v2: vibObj is {rate, extentStart, extentEnd, vertOffset, phase}; v1 {periods, vertOffset, initUp, extent} accepted as LEGACY and healed losslessly; canonical form emits vibObj only when id == 13 (PROP-6b).",
+      "0.1.0": "initial contract: PROP-1 ruleSet, PROP-2 dates/collections, PROP-3 chikari; 10 entities."
+    }
+  },
   "description": "Language-neutral serialization contract (JSON Schemas + golden fixtures) for the IDTAP data model, shared by idtap (TS) and idtap-api (Python).",
   "entities": {
     "pitch": {
@@ -18,7 +27,7 @@
       "schema": "schemas/trajectory.schema.json",
       "fixtures": "fixtures/trajectory/",
       "status": "complete",
-      "notes": "Articulation/Automation/vibObj sub-schemas still TODO"
+      "notes": "vibObj sub-schema done (PROP-6 v2 + LEGACY v1); Articulation/Automation are $ref'd to their own schemas"
     },
     "phrase": {
       "schema": "schemas/phrase.schema.json",
@@ -65,6 +74,6 @@
   },
   "roadmap": [],
   "divergences": "DIVERGENCES.md",
-  "status": "model complete \u2014 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes",
+  "status": "model complete — 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes",
   "proposals": "PROPOSALS.md"
 }
