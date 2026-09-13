@@ -1,0 +1,128 @@
+{
+  "name": "vib-v2-noninteger-cycles",
+  "description": "v2 with a non-integer cycle count (P = 3.7 Hz * 0.55 s = 2.035) and an arbitrary phase (1.3 rad): x1 is the first cosine extreme >= 1/(4P), x2 the last <= 1 - 1/(4P); raised-cosine tapers on [0, x1] and [x2, 1] attach the curve to logFreqs[0]. Sample points cover both tapers (PROP-6).",
+  "scenario": "stripped",
+  "trajectoryJson": {
+    "id": 13,
+    "pitches": [
+      {
+        "swara": 4,
+        "raised": true,
+        "oct": -1,
+        "logOffset": 0.0
+      }
+    ],
+    "durTot": 0.55,
+    "durArray": [
+      1.0
+    ],
+    "slope": 2.0,
+    "num": 0,
+    "uniqueId": "fixture-vib-v2-noninteger-cycles",
+    "vibObj": {
+      "rate": 3.7,
+      "extentStart": 0.06,
+      "extentEnd": 0.03,
+      "vertOffset": -0.005,
+      "phase": 1.3
+    }
+  },
+  "context": {
+    "ratios": [
+      1,
+      [
+        1.0594630943592953,
+        1.122462048309373
+      ],
+      [
+        1.189207115002721,
+        1.2599210498948732
+      ],
+      [
+        1.3348398541700344,
+        1.4142135623730951
+      ],
+      1.4983070768766815,
+      [
+        1.5874010519681994,
+        1.681792830507429
+      ],
+      [
+        1.7817974362806785,
+        1.8877486253633868
+      ]
+    ],
+    "fundamental": 246.0
+  },
+  "expected": {
+    "id": 13,
+    "durTot": 0.55,
+    "derivedName": "Vibrato",
+    "tagsDefault": [],
+    "pitchFrequencies": [
+      184.29177045583182
+    ],
+    "vibObjInCanonical": true,
+    "vibObj": {
+      "rate": 3.7,
+      "extentStart": 0.06,
+      "extentEnd": 0.03,
+      "vertOffset": -0.005,
+      "phase": 1.3
+    },
+    "curveX": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "curveFrequencies": [
+      184.2917704558318,
+      183.166650377026,
+      181.02133332478863,
+      180.1654644950928,
+      181.07857841558163,
+      182.9399663712441,
+      184.99302403030592,
+      186.42771585550778,
+      186.70816023591874,
+      185.78997831867602,
+      184.11344431054476,
+      182.38377760504846,
+      181.26618632283308,
+      181.07951344476325,
+      181.30818378465204,
+      181.78602563308135,
+      182.42721938848027,
+      183.11559389400225,
+      183.7251389028939,
+      184.14316053850015,
+      184.2917704558318
+    ],
+    "attach": {
+      "P": 2.035,
+      "x1": 0.1440287832828187,
+      "x2": 0.6354292746833101
+    }
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

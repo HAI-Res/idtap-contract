@@ -15,6 +15,13 @@ import json, math, os, sys, glob
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIX = os.path.join(HERE, "..", "fixtures")
+CONTRACT = os.path.join(HERE, "..", "contract.json")
+
+# The contract version this runner was written against. Each implementation
+# repo keeps the same kind of constant (see README "Versioning") and asserts it
+# against contract.json in its conformance suite, so a bump that changes wire
+# semantics fails CI in every client until the client is updated.
+CONTRACT_VERSION = "0.2.0"
 
 SARGAM = ["sa", "re", "ga", "ma", "pa", "dha", "ni"]
 YAMAN_RULESET = {
@@ -96,19 +103,89 @@ def check_raga(fx):
 
 
 # --------------------------------------------------------------------------- trajectory
+def clamp_offset(vert_offset, half_extent):
+    if abs(vert_offset) > half_extent:
+        return math.copysign(half_extent, vert_offset)
+    return vert_offset
+
+
+def heal_vib_obj(vib, dur_tot):
+    """PROP-6 lossless v1 -> v2 heal: v1 is detected by `periods`; the four v1
+    fields are coerced with Number() (stored strings are common) and `periods` is
+    used as stored, no truncation."""
+    if "periods" not in vib:
+        return dict(vib)
+    extent = float(vib["extent"])
+    return {"rate": float(vib["periods"]) / dur_tot,
+            "extentStart": extent, "extentEnd": extent,
+            "vertOffset": float(vib["vertOffset"]),
+            "phase": math.pi if vib["initUp"] else 0.0}
+
+
+def vibrato_v2_attach(vib, dur_tot):
+    """PROP-6 attach-at-extreme rule: P = rate*durTot (P = 1 when P < 1);
+    extremes of cos(2 pi P x + phase) sit at x = (k - phase/pi) / (2P); x1 is the
+    first with x1 >= 1/(4P), x2 the last with x2 <= 1 - 1/(4P); if x2 < x1 the two
+    tapers meet at x1."""
+    P = vib["rate"] * dur_tot
+    if not (P >= 1):
+        P = 1.0
+    ph = vib["phase"] / math.pi
+    x1 = (math.ceil(0.5 + ph) - ph) / (2 * P)
+    x2 = (math.floor(2 * P - 0.5 + ph) - ph) / (2 * P)
+    return P, x1, max(x1, x2)
+
+
+def vibrato_v2(x, lf0, vib, dur_tot):
+    """PROP-6 normative vibrato curve; returns Hz."""
+    P, x1, x2 = vibrato_v2_attach(vib, dur_tot)
+
+    def core(xx):
+        A = (vib["extentStart"] + (vib["extentEnd"] - vib["extentStart"]) * xx) / 2
+        return lf0 + clamp_offset(vib["vertOffset"], A) + A * math.cos(2 * math.pi * P * xx + vib["phase"])
+
+    if x <= x1:
+        y = lf0 + (core(x1) - lf0) * (1 - math.cos(math.pi * x / x1)) / 2
+    elif x >= x2:
+        s = core(x2)
+        y = s + (lf0 - s) * (1 - math.cos(math.pi * (x - x2) / (1 - x2))) / 2
+    else:
+        y = core(x)
+    return 2 ** y
+
+
 def check_trajectory(fx):
     ctx = fx.get("context") or {}
     tj = fx["trajectoryJson"]
+    exp = fx["expected"]
     rel = fx.get("tolerance", {}).get("rel", 1e-9)
     got = []
     for p in tj["pitches"]:
         ratios = ctx.get("ratios", p.get("ratios"))
         fundamental = ctx.get("fundamental", p.get("fundamental"))
         got.append(pitch_frequency(p, ratios, fundamental))
-    want = fx["expected"]["pitchFrequencies"]
+    want = exp["pitchFrequencies"]
     ok = len(got) == len(want) and all(close(a, b, rel) for a, b in zip(got, want))
-    ok = ok and tj["id"] == fx["expected"]["id"]
-    return ok, f"freqs={[round(x, 2) for x in got]}"
+    ok = ok and tj["id"] == exp["id"]
+    info = f"freqs={[round(x, 2) for x in got]}"
+    if "vibObj" not in tj:
+        return ok, info
+    # PROP-6b: canonical output carries vibObj only on id 13.
+    ok = ok and exp["vibObjInCanonical"] == (tj["id"] == 13)
+    if tj["id"] != 13:
+        return ok, info + " vibObj ignored (id != 13)"
+    # PROP-6: heal to v2, then re-derive the curve at the fixture's sample points.
+    vib = heal_vib_obj(tj["vibObj"], tj["durTot"])
+    ok = ok and set(vib) == {"rate", "extentStart", "extentEnd", "vertOffset", "phase"}
+    ok = ok and all(close(vib[k], exp["vibObj"][k], rel) for k in vib)
+    lf0 = math.log2(got[0])
+    curve = [vibrato_v2(x, lf0, vib, tj["durTot"]) for x in exp["curveX"]]
+    ok = ok and len(curve) == len(exp["curveFrequencies"]) and all(
+        close(a, b, rel) for a, b in zip(curve, exp["curveFrequencies"]))
+    P, x1, x2 = vibrato_v2_attach(vib, tj["durTot"])
+    att = exp.get("attach", {})
+    ok = ok and all(close(a, att[k], rel) for k, a in (("P", P), ("x1", x1), ("x2", x2)))
+    return ok, info + f" rate={vib['rate']:.3f}Hz P={P:.3f} x1={x1:.3f} x2={x2:.3f} curve[{len(curve)}] ok"
 
 
 # --------------------------------------------------------------------------- phrase
@@ -197,8 +274,19 @@ CHECKERS = {"pitch": check_pitch, "raga": check_raga,
             "meter": check_meter}
 
 
+def check_contract_version():
+    """The version assertion every client must mirror: contract.json `version`
+    must equal the constant this runner was written against."""
+    version = json.load(open(CONTRACT))["version"]
+    ok = version == CONTRACT_VERSION
+    print(f"== contract ==\n  {'PASS' if ok else 'FAIL'}  version {version} (expected {CONTRACT_VERSION})")
+    return ok
+
+
 def main():
     total = fails = 0
+    total += 1
+    fails += 0 if check_contract_version() else 1
     for entity, checker in CHECKERS.items():
         files = sorted(glob.glob(os.path.join(FIX, entity, "*.json")))
         files = [f for f in files if not f.endswith("index.json")]
