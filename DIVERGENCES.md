@@ -285,6 +285,19 @@ Original divergence below for history.
   v1 `periods` was already wrong relative to the web app; after the heal all three
   agree with what the web app played.
 
+## VIB-2 🟢 Python client reader leniencies beyond the schema (documented, intentional)
+
+The schema is strict; the Python reader (`idtap` ≥ the PROP-6 release) is lenient in
+two places, by design:
+- **(a) `vibObj` on `id != 13`:** an invalid vibObj **warns and falls back to the
+  default** rather than raising (the field is ignored on non-13 ids anyway, PROP-6b).
+- **(b) missing v2 keys on read take defaults** (e.g. a `vibObj` lacking `phase` loads
+  with `phase = pi`). Canonical output is always complete and schema-valid; only the
+  reader is tolerant.
+- **Fixed in the same change:** Python's old `to_json` emitted the inner vibObj keys in
+  **snake_case** (`vert_offset`, `init_up`); it now emits camelCase, matching TS and
+  the schema.
+
 ---
 
 ## Resolution workflow

@@ -338,7 +338,11 @@ encode-stability tests; do it in the same release or not at all.
 6. **autotranscribe-synth-loss:** `export_idtap.py` maps the vibrato token straight to
    v2 (`rate`, `extentStart/End`, `phase`); the cosine-chain fallback stays only for runs
    the collapse move rejected. `decompose_trajectory` in the Python client gains the v2
-   branch (still exact: one cosine per half-period between consecutive extremes).
+   branch: one cosine per half-period between consecutive extremes. This is exact
+   only when `extentStart == extentEnd` (so for every healed v1 vibrato). With a ramp
+   the chunk endpoints sit on the curve but the interior differs by at most the ramp
+   increment over one half-period, because a half-cosine cannot carry a linearly
+   varying amplitude.
 
 ### Things that must not be forgotten
 - Three TS code paths rebuild a trajectory from a hand-written field list and already
