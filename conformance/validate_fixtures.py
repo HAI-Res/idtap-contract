@@ -285,8 +285,7 @@ def check_contract_version():
 
 def main():
     total = fails = 0
-    total += 1
-    fails += 0 if check_contract_version() else 1
+    version_ok = check_contract_version()
     for entity, checker in CHECKERS.items():
         files = sorted(glob.glob(os.path.join(FIX, entity, "*.json")))
         files = [f for f in files if not f.endswith("index.json")]
@@ -299,8 +298,9 @@ def main():
             total += 1
             fails += 0 if ok else 1
             print(f"  {'PASS' if ok else 'FAIL'}  {fx['name']}  {info}")
-    print(f"\n{total - fails}/{total} fixtures consistent")
-    sys.exit(1 if fails else 0)
+    print(f"\n{total - fails}/{total} fixtures consistent; contract version "
+          f"{'OK' if version_ok else 'MISMATCH'}")
+    sys.exit(1 if fails or not version_ok else 0)
 
 
 if __name__ == "__main__":

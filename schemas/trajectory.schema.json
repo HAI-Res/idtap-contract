@@ -65,7 +65,7 @@
     },
     "vibObj": {
       "description": "Vibrato parameters (PROP-6). CANONICAL: present only when id == 13, v2 shape. LEGACY: v1 shape accepted on any load and healed.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/$defs/vibObjV2"
         },
