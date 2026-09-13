@@ -270,6 +270,21 @@ Original divergence below for history.
 - **Contract handling:** frequency conformance compares MELODIC pitches only (excludes
   id-12 Silent trajectories) so it's robust to this on both sides.
 
+## VIB-1 🟡 v1 `vibObj.periods`: Python truncated, Swift kept a Double — RESOLVED → PROP-6
+
+- **Python** (`idtap` ≤ 0.1.54) `VibObj.from_json` did `int(periods)`; **Swift**
+  `VibratoObject` kept a `Double`; **TS** used the raw value (often a *string*, e.g.
+  Babul Mora `{periods: '3.5', extent: '0.055'}`, coerced by arithmetic). So a stored
+  non-integer `periods` rendered three different vibratos.
+- **Canonical (PROP-6):** the v1 → v2 heal uses the **stored value as-is** —
+  `rate = Number(periods) / durTot`, no truncation, no rounding — so whichever number
+  was stored is what migrates. Fixture `vib-v1-legacy-string-fields-heals`
+  (`periods: '3.5'`, `durTot: 0.474` → `rate = 7.3839…`) pins it; a client that
+  truncates gets `rate = 6.329…` and fails.
+- **Effect on old Python renders:** anything Python rendered from a non-integer
+  v1 `periods` was already wrong relative to the web app; after the heal all three
+  agree with what the web app played.
+
 ---
 
 ## Resolution workflow

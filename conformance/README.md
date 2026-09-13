@@ -78,3 +78,23 @@ fundamental = context.fundamental ?? pitchJson.fundamental  (legacy)
 - **stripped** fixtures: context is populated, json has no ratios/fundamental.
 - **legacy** fixtures: context is null, json embeds ratios/fundamental.
 - **mixed** (future): context populated AND json embeds — context must win.
+
+## Trajectory vibrato fixtures (PROP-6, contract 0.2.0)
+
+The `fixtures/trajectory/vib-*` and `canonical-omits-vibobj-for-non-13` fixtures
+add three optional `expected` blocks; adapters should assert each when present:
+
+| `expected` key | assert |
+|---|---|
+| `vibObj` | after `fromJSON`, the trajectory's vibObj equals this v2 object (all five keys, rel tolerance). For v1 input this checks the heal. |
+| `curveX` / `curveFrequencies` | `traj.compute(x)` (TS `id13`, Python `id13`, Swift `compute`) at each `curveX` equals `curveFrequencies[i]` within `tolerance.rel`. |
+| `vibObjInCanonical` | `"vibObj" in traj.toJSON()` equals this boolean (true only for id 13 — PROP-6b). |
+
+`expected.attach` (`P`, `x1`, `x2`) and `expected.v1Equivalent` are informational
+for debugging a curve mismatch; clients need not expose them.
+
+Version assertion (README "Versioning"): add to the suite
+
+```python
+assert json.load(open("path/to/idtap-contract/contract.json"))["version"] == CONTRACT_VERSION  # "0.2.0"
+```
