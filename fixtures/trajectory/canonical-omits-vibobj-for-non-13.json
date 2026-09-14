@@ -1,0 +1,70 @@
+{
+  "name": "canonical-omits-vibobj-for-non-13",
+  "description": "PROP-6b: a non-13 trajectory (id 0) carrying a vibObj must load (the field is ignored) and its CANONICAL output must NOT contain vibObj \u2014 vibObj is emitted only when id == 13.",
+  "scenario": "stripped",
+  "trajectoryJson": {
+    "id": 0,
+    "pitches": [
+      {
+        "swara": 0,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0
+      }
+    ],
+    "durTot": 1.0,
+    "durArray": [
+      1.0
+    ],
+    "slope": 2.0,
+    "num": 0,
+    "uniqueId": "fixture-canonical-omits-vibobj-for-non-13",
+    "vibObj": {
+      "rate": 5.5,
+      "extentStart": 0.05,
+      "extentEnd": 0.05,
+      "vertOffset": 0.0,
+      "phase": 3.141592653589793
+    }
+  },
+  "context": {
+    "ratios": [
+      1,
+      [
+        1.0594630943592953,
+        1.122462048309373
+      ],
+      [
+        1.189207115002721,
+        1.2599210498948732
+      ],
+      [
+        1.3348398541700344,
+        1.4142135623730951
+      ],
+      1.4983070768766815,
+      [
+        1.5874010519681994,
+        1.681792830507429
+      ],
+      [
+        1.7817974362806785,
+        1.8877486253633868
+      ]
+    ],
+    "fundamental": 246.0
+  },
+  "expected": {
+    "id": 0,
+    "durTot": 1.0,
+    "derivedName": "Fixed",
+    "tagsDefault": [],
+    "pitchFrequencies": [
+      246.0
+    ],
+    "vibObjInCanonical": false
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}

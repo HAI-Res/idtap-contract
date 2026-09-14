@@ -95,6 +95,46 @@
       "name": "enum-id-13-vibrato",
       "scenario": "stripped",
       "description": "Trajectory id=13 (Vibrato), 1 pitch(es), 12-TET 246Hz."
+    },
+    {
+      "name": "vib-v1-legacy-heals",
+      "scenario": "legacy",
+      "description": "LEGACY v1 vibObj {periods, vertOffset, initUp, extent} on a legacy (embedded-ratios) id-13 trajectory. Must heal losslessly to v2: rate = periods/durTot (8/2 = 4 Hz), extentStart = extentEnd = extent, phase = pi for initUp true; the curve must equal the v1 render (PROP-6)."
+    },
+    {
+      "name": "vib-v1-legacy-string-fields-heals",
+      "scenario": "stripped",
+      "description": "Real stored shape (Babul Mora, post-#887: stripped pitches + v1 vibObj): the old sliders stored periods/extent as STRINGS and periods is non-integer (3.5). The heal coerces with Number() and uses periods as-is (no truncation): rate = 3.5/0.474 Hz (PROP-6)."
+    },
+    {
+      "name": "vib-v2-equals-v1-golden",
+      "scenario": "stripped",
+      "description": "THE LOSSLESS PROOF: a v2 vibObj with equal extents, integer cycle count (P = 4 Hz * 2 s = 8) and phase pi is rendered at 21 sample points; the values equal the v1 formula for {periods: 8, initUp: true, extent: 0.05, vertOffset: 0} term for term (PROP-6)."
+    },
+    {
+      "name": "vib-v2-equals-v1-golden-phase0-offset",
+      "scenario": "stripped",
+      "description": "Second lossless proof: phase 0 (v1 initUp false), non-zero vertOffset (0.01), P = 1.5 Hz * 2 s = 3. Equals v1 {periods: 3, initUp: false, extent: 0.08, vertOffset: 0.01} (PROP-6)."
+    },
+    {
+      "name": "vib-v2-ramp",
+      "scenario": "stripped",
+      "description": "v2 extent ramp: extentStart 0 -> extentEnd 0.08 (0 -> 96 c) over 2 s at 5.5 Hz, phase pi; vertOffset 0.01 is clamped to +-A(x) so it fades in with the ramp (PROP-6)."
+    },
+    {
+      "name": "vib-v2-noninteger-cycles",
+      "scenario": "stripped",
+      "description": "v2 with a non-integer cycle count (P = 3.7 Hz * 0.55 s = 2.035) and an arbitrary phase (1.3 rad): x1 is the first cosine extreme >= 1/(4P), x2 the last <= 1 - 1/(4P); raised-cosine tapers on [0, x1] and [x2, 1] attach the curve to logFreqs[0]. Sample points cover both tapers (PROP-6)."
+    },
+    {
+      "name": "vib-v2-subcycle",
+      "scenario": "stripped",
+      "description": "v2 with fewer than one cycle (P = 1 Hz * 0.3 s = 0.3 < 1): computed with P = 1, the stored rate is untouched (PROP-6)."
+    },
+    {
+      "name": "canonical-omits-vibobj-for-non-13",
+      "scenario": "stripped",
+      "description": "PROP-6b: a non-13 trajectory (id 0) carrying a vibObj must load (the field is ignored) and its CANONICAL output must NOT contain vibObj \u2014 vibObj is emitted only when id == 13."
     }
   ]
 }

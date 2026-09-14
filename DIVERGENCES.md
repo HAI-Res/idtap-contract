@@ -270,6 +270,34 @@ Original divergence below for history.
 - **Contract handling:** frequency conformance compares MELODIC pitches only (excludes
   id-12 Silent trajectories) so it's robust to this on both sides.
 
+## VIB-1 🟡 v1 `vibObj.periods`: Python truncated, Swift kept a Double — RESOLVED → PROP-6
+
+- **Python** (`idtap` ≤ 0.1.54) `VibObj.from_json` did `int(periods)`; **Swift**
+  `VibratoObject` kept a `Double`; **TS** used the raw value (often a *string*, e.g.
+  Babul Mora `{periods: '3.5', extent: '0.055'}`, coerced by arithmetic). So a stored
+  non-integer `periods` rendered three different vibratos.
+- **Canonical (PROP-6):** the v1 → v2 heal uses the **stored value as-is** —
+  `rate = Number(periods) / durTot`, no truncation, no rounding — so whichever number
+  was stored is what migrates. Fixture `vib-v1-legacy-string-fields-heals`
+  (`periods: '3.5'`, `durTot: 0.474` → `rate = 7.3839…`) pins it; a client that
+  truncates gets `rate = 6.329…` and fails.
+- **Effect on old Python renders:** anything Python rendered from a non-integer
+  v1 `periods` was already wrong relative to the web app; after the heal all three
+  agree with what the web app played.
+
+## VIB-2 🟢 Python client reader leniencies beyond the schema (documented, intentional)
+
+The schema is strict; the Python reader (`idtap` ≥ the PROP-6 release) is lenient in
+two places, by design:
+- **(a) `vibObj` on `id != 13`:** an invalid vibObj **warns and falls back to the
+  default** rather than raising (the field is ignored on non-13 ids anyway, PROP-6b).
+- **(b) missing v2 keys on read take defaults** (e.g. a `vibObj` lacking `phase` loads
+  with `phase = pi`). Canonical output is always complete and schema-valid; only the
+  reader is tolerant.
+- **Fixed in the same change:** Python's old `to_json` emitted the inner vibObj keys in
+  **snake_case** (`vert_offset`, `init_up`); it now emits camelCase, matching TS and
+  the schema.
+
 ---
 
 ## Resolution workflow

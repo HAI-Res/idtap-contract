@@ -91,9 +91,26 @@ reference loop and this repo's own self-check.
 
 ## Versioning
 
-The contract is versioned (`version` in `contract.json`). Both implementations
-assert the contract version they were built against on load, so an incompatible
-schema bump is caught rather than silently mis-parsed.
+The contract is versioned (`version` in `contract.json`, currently **0.2.0**;
+`versionPolicy` there carries the changelog). Serialized documents carry no
+version field, so the assertion lives in each client's **conformance suite**, not
+in the loader:
+
+1. Each implementation keeps one constant naming the contract version it was
+   built against — `CONTRACT_VERSION` in `conformance/validate_fixtures.py` is
+   the reference; the clients mirror it (`src/ts/tests/contract-conformance.test.ts`
+   in idtap-platform, `idtap/tests/test_contract_conformance.py` in idtap-client,
+   the Swift golden test in idtap-swift).
+2. That suite reads the vendored `contract.json` and asserts
+   `version == CONTRACT_VERSION` **exactly**. A minor bump (wire semantics
+   changed) therefore fails CI in every client until the client is updated and
+   its constant bumped; a patch bump is reserved for fixture/doc additions and
+   should be applied to the constant in the same sync commit.
+3. The constant is bumped **only** in the commit that implements the new
+   semantics (for 0.2.0: the PROP-6 vibrato heal + `id == 13` canonical rule).
+
+This is deliberately a CI-time check. A load-time check would need a
+`contractVersion` field on the wire, which is a separate proposal.
 
 ## Status / roadmap
 
@@ -102,13 +119,23 @@ schema bump is caught rather than silently mis-parsed.
       reference slice; the others follow the same pattern.*
 - [x] **Raga** — schema + 3 fixtures pinning `Raga JSON → stratifiedRatios +
       fundamental`. Surfaced RAGA-1..3 divergences (see `DIVERGENCES.md`).
-- [x] **Trajectory** — schema + 4 fixtures (pitch-frequency preservation through
-      context threading; stripped name/instrumentation/tags). Surfaced TRAJ-1/2.
+- [x] **Trajectory** — schema + 27 fixtures (pitch-frequency preservation through
+      context threading; stripped name/instrumentation/tags; every id 0-13).
+      Surfaced TRAJ-1/2.
+- [x] **Vibrato v2 (PROP-6, contract 0.2.0)** — `vibObj` sub-schema (v2 strict,
+      v1 LEGACY) + 8 `vib-*`/`canonical-omits-vibobj-*` fixtures pinning the
+      lossless v1→v2 heal, the normative curve at 21 sample points (equal-to-v1
+      proof, extent ramp, non-integer cycles with both tapers, sub-cycle), and
+      the `id == 13`-only canonical rule (PROP-6b). Values are bit-identical to
+      the TS reference golden (`tools/crosscheck_vibrato_golden.py`).
 - [x] **Phrase** — schema + 2 fixtures (grid context-threading + legacy
       raga-fallback). Surfaced PHRASE-1/2.
 - [x] **Piece** — schema + 3 fixtures (full-piece frequency preservation through
       the whole threading chain; legacy full-embedded). Surfaced PIECE-1/2, SEM-1.
 - [x] **Supporting sub-schemas** — Articulation, Automation, Chikari, Group, Meter
       (structural). All consistent except METER-1 (PulseStructure.offsets).
-- [ ] Wire conformance suites into `idtap` and `idtap-api` CI
-- [ ] Publish contract version + compatibility assertion in both repos
+- [x] Wire conformance suites into `idtap` and `idtap-api` CI (2026-07-13)
+- [x] Publish contract version + compatibility assertion — designed above
+      (`CONTRACT_VERSION` constant vs `contract.json`); reference check in
+      `validate_fixtures.py`. Clients add the one-line assertion with their
+      0.2.0 sync.

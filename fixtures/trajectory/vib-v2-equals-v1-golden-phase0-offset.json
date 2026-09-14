@@ -1,0 +1,134 @@
+{
+  "name": "vib-v2-equals-v1-golden-phase0-offset",
+  "description": "Second lossless proof: phase 0 (v1 initUp false), non-zero vertOffset (0.01), P = 1.5 Hz * 2 s = 3. Equals v1 {periods: 3, initUp: false, extent: 0.08, vertOffset: 0.01} (PROP-6).",
+  "scenario": "stripped",
+  "trajectoryJson": {
+    "id": 13,
+    "pitches": [
+      {
+        "swara": 2,
+        "raised": true,
+        "oct": 0,
+        "logOffset": 0.0
+      }
+    ],
+    "durTot": 2.0,
+    "durArray": [
+      1.0
+    ],
+    "slope": 2.0,
+    "num": 0,
+    "uniqueId": "fixture-vib-v2-equals-v1-golden-phase0-offset",
+    "vibObj": {
+      "rate": 1.5,
+      "extentStart": 0.08,
+      "extentEnd": 0.08,
+      "vertOffset": 0.01,
+      "phase": 0.0
+    }
+  },
+  "context": {
+    "ratios": [
+      1,
+      [
+        1.0594630943592953,
+        1.122462048309373
+      ],
+      [
+        1.189207115002721,
+        1.2599210498948732
+      ],
+      [
+        1.3348398541700344,
+        1.4142135623730951
+      ],
+      1.4983070768766815,
+      [
+        1.5874010519681994,
+        1.681792830507429
+      ],
+      [
+        1.7817974362806785,
+        1.8877486253633868
+      ]
+    ],
+    "fundamental": 246.0
+  },
+  "expected": {
+    "id": 13,
+    "durTot": 2.0,
+    "derivedName": "Vibrato",
+    "tagsDefault": [],
+    "pitchFrequencies": [
+      309.94057827413883
+    ],
+    "vibObjInCanonical": true,
+    "vibObj": {
+      "rate": 1.5,
+      "extentStart": 0.08,
+      "extentEnd": 0.08,
+      "vertOffset": 0.01,
+      "phase": 0.0
+    },
+    "curveX": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ],
+    "curveFrequencies": [
+      309.94057827413894,
+      308.61505197334253,
+      305.7508255161438,
+      303.7166080506651,
+      305.17377058109514,
+      312.096385480933,
+      319.17603418141573,
+      320.43548256184954,
+      314.7818434002026,
+      307.05141228990266,
+      303.5620934075215,
+      307.05141228990266,
+      314.7818434002026,
+      320.43548256184954,
+      319.17603418141573,
+      312.096385480933,
+      305.17377058109514,
+      303.7166080506651,
+      305.7508255161438,
+      308.61505197334253,
+      309.94057827413894
+    ],
+    "attach": {
+      "P": 3.0,
+      "x1": 0.16666666666666666,
+      "x2": 0.8333333333333334
+    },
+    "v1Equivalent": {
+      "periods": 3,
+      "vertOffset": 0.01,
+      "initUp": false,
+      "extent": 0.08
+    }
+  },
+  "tolerance": {
+    "rel": 1e-09
+  }
+}
