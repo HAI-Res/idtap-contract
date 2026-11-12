@@ -1,0 +1,427 @@
+{
+  "name": "project-cantonese-tone-orthography",
+  "scenario": "stripped",
+  "kind": "project",
+  "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection carries only what the legacy fields can: approximate hindi-urdu keys from each pack entry's `legacy` (i -> ī, o -> au, s -> sa, h -> ha, m -> ma, k -> ka; glide u -> nothing). Tone, characters and romanization are dropped, so the write guard refuses a pre-0.3.0 save. IPA is derived from the finals table, never stored.",
+  "pieceJson": {
+    "raga": {
+      "name": "Yaman",
+      "fundamental": 246.0,
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "tuning": {
+        "sa": 1,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "pa": 1.4983070768766815,
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        }
+      }
+    },
+    "phraseGrid": [
+      [
+        {
+          "durTot": 1.0,
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "chikaris": {},
+          "startTime": 0.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y1"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y2"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-y0",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false,
+          "syllables": [
+            {
+              "anchor": {
+                "traj": "y1",
+                "t": 0
+              },
+              "onset": "s",
+              "nucleus": "i",
+              "tone": "1",
+              "orthography": "詩",
+              "romanization": "si1",
+              "wordStart": true,
+              "lyric": {
+                "vowel": "i",
+                "source": "pack"
+              }
+            }
+          ]
+        },
+        {
+          "durTot": 2.5,
+          "durArray": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ],
+          "chikaris": {},
+          "startTime": 1.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y3"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y4"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y5"
+              },
+              {
+                "id": 12,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y6"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "y7"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-y1",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false,
+          "syllables": [
+            {
+              "anchor": {
+                "traj": "y4",
+                "t": 0
+              },
+              "coda": "m",
+              "tone": "4",
+              "orthography": "唔",
+              "romanization": "m4",
+              "wordStart": true,
+              "lyric": {
+                "vowel": null,
+                "source": "pack"
+              }
+            },
+            {
+              "anchor": {
+                "traj": "y5",
+                "t": 0
+              },
+              "onset": "h",
+              "nucleus": "o",
+              "coda": "u",
+              "tone": "2",
+              "orthography": "好",
+              "romanization": "hou2",
+              "lyric": {
+                "vowel": "o",
+                "source": "pack"
+              }
+            },
+            {
+              "anchor": {
+                "traj": "y7",
+                "t": 0
+              },
+              "onset": "s",
+              "nucleus": "i",
+              "coda": "k",
+              "tone": "6",
+              "orthography": "食",
+              "romanization": "sik6",
+              "wordStart": true,
+              "lyric": {
+                "vowel": "i",
+                "source": "pack"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "instrumentation": [
+      "Vocal (F)"
+    ],
+    "durTot": 3.5,
+    "durArrayGrid": [
+      [
+        0.2857142857142857,
+        0.7142857142857143
+      ]
+    ],
+    "sectionCatGrid": [
+      []
+    ],
+    "meters": [],
+    "title": "Cantonese projection (fixture)",
+    "_id": "fixture000000000000000000",
+    "system": {
+      "phonology": "jyutping",
+      "display": [
+        "jyutping",
+        "Hant"
+      ]
+    },
+    "lyricsText": [
+      "詩唔好 食"
+    ]
+  },
+  "expected": {
+    "legacy": {
+      "y1": {
+        "vowel": "ī",
+        "startConsonant": "sa",
+        "startConsonantHindi": "स",
+        "startConsonantIpa": "s",
+        "startConsonantEngTrans": "s",
+        "art0": {
+          "name": "consonant",
+          "stroke": "sa",
+          "hindi": "स",
+          "ipa": "s",
+          "engTrans": "s"
+        },
+        "art1": null
+      },
+      "y2": {
+        "vowel": "ī",
+        "art0": null,
+        "art1": null
+      },
+      "y3": {
+        "vowel": "ī",
+        "art0": null,
+        "art1": null
+      },
+      "y4": {
+        "endConsonant": "ma",
+        "endConsonantHindi": "म",
+        "endConsonantIpa": "m",
+        "endConsonantEngTrans": "m",
+        "art0": null,
+        "art1": {
+          "name": "consonant",
+          "stroke": "ma",
+          "hindi": "म",
+          "ipa": "m",
+          "engTrans": "m"
+        }
+      },
+      "y5": {
+        "vowel": "au",
+        "startConsonant": "ha",
+        "startConsonantHindi": "ह",
+        "startConsonantIpa": "h",
+        "startConsonantEngTrans": "h",
+        "art0": {
+          "name": "consonant",
+          "stroke": "ha",
+          "hindi": "ह",
+          "ipa": "h",
+          "engTrans": "h"
+        },
+        "art1": null
+      },
+      "y6": {
+        "art0": null,
+        "art1": null
+      },
+      "y7": {
+        "vowel": "ī",
+        "startConsonant": "sa",
+        "startConsonantHindi": "स",
+        "startConsonantIpa": "s",
+        "startConsonantEngTrans": "s",
+        "endConsonant": "ka",
+        "endConsonantHindi": "क",
+        "endConsonantIpa": "k",
+        "endConsonantEngTrans": "k",
+        "art0": {
+          "name": "consonant",
+          "stroke": "sa",
+          "hindi": "स",
+          "ipa": "s",
+          "engTrans": "s"
+        },
+        "art1": {
+          "name": "consonant",
+          "stroke": "ka",
+          "hindi": "क",
+          "ipa": "k",
+          "engTrans": "k"
+        }
+      }
+    },
+    "derivedIpa": [
+      "siː",
+      "m̩",
+      "hou̯",
+      "sek̚"
+    ],
+    "legacySafe": false,
+    "legacySafeReasons": [
+      "orthography",
+      "pack",
+      "romanization",
+      "tone",
+      "wordStart"
+    ],
+    "violations": []
+  }
+}

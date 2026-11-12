@@ -1,0 +1,1594 @@
+{
+  "name": "invariants",
+  "scenario": "validation",
+  "kind": "invariants",
+  "description": "Load-time invariants, one case each. Codes: anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+  "cases": [
+    {
+      "name": "anchor-missing",
+      "description": "The anchor names no trajectory of this phrase; v1 then starts the track without a syllable.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "nope",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "anchor-missing",
+          "unanchored-start"
+        ]
+      }
+    },
+    {
+      "name": "anchor-silence",
+      "description": "A syllable starts on a silence trajectory (id 12).",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 12,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                },
+                {
+                  "anchor": {
+                    "traj": "v2",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "anchor-silence"
+        ]
+      }
+    },
+    {
+      "name": "anchor-order",
+      "description": "Syllables out of trajectory order.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2",
+                    "vowel": "ī"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v2",
+                    "t": 0
+                  },
+                  "nucleus": "ī",
+                  "lyric": {
+                    "vowel": "ī",
+                    "source": "pack"
+                  }
+                },
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "anchor-order"
+        ]
+      }
+    },
+    {
+      "name": "unanchored-after-silence",
+      "description": "v3 follows a silence but starts no syllable.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.5,
+              "durArray": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 12,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v3",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "unanchored-start"
+        ]
+      }
+    },
+    {
+      "name": "anchor-t-nonzero",
+      "description": "anchor.t must be 0 in 0.3.x: no system allows a mid-trajectory onset yet.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0.5
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "anchor-t"
+        ]
+      }
+    },
+    {
+      "name": "tone-in-hindi",
+      "description": "hindi-urdu defines no tones.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "tone": "1",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "tone-not-allowed"
+        ]
+      }
+    },
+    {
+      "name": "cluster-in-hindi",
+      "description": "hindi-urdu does not allow onset clusters.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "onset": [
+                    "ka",
+                    "ra"
+                  ],
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "cluster-not-allowed"
+        ]
+      }
+    },
+    {
+      "name": "unknown-key",
+      "description": "onset 'qa' is not a hindi-urdu key.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "onset": "qa",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "key-unknown"
+        ]
+      }
+    },
+    {
+      "name": "syllabic-nasal-in-kurmanji",
+      "description": "Syllabic nasals (no nucleus, coda m|ng) are allowed only by a pack with syllabicNasals (jyutping).",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "coda": "m",
+                  "lyric": {
+                    "vowel": null,
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "kurmanji"
+        }
+      },
+      "expected": {
+        "violations": [
+          "nucleus-missing"
+        ]
+      }
+    },
+    {
+      "name": "kurmanji-cluster-ok",
+      "description": "xwe: Kurmanji allows the onset cluster x+w.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "onset": [
+                    "x",
+                    "w"
+                  ],
+                  "nucleus": "e",
+                  "lyric": {
+                    "vowel": "e",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "kurmanji"
+        }
+      },
+      "expected": {
+        "violations": []
+      }
+    },
+    {
+      "name": "jyutping-bare-eo",
+      "description": "Bare eo is not among the 59 listed finals. It is a candidate for Yingyao's 60th final (unverified in packs/jyutping.json); if it is confirmed, this case becomes valid.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "onset": "s",
+                  "nucleus": "eo",
+                  "tone": "1",
+                  "lyric": {
+                    "vowel": "eo",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "jyutping"
+        }
+      },
+      "expected": {
+        "violations": [
+          "final-unknown"
+        ]
+      }
+    },
+    {
+      "name": "jyutping-syllabic-ng-ok",
+      "description": "ng5 (五): a syllabic nasal, allowed by jyutping.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "coda": "ng",
+                  "tone": "5",
+                  "lyric": {
+                    "vowel": null,
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "jyutping"
+        }
+      },
+      "expected": {
+        "violations": []
+      }
+    }
+  ]
+}

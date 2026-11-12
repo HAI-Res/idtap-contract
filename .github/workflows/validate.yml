@@ -19,8 +19,12 @@ jobs:
 
       # Self-check: every fixture's `expected` re-derives from the canonical
       # rule, and contract.json's version matches the runner's CONTRACT_VERSION.
+      # jsonschema first: the self-check also validates the PROP-7/8/9 fixtures
+      # and the packs against their schemas.
       - name: Run conformance self-check
-        run: python3 conformance/validate_fixtures.py
+        run: |
+          pip install -q jsonschema
+          python3 conformance/validate_fixtures.py
 
       # Schema sanity: every schema parses and compiles under Draft 2020-12.
       - name: Compile schemas

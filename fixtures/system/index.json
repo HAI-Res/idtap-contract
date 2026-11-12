@@ -1,0 +1,25 @@
+{
+  "entity": "system",
+  "fixtures": [
+    {
+      "name": "system-absent",
+      "scenario": "legacy",
+      "description": "Absent system: every pre-0.3.0 piece. Resolves to Hindustani."
+    },
+    {
+      "name": "system-hindustani-explicit",
+      "scenario": "stripped",
+      "description": "The Hindustani defaults written out; identical meaning to absent."
+    },
+    {
+      "name": "system-cantonese",
+      "scenario": "stripped",
+      "description": "Cantonese: only phonology has semantics in 0.3.0; 'mode-12tet' is an extensible id kept verbatim. Missing rhythm defaults to tala."
+    },
+    {
+      "name": "system-kurmanji",
+      "scenario": "stripped",
+      "description": "Kurmanji, Dengbêj Gazîn 'Her wayê wayê wayê' (first three syllables: her wa yê, with a melisma on her). An unknown component ('x-notes') is kept verbatim."
+    }
+  ]
+}

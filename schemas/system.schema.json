@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/system.schema.json",
+  "title": "System",
+  "description": "PROP-7: the transcription system a Piece is written in, as named components. ABSENT `system` = Hindustani, so every pre-0.3.0 document is unchanged; a missing component also takes its Hindustani default (pitch 'raga', phonology 'hindi-urdu', rhythm 'tala', display ['sargam', 'Deva']). Values are extensible string ids: an unknown id is preserved on load and re-emitted on save, never rejected. In 0.3.0 only `phonology` has semantics: it names a pack (packs/<id>.json). Clients show syllable and tone UI only when `system` is present (the feature flag of the PROP-8 rollout).",
+  "type": "object",
+  "additionalProperties": {
+    "description": "Further components a later proposal may add; kept verbatim.",
+    "type": ["string", "array"],
+    "items": { "type": "string" }
+  },
+  "properties": {
+    "pitch": { "description": "Pitch framework id: 'raga' (the piece's Raga), later e.g. 'mode-12tet', 'maqam'.", "type": "string" },
+    "phonology": { "description": "Phoneme pack id (packs/<id>.json): 'hindi-urdu', 'jyutping', 'kurmanji'.", "type": "string" },
+    "rhythm": { "description": "Rhythm framework id: 'tala' (Meter hierarchy), later e.g. 'banshi', 'usul'.", "type": "string" },
+    "display": { "description": "Display conventions, most specific first: e.g. ['sargam', 'Deva'], ['jyutping', 'Hant'], ['kurmanji-latin'].", "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -26,6 +26,11 @@
     "uniqueId": { "type": ["string", "null"] },
     "adHocCategorizationGrid": { "type": "array" },
     "isSectionStart": { "type": ["boolean", "null"] },
+    "syllables": {
+      "description": "PROP-8 (contract 0.3.0): the syllable tier of this phrase's main string (trajectoryGrid[0]). ABSENT = not yet healed: the loader builds it from the legacy per-trajectory fields (vowel, startConsonant, endConsonant) by the firstTrajIdxs rule; [] = healed, no syllables. Canonical output always emits it and dual-writes the legacy fields projected from it through 0.3.x. Syllables follow their trajectory: after any phrase split, merge or moved division each syllable is re-homed to the phrase that now holds its anchor trajectory.",
+      "type": "array",
+      "items": { "$ref": "syllable.schema.json" }
+    },
 
     "raga": {
       "description": "LEGACY ONLY — stripped in canonical form (inherited from piece). If present, used as fallback context for threading.",

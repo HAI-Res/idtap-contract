@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idtap.swara.studio/schemas/syllable.schema.json",
+  "title": "Syllable",
+  "description": "PROP-8: one sung syllable, stored in Phrase.syllables. It STARTS at anchor (a trajectory of the same phrase's main string, trajectoryGrid[0]); its extent is implied: it runs to the next syllable's anchor or to a silence trajectory (id 12), whichever comes first, even across a phrase boundary within the track. Time lives only in Trajectory.durTot. onset/nucleus/coda/tone are KEYS into the piece's phoneme pack (system.phonology, absent = hindi-urdu); IPA and display forms are derived from the pack, never stored here. Invariants (checked on load, see PROPOSALS.md PROP-8): every anchor names a trajectory of this phrase's trajectoryGrid[0] that is not a silence; anchors are in trajectory order, at most one per trajectory; in a track that has syllables, the first non-silent trajectory of the track and every non-silent trajectory after a silence start a syllable; anchor.t is 0 in 0.3.x.",
+  "type": "object",
+  "required": ["anchor", "lyric"],
+  "additionalProperties": false,
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "required": ["traj"],
+      "additionalProperties": false,
+      "properties": {
+        "traj": { "description": "uniqueId of the trajectory the syllable starts on.", "type": "string" },
+        "t": { "description": "Position inside that trajectory, 0-1. Defaults to 0; must be 0 in 0.3.x (no system allows otherwise yet). Reserved so a mid-trajectory onset is a data change, not a contract break.", "type": "number", "minimum": 0, "maximum": 1, "default": 0 }
+      }
+    },
+    "orthography": { "description": "Written form as the text gives it (詩, बा, her). Free text: no validation or lookup in 0.3.0.", "type": "string" },
+    "romanization": { "description": "Romanized form: Jyutping with tone digit (si1), ISO 15919 for Hindi (bā), Kurmanji as spelled.", "type": "string" },
+    "onset": { "description": "Pack consonant key, or an array of keys for a cluster where the pack allows (flags.onsetClusters).", "$ref": "#/$defs/keyOrCluster" },
+    "nucleus": { "description": "Pack vowel key. Absent only where the pack allows: a syllabic final (Jyutping m, ng) or flags.nucleusOptional.", "type": "string" },
+    "coda": { "description": "Pack coda key, or an array where the pack allows (flags.codaClusters). Sits at the end of the syllable's last trajectory; no anchor of its own.", "$ref": "#/$defs/keyOrCluster" },
+    "tone": { "description": "Key of the pack's tone set (Jyutping '1'-'6'). A label only in 0.3.0.", "type": "string" },
+    "wordStart": { "description": "true when this syllable begins a word (ba of ba·bul).", "type": "boolean" },
+    "lyric": {
+      "description": "The vowel the text says: typed by a person ('human') or derived by the pack or the legacy heal ('pack'). vowel is a pack vowel key, or null when the syllable has none (a healed group with no vowel, a syllabic nasal).",
+      "$ref": "#/$defs/vowelObs"
+    },
+    "sung": {
+      "description": "The vowel measured in the audio: filled by a model ('model'), a person may override ('human'). Synthesis reads sung when present, else lyric. Not projected to the legacy fields.",
+      "$ref": "#/$defs/vowelObs"
+    }
+  },
+  "$defs": {
+    "keyOrCluster": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" }, "minItems": 2 }
+      ]
+    },
+    "vowelObs": {
+      "type": "object",
+      "required": ["vowel", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "vowel": { "type": ["string", "null"] },
+        "source": { "enum": ["human", "model", "pack"] }
+      }
+    }
+  }
+}

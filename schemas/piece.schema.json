@@ -14,6 +14,8 @@
       "items": { "type": "array", "items": { "$ref": "phrase.schema.json" } }
     },
     "instrumentation": { "type": "array", "items": { "type": "string" } },
+    "system": { "description": "PROP-7 (contract 0.3.0): the transcription system. ABSENT = Hindustani (every pre-0.3.0 piece). Kept verbatim when its ids are unknown.", "$ref": "system.schema.json" },
+    "lyricsText": { "description": "PROP-8: per-track source text as given (lyricsText[track]), for reference only: never parsed, never the source of the syllable tier.", "type": "array", "items": { "type": ["string", "null"] } },
     "durTot": { "type": "number" },
     "durArrayGrid": { "type": "array", "items": { "type": "array" } },
     "sectionCatGrid": { "type": "array" },

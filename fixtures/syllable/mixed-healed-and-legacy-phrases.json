@@ -1,0 +1,333 @@
+{
+  "name": "mixed-healed-and-legacy-phrases",
+  "scenario": "mixed",
+  "kind": "heal",
+  "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'.",
+  "pieceJson": {
+    "raga": {
+      "name": "Yaman",
+      "fundamental": 246.0,
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "tuning": {
+        "sa": 1,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "pa": 1.4983070768766815,
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        }
+      }
+    },
+    "phraseGrid": [
+      [
+        {
+          "durTot": 1.0,
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "chikaris": {},
+          "startTime": 0.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "ga",
+                    "hindi": "ग",
+                    "ipa": "g",
+                    "engTrans": "g"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "m1",
+                "vowel": "ā",
+                "startConsonant": "ga",
+                "startConsonantHindi": "ग",
+                "startConsonantIpa": "g",
+                "startConsonantEngTrans": "g"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "m2",
+                "vowel": "ī"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-m0",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false,
+          "syllables": [
+            {
+              "anchor": {
+                "traj": "m1",
+                "t": 0
+              },
+              "onset": "ga",
+              "nucleus": "ī",
+              "lyric": {
+                "vowel": "ī",
+                "source": "pack"
+              }
+            }
+          ]
+        },
+        {
+          "durTot": 1.5,
+          "durArray": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.3333333333333333
+          ],
+          "chikaris": {},
+          "startTime": 1.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "da",
+                    "hindi": "द",
+                    "ipa": "d",
+                    "engTrans": "d"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "n1",
+                "vowel": "ē",
+                "startConsonant": "da",
+                "startConsonantHindi": "द",
+                "startConsonantIpa": "d",
+                "startConsonantEngTrans": "d"
+              },
+              {
+                "id": 12,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "n2"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "1.00": {
+                    "name": "consonant",
+                    "stroke": "ma",
+                    "hindi": "म",
+                    "ipa": "m",
+                    "engTrans": "m"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "n3",
+                "vowel": "ō",
+                "endConsonant": "ma",
+                "endConsonantHindi": "म",
+                "endConsonantIpa": "m",
+                "endConsonantEngTrans": "m"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-m1",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false
+        }
+      ]
+    ],
+    "instrumentation": [
+      "Vocal (F)"
+    ],
+    "durTot": 2.5,
+    "durArrayGrid": [
+      [
+        0.4,
+        0.6
+      ]
+    ],
+    "sectionCatGrid": [
+      []
+    ],
+    "meters": [],
+    "title": "Mixed heal (fixture)",
+    "_id": "fixture000000000000000000"
+  },
+  "expected": {
+    "syllables": [
+      [
+        [
+          {
+            "anchor": {
+              "traj": "m1",
+              "t": 0
+            },
+            "onset": "ga",
+            "nucleus": "ī",
+            "lyric": {
+              "vowel": "ī",
+              "source": "pack"
+            }
+          }
+        ],
+        [
+          {
+            "anchor": {
+              "traj": "n1",
+              "t": 0
+            },
+            "onset": "da",
+            "nucleus": "ē",
+            "lyric": {
+              "vowel": "ē",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "n3",
+              "t": 0
+            },
+            "nucleus": "ō",
+            "coda": "ma",
+            "lyric": {
+              "vowel": "ō",
+              "source": "pack"
+            }
+          }
+        ]
+      ]
+    ],
+    "legacyRoundTrip": false,
+    "legacyAfterProjection": {
+      "m1": {
+        "art0": {
+          "name": "consonant",
+          "stroke": "ga",
+          "hindi": "ग",
+          "ipa": "g",
+          "engTrans": "g"
+        },
+        "art1": null,
+        "vowel": "ī",
+        "startConsonant": "ga",
+        "startConsonantHindi": "ग",
+        "startConsonantIpa": "g",
+        "startConsonantEngTrans": "g"
+      },
+      "m2": {
+        "art0": null,
+        "art1": null,
+        "vowel": "ī"
+      }
+    },
+    "legacySafe": true,
+    "legacySafeReasons": [],
+    "violations": []
+  }
+}
