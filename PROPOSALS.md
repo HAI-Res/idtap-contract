@@ -490,6 +490,24 @@ is `consonant`). The values come from the pack entry's `legacy` block:
 
 **Dual-write stays on through 0.3.x**; the legacy fields are dropped in a later minor.
 
+### Tier disabled: preserve, never create (normative; readers before writers)
+`/updateTranscription` does a `$set` of what the client sends, and `phraseGrid` goes up
+as one key, so a client that drops `syllables` silently deletes a tier another client
+(Swift, Python 0.1.57) wrote. A 0.3.0 client with the syllable tier disabled (the web
+app with the flag off) therefore:
+1. parses and keeps every existing `phrase.syllables` and re-emits it **byte-identical**
+   on save;
+2. **never persists healed syllables.** The heal may run in memory for reads, but the
+   persist-on-save step is behind the flag; a phrase that arrived without the key leaves
+   without it;
+3. still writes the legacy fields as today. Where a phrase carries syllables, they are
+   the source of truth and the legacy fields are their projection, as with the flag on.
+
+Consequence: while the flag is off nothing new appears in the database. Existing Hindi
+pieces stay readable by `idtap` 0.1.56; the only documents that trip 0.1.56 are the ones
+Swift or Python 0.1.57 write explicitly with the tier. That keeps the order PyPI 0.1.57
+→ server → web flag-off → Swift → flag on honest.
+
 ### Re-homing after phrase edits (normative, `rehome`)
 After every phrase split, merge or moved division, pool every syllable the track had
 before the edit and put each in the phrase that now holds its anchor trajectory, in
@@ -523,7 +541,7 @@ trip the guard. Reason codes: `fixtures/syllable/write-guard.json`.
    on any phrase that has the tier, and `Piece._ALLOWED_JSON_KEYS` would refuse `system`
    and `lyricsText` the same way (verified 2026-11-12 against the Cantonese fixture).
 5. **Server** (write guard, packs served by the API).
-6. **Web with the flag off** (dual-write live, no syllable UI).
+6. **Web with the flag off**: preserve, never create (above); no syllable UI.
 7. **Swift.**
 8. **Flag on** (syllable and tone UI where `piece.system` is set).
 Rollback at any later step: dual-write keeps every document readable; only syllable
@@ -544,10 +562,11 @@ editing stops.
 - **Python 0.1.56 and earlier cannot read the new form at all** (step 4). So the
   "old client saves and drops the syllables" path in the write guard applies to stale web
   tabs and to scripts that write without loading, not to installed Python clients, which
-  fail on load. With the web flag off, every web save of a Hindi piece still writes
-  `syllables` (dual-write), so step 6 is when unupgraded Python clients start failing on
-  edited pieces. Open for Jon: whether web-flag-off should omit `syllables` until the
-  flag is on.
+  fail on load. The preserve-never-create rule keeps flag-off web from writing the tier,
+  so 0.1.56 only meets it in documents a 0.3.0 client with the tier enabled wrote.
+- **0.1.57 must accept and round-trip keys it does not know** on Phrase and Piece (at
+  least `syllables`, `system`, `lyricsText`; ideally any key), rather than raise, so this
+  blocker does not recur at 0.4.0. Swift and TS readers need the same property.
 - **Uniqueids must be stable across save/load** in every client, since anchors depend on
   them. Check that no client regenerates trajectory `uniqueId` on load or copy-paste
   without re-pointing the syllable.
