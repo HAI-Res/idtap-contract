@@ -366,3 +366,227 @@ encode-stability tests; do it in the same release or not at all.
   and the token uses 3–9; below ~1 Hz a sub-second note holds less than a cycle and reads
   as a bend; above ~12 Hz it is trill or buzz, and the 50 Hz Web Audio pitch envelope
   cannot render past 25 Hz anyway.
+
+---
+
+## PROP-7 — `system`: the transcription system travels with the piece
+
+**Decision (Jon, 2026-11-12, plan decision 2):** one data model for every tradition,
+with a `system` descriptor on `Piece`, not separate apps or forks. Status: **contract
+drafted on `prop7-8/system-and-syllables` (0.3.0), awaiting review**; client PRs follow.
+Source: the Claude Doc "IDTAP for Many Traditions: Plan", section "One model".
+
+PROP-1 moved the raga's `ruleSet` into the piece so a transcription is interpretable
+without the database. A tradition is the same move one level up.
+
+- **Shape** (`schemas/system.schema.json`): optional object of extensible string ids,
+  `{ pitch, phonology, rhythm, display }`. Unknown ids and unknown components are kept
+  verbatim on load and re-emitted on save, never rejected.
+- **Absent = Hindustani.** Every pre-0.3.0 document is unchanged. A missing component
+  takes its Hindustani default: `pitch: 'raga'`, `phonology: 'hindi-urdu'`,
+  `rhythm: 'tala'`, `display: ['sargam', 'Deva']`.
+- **Only `phonology` has semantics in 0.3.0:** it names a pack (PROP-9). Pitch and rhythm
+  generalizations (maqam, banshi, usul) are later proposals, written when a transcriber
+  needs them.
+- **Feature flag:** clients show syllable and tone UI only when `piece.system` is present.
+- `Piece.lyricsText[track]` (optional, string or null per track): the source text as
+  given, for reference only; never parsed.
+- Fixtures: `fixtures/system/` (absent, hindustani explicit, cantonese, kurmanji).
+
+---
+
+## PROP-8 — The syllable tier replaces per-trajectory phonemes
+
+**Decision (Jon, 2026-11-12, plan decisions 3, 4, 6):** `Phrase.syllables`, one list per
+phrase (so per track); each syllable anchored to the trajectory it starts on; lyric and
+sung vowels with provenance; the legacy fields are dual-written through 0.3.x. Status:
+**contract drafted on `prop7-8/system-and-syllables` (0.3.0), awaiting review.**
+
+### Design note (what the investigation found, before the schema)
+- **The legacy fields are nine on the wire, twelve in memory, plus a fourth copy.**
+  `Trajectory.toJSON` writes `vowel`, `startConsonant{,Hindi,Ipa,EngTrans}` and
+  `endConsonant{,Hindi,Ipa,EngTrans}`. `vowelHindi/Ipa/EngTrans` exist only in memory
+  (derived by `convertCIsoToHindiAndIpa`). The constructor also mirrors each consonant
+  as an articulation `{name: 'consonant', stroke, hindi, ipa, engTrans}` at `'0.00'`
+  (start) and `'1.00'` (end), and those are serialized. The projection writes all of it.
+- **Stored values are ISO keys with the inherent a** (`ka`, `ā`). The display copies are
+  `tables[indexOf(key)]`, first match, so today's `na` always gets index 14's copies
+  (`न`, IPA `n`) and never index 19's (`n̪`). The Python synth already treats `na` as a
+  dental n and puts the true retroflex at `ɳ`.
+- **`firstTrajIdxs` already makes the heal lossless.** Its five triggers (first of the
+  phrase, after a silence, a start consonant, after an end consonant, a vowel change)
+  guarantee that within one group the vowel is constant, a start consonant can only be
+  on the first trajectory and an end consonant only on the last. So legacy → syllables →
+  legacy is the identity, which `heal-legacy-hindi-roundtrip` proves.
+- **null vs absent differs between clients** (SYL-1): TS `fromJSON` spreads `...obj`, so
+  a stored `null` consonant bypasses the constructor default and counts as present in
+  `firstTrajIdxs`; Python treats `None` as absent. Normative: null == absent.
+- **Syllables live on the main string** (`trajectoryGrid[0]`), as `firstTrajIdxs` does.
+
+### Wire shape (`schemas/syllable.schema.json`, `Phrase.syllables`)
+```
+Syllable {
+  anchor: { traj: <trajectory uniqueId>, t: 0 }   t in [0,1], default 0; must be 0 in 0.3.x
+  orthography?   free text (詩, बा, her); no validation or lookup in 0.3.0
+  romanization?  Jyutping with tone digit (si1); ISO for Hindi (bā); Kurmanji as spelled
+  onset?         pack consonant key, or [keys] where the pack allows clusters (xw)
+  nucleus?       pack vowel key; absent only for a syllabic final or where the pack allows
+  coda?          pack coda key, or [keys]; no anchor of its own
+  tone?          pack tone key (Jyutping '1'-'6'); a label only
+  wordStart?     true when the syllable begins a word
+  lyric: { vowel: <vowel key> | null, source: 'human' | 'model' | 'pack' }
+  sung?: { vowel: <vowel key> | null, source }
+}
+```
+Keys, not IPA: a syllable stores what the pack keys on (ISO for hindi-urdu, Jyutping
+letters, Kurmanji letters); IPA and display forms are derived from the pack, never
+stored (plan, pack-level call of 12 Nov). `Phrase.syllables` **absent** = not yet
+healed; `[]` = healed, no syllables. Canonical output always emits it.
+
+**Extent is implied:** a syllable runs from its anchor to the next anchor or to a
+silence trajectory (id 12), whichever comes first, along the track's main-string
+trajectories in phrase order, so it can cross a phrase boundary.
+
+### Invariants (checked on load; codes in `fixtures/syllable/invariants.json`)
+- `anchor-missing`: every anchor names a trajectory of the same phrase's main string.
+- `anchor-silence`: never a silence. `anchor-order`: anchors in trajectory order, at most
+  one per trajectory.
+- `unanchored-start`: in a track that has any syllable, the track's first non-silent
+  trajectory and every non-silent trajectory after a silence start a syllable.
+- `anchor-t`: `t` is 0 (a later minor may let a system allow otherwise).
+- `key-unknown`, `cluster-not-allowed`, `tone-not-allowed`, `nucleus-missing`,
+  `final-unknown`, `syllabic-not-allowed`: keys against the pack. Syllabic m/ng (no
+  nucleus, coda m|ng) are valid only where the pack lists them as syllabic finals
+  (Jyutping).
+What a client does with a violation (refuse, repair, warn) is its choice in 0.3.0.
+
+### Heal: legacy → syllables (normative, `conformance/syllables.py` `heal_piece`)
+1. Uniqueids are assigned before healing (loaders already do) and persisted.
+2. A phrase with a `syllables` key keeps it, even `[]`; its legacy fields are ignored on
+   load and rewritten by the projection (`mixed-healed-and-legacy-phrases`).
+3. A phrase without the key: if no main-string trajectory anywhere in its **track** has a
+   vowel or consonant, `syllables = []` (instrumental tracks). Otherwise run
+   `firstTrajIdxs` (null == absent); each start index opens a syllable that spans up to
+   the next start or a silence. `onset` = first trajectory's `startConsonant`,
+   `nucleus` = its `vowel`, `coda` = last trajectory's `endConsonant`,
+   `lyric = { vowel: <vowel> or null, source: 'pack' }`, `anchor.t = 0`. A group with no
+   vowel still becomes a syllable (lyric.vowel null), so no extent leaks over it.
+
+### Projection: syllables → legacy fields (normative, `project_piece`)
+For every syllable and the trajectories it spans: `vowel` on every spanned trajectory,
+`startConsonant` + three copies + the `'0.00'` mirror on the first, `endConsonant` +
+three copies + the `'1.00'` mirror on the last; every other main-string trajectory has
+all of them cleared (a stale `'0.00'`/`'1.00'` articulation is removed only when its name
+is `consonant`). The values come from the pack entry's `legacy` block:
+- **hindi-urdu:** exact, `{iso, hindi, ipa, engTrans}` = today's tables at
+  `indexOf(key)`, bugs included (Jon, 2026-11-12: "legacy block"), so the round trip is
+  byte-identical. A stored string that is not a pack key is written back as-is with no
+  copies, as today's code does. The corrected forms live in `ipa`/`display` for new UI.
+- **other packs:** `legacy.iso` names the nearest hindi-urdu key (approximate) and the
+  copies come from that entry, so pre-0.3.0 readers display and synthesize something.
+  Clusters project their first (onset) or last (coda) consonant; glides, tones,
+  orthography, romanization, word starts and sung vowels project to nothing.
+- `lyric.vowel` is projected; `sung` never is.
+
+**Dual-write stays on through 0.3.x**; the legacy fields are dropped in a later minor.
+
+### Re-homing after phrase edits (normative, `rehome`)
+After every phrase split, merge or moved division, pool every syllable the track had
+before the edit and put each in the phrase that now holds its anchor trajectory, in
+trajectory order; a syllable whose trajectory was deleted is dropped. Pooling from the
+pre-edit state matters for a merge, which deletes a phrase and its list. Fixtures:
+`rehome-split-at-syllable-boundary`, `rehome-split-mid-melisma`, `rehome-merge`. The
+projection is unchanged by any of them.
+
+### Write guard (document; the server implements)
+A save from a client whose `X-IDTAP-Client` is below 0.3.0 is **refused** when the
+stored piece is not legacy-safe. Legacy-safe (`legacy_safe`) means: the pack is
+hindi-urdu, no syllable carries `orthography`, `romanization`, `tone`, `wordStart` or
+`sung`, `t` is 0, no cluster, every key has a legacy form (not `ṇa`), and
+heal(project(piece)) gives back the same syllables (anchor, onset, nucleus, coda,
+lyric.vowel; `lyric.source` is not compared). For every other piece the old client's
+save drops the syllables and the next load rebuilds them losslessly. `system` and
+`lyricsText` are top-level fields that a `$set` save leaves in place, so they do not
+trip the guard. Reason codes: `fixtures/syllable/write-guard.json`.
+
+### Rollout order (plan, "Release sequence")
+1. **Contract 0.3.0** (this branch).
+2. **All three client PRs ready and passing the same fixtures (the gate):** idtap-client
+   (heal, project, rehome, invariants, packs bundled), idtap-platform (model + server
+   guard), idtap-swift. Each bumps `CONTRACT_VERSION` to 0.3.0 in the commit that
+   implements the semantics, never before.
+3. **Dry run** over a DB dump: load every piece with the new model, heal, re-serialize,
+   assert the legacy fields round-trip byte-for-byte. Zero diffs is the gate.
+4. **PyPI 0.1.57, and installed where it matters** (cluster, Jon's machines) before
+   anything writes the new keys. This is the hard constraint, as in PROP-6: `idtap`
+   0.1.56 raises `ValueError: Invalid parameter: 'syllables'` in `Phrase._validate_parameters`
+   on any phrase that has the tier, and `Piece._ALLOWED_JSON_KEYS` would refuse `system`
+   and `lyricsText` the same way (verified 2026-11-12 against the Cantonese fixture).
+5. **Server** (write guard, packs served by the API).
+6. **Web with the flag off** (dual-write live, no syllable UI).
+7. **Swift.**
+8. **Flag on** (syllable and tone UI where `piece.system` is set).
+Rollback at any later step: dual-write keeps every document readable; only syllable
+editing stops.
+
+### Things that must not be forgotten
+- **The `'0.00'`/`'1.00'` consonant articulations** are a fourth copy of each consonant
+  and are serialized; the projection owns them. Code that edits consonants through
+  `addConsonant`/`changeConsonant`/`removeConsonant` must go through the syllable tier.
+- **Hand-written trajectory copies** (`TranscriptionLayer.vue` paths noted in PROP-6,
+  `insertFixedTraj*`) must carry `uniqueId` and the phrase's syllables, or a split loses
+  them; run `rehome` after each.
+- **Stored display copies win today** (`if (!this.startConsonantHindi)`), so a document
+  whose stored copy differs from the table changes on its first 0.3.0 save. The dry run
+  measures this; expect it to be rare.
+- **Empty strings:** null and missing are absent; `''` is a stored value. The dry run
+  should count `''` in `vowel`/`startConsonant`/`endConsonant` before 0.3.0 ships.
+- **Python 0.1.56 and earlier cannot read the new form at all** (step 4). So the
+  "old client saves and drops the syllables" path in the write guard applies to stale web
+  tabs and to scripts that write without loading, not to installed Python clients, which
+  fail on load. With the web flag off, every web save of a Hindi piece still writes
+  `syllables` (dual-write), so step 6 is when unupgraded Python clients start failing on
+  edited pieces. Open for Jon: whether web-flag-off should omit `syllables` until the
+  flag is on.
+- **Uniqueids must be stable across save/load** in every client, since anchors depend on
+  them. Check that no client regenerates trajectory `uniqueId` on load or copy-paste
+  without re-pointing the syllable.
+- **Analysis queries** that read `vowel`/`startConsonant` keep working through 0.3.x via
+  dual-write; port them to the tier before the legacy fields are dropped.
+- **The autotranscriber:** a consonant onset is a reason to start a new trajectory; the
+  vowel search runs constrained to a syllable's sounds when a lyric is present.
+
+---
+
+## PROP-9 — Phoneme packs as data
+
+**Decision (Jon, 2026-11-12, plan decision 5):** phoneme inventories stop being code;
+Hindi/Urdu, Jyutping and Kurmanji packs are built together. Status: **drafted on
+`prop7-8/system-and-syllables`; jyutping and kurmanji pending speaker review.**
+
+- `packs/<id>.json`, schema `schemas/pack.schema.json`, generated by
+  `tools/generate_packs.py`. Served by the API and bundled in each client.
+- **Entries keyed by the pack's romanization key** (what a syllable stores), each with
+  `ipa`, feature axes and `display` per ISO 15924 script. Consonants: `place`, `manner`,
+  `voiced`, `aspirated` (the axes of the Python client's `ConsonantSpec`), plus
+  `pharyngealized` (Kurmanji) and `labialized` (Jyutping gw, kw). Vowels: `height`,
+  `backness`, `rounded`, `length`. `codas` is either `"consonants"` or its own map
+  (Jyutping: unreleased -p -t -k, glides -i -u).
+- `finals`: the vowel-realization table where the nucleus depends on the coda (Jyutping,
+  enumerated, not nucleus × coda). `tones` with Chao contours. `flags`: syllabicNasals,
+  onsetClusters, codaClusters, tones, nucleusOptional, legacyExact.
+- `variants` hold context realizations (Kurmanji i → [ɨ] before m; e → [ə] in ew);
+  they are not phonemes, and a syllable stores the letter.
+- `unverified` lists what is not yet checked. Clients may show it, must not treat it as
+  settled.
+
+| pack | status | contents | open |
+|---|---|---|---|
+| `hindi-urdu` | complete | 33 consonants, 10 vowels + `_`; `legacy` blocks = today's tables exactly; `legacyTables` verbatim | Urdu (Arab) consonant forms unreviewed; three table bugs fixed in display (DIVERGENCES PACK-1) |
+| `jyutping` | draft, Yingyao Yu to review | 19 onsets, 8 codas, 9 nuclei, 59 finals with IPA, 6 tones | Yingyao counts 60 finals, the sources give 59 (candidates: bare eo, en, um, up); tones 2 and 5 are 25/23 in her list and 35/13 on jyutping.org (both kept) |
+| `kurmanji` | draft, Seba Kayan to review | 31 consonants incl. p̱ ṯ ḵ ç̱ (U+0331), ḥ, ʿ, flap r vs trill rr, x vs x̱; 8 vowels with context variants | [ɯ] glide after w; velar vs uvular x/x̱; [ɯɛ] after g, k; no Arabic-script forms |
+
+Validator checks: every pack against the schema; every hindi-urdu legacy key heals to
+a pack key and its `legacy` block equals `tables[indexOf(key)]`; every approximate
+`legacy.iso` of the other packs is a legacy hindi-urdu key; finals are consistent with
+nuclei and codas.
