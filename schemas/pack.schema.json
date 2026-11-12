@@ -26,7 +26,7 @@
         "codaClusters": { "description": "coda may be an array of coda keys.", "type": "boolean" },
         "tones": { "description": "The pack defines `tones`; a syllable's tone must be one of its keys.", "type": "boolean" },
         "nucleusOptional": { "description": "A syllable may have no nucleus (hindi-urdu: healed legacy groups with no vowel).", "type": "boolean" },
-        "legacyExact": { "description": "Every `legacy` block is exact (the projection is lossless for this pack's keys). Only hindi-urdu.", "type": "boolean" }
+        "legacyExact": { "description": "The pack carries exact `legacy` blocks (the projection is lossless for its keys). Only hindi-urdu; every other pack is false and has no legacy blocks.", "type": "boolean" }
       }
     },
     "consonants": { "description": "Onset consonants (and codas when `codas` is \"consonants\"), keyed by pack key.", "type": "object", "additionalProperties": { "$ref": "#/$defs/consonant" } },
@@ -75,16 +75,15 @@
   "$defs": {
     "display": { "description": "Script code -> written form.", "type": "object", "additionalProperties": { "type": "string" } },
     "legacy": {
-      "description": "What the PROP-8 projection writes into the pre-0.3.0 per-trajectory fields for this key. Exact for hindi-urdu ({iso, hindi, ipa, engTrans} = today's tables at indexOf(iso)); for other packs only `iso`, the nearest hindi-urdu key, marked approximate, and the copies come from that hindi-urdu entry.",
+      "description": "hindi-urdu only: what the PROP-8 projection writes into the pre-0.3.0 per-trajectory fields for this key, exactly ({iso, hindi, ipa, engTrans} = today's tables at indexOf(iso)). Other packs carry no legacy blocks and project nothing.",
       "type": "object",
-      "required": ["iso"],
+      "required": ["iso", "hindi", "ipa", "engTrans"],
       "additionalProperties": false,
       "properties": {
         "iso": { "type": "string" },
         "hindi": { "type": "string" },
         "ipa": { "type": "string" },
-        "engTrans": { "type": "string" },
-        "approximate": { "type": "boolean" }
+        "engTrans": { "type": "string" }
       }
     },
     "variant": {

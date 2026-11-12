@@ -17,7 +17,7 @@
     "Finals are enumerated, not nucleus x coda: the nucleus quality depends on the coda (i before ng/k is [e], u before ng/k is [o], o before u is [o], e before i is [e]).",
     "Finals IPA follows jyutping.org's chart. Wikipedia writes ing/ik as [ɪŋ ɪk] and ung/uk as [ʊŋ ʊk]; both are common transcriptions of the same sounds.",
     "Orthography (characters) is free text on the syllable: no validation or lookup in 0.3.0.",
-    "`legacy` maps an entry to the nearest hindi-urdu key so that pre-0.3.0 readers show and synthesize something; all are approximate, and the write guard stops a pre-0.3.0 client from saving such a piece."
+    "No `legacy` blocks (Jon, 2026-11-12): every platform moves to the syllable tier together, so a non-Hindi piece projects nothing into the pre-0.3.0 per-trajectory fields. The write guard is the only protection against a pre-0.3.0 save."
   ],
   "unverified": [
     "finals: Yingyao's inventory counts 60 finals; jyutping.org and Wikipedia give 57 + syllabic m, ng = 59. Candidates for the 60th: bare eo (jyutping.org section 3.1 lists 'eo [ɵ]'), en, um, up (chart labels with no example character).",
@@ -40,10 +40,6 @@
       "aspirated": false,
       "display": {
         "Latn": "b"
-      },
-      "legacy": {
-        "iso": "pa",
-        "approximate": true
       }
     },
     "p": {
@@ -54,10 +50,6 @@
       "aspirated": true,
       "display": {
         "Latn": "p"
-      },
-      "legacy": {
-        "iso": "pha",
-        "approximate": true
       }
     },
     "m": {
@@ -68,10 +60,6 @@
       "aspirated": false,
       "display": {
         "Latn": "m"
-      },
-      "legacy": {
-        "iso": "ma",
-        "approximate": true
       }
     },
     "f": {
@@ -82,10 +70,6 @@
       "aspirated": false,
       "display": {
         "Latn": "f"
-      },
-      "legacy": {
-        "iso": "pha",
-        "approximate": true
       }
     },
     "d": {
@@ -96,10 +80,6 @@
       "aspirated": false,
       "display": {
         "Latn": "d"
-      },
-      "legacy": {
-        "iso": "ta",
-        "approximate": true
       }
     },
     "t": {
@@ -110,10 +90,6 @@
       "aspirated": true,
       "display": {
         "Latn": "t"
-      },
-      "legacy": {
-        "iso": "tha",
-        "approximate": true
       }
     },
     "n": {
@@ -124,10 +100,6 @@
       "aspirated": false,
       "display": {
         "Latn": "n"
-      },
-      "legacy": {
-        "iso": "na",
-        "approximate": true
       }
     },
     "l": {
@@ -138,10 +110,6 @@
       "aspirated": false,
       "display": {
         "Latn": "l"
-      },
-      "legacy": {
-        "iso": "la",
-        "approximate": true
       }
     },
     "g": {
@@ -152,10 +120,6 @@
       "aspirated": false,
       "display": {
         "Latn": "g"
-      },
-      "legacy": {
-        "iso": "ka",
-        "approximate": true
       }
     },
     "k": {
@@ -166,10 +130,6 @@
       "aspirated": true,
       "display": {
         "Latn": "k"
-      },
-      "legacy": {
-        "iso": "kha",
-        "approximate": true
       }
     },
     "ng": {
@@ -180,10 +140,6 @@
       "aspirated": false,
       "display": {
         "Latn": "ng"
-      },
-      "legacy": {
-        "iso": "ṅa",
-        "approximate": true
       }
     },
     "h": {
@@ -194,10 +150,6 @@
       "aspirated": false,
       "display": {
         "Latn": "h"
-      },
-      "legacy": {
-        "iso": "ha",
-        "approximate": true
       }
     },
     "gw": {
@@ -208,10 +160,6 @@
       "aspirated": false,
       "display": {
         "Latn": "gw"
-      },
-      "legacy": {
-        "iso": "ka",
-        "approximate": true
       },
       "labialized": true
     },
@@ -224,10 +172,6 @@
       "display": {
         "Latn": "kw"
       },
-      "legacy": {
-        "iso": "kha",
-        "approximate": true
-      },
       "labialized": true
     },
     "w": {
@@ -238,10 +182,6 @@
       "aspirated": false,
       "display": {
         "Latn": "w"
-      },
-      "legacy": {
-        "iso": "va",
-        "approximate": true
       }
     },
     "z": {
@@ -252,10 +192,6 @@
       "aspirated": false,
       "display": {
         "Latn": "z"
-      },
-      "legacy": {
-        "iso": "ca",
-        "approximate": true
       }
     },
     "c": {
@@ -266,10 +202,6 @@
       "aspirated": true,
       "display": {
         "Latn": "c"
-      },
-      "legacy": {
-        "iso": "cha",
-        "approximate": true
       }
     },
     "s": {
@@ -280,10 +212,6 @@
       "aspirated": false,
       "display": {
         "Latn": "s"
-      },
-      "legacy": {
-        "iso": "sa",
-        "approximate": true
       }
     },
     "j": {
@@ -294,10 +222,6 @@
       "aspirated": false,
       "display": {
         "Latn": "j"
-      },
-      "legacy": {
-        "iso": "ya",
-        "approximate": true
       }
     }
   },
@@ -330,10 +254,6 @@
       "aspirated": false,
       "display": {
         "Latn": "m"
-      },
-      "legacy": {
-        "iso": "ma",
-        "approximate": true
       }
     },
     "n": {
@@ -344,10 +264,6 @@
       "aspirated": false,
       "display": {
         "Latn": "n"
-      },
-      "legacy": {
-        "iso": "na",
-        "approximate": true
       }
     },
     "ng": {
@@ -358,10 +274,6 @@
       "aspirated": false,
       "display": {
         "Latn": "ng"
-      },
-      "legacy": {
-        "iso": "ṅa",
-        "approximate": true
       }
     },
     "p": {
@@ -372,10 +284,6 @@
       "aspirated": false,
       "display": {
         "Latn": "p"
-      },
-      "legacy": {
-        "iso": "pa",
-        "approximate": true
       }
     },
     "t": {
@@ -386,10 +294,6 @@
       "aspirated": false,
       "display": {
         "Latn": "t"
-      },
-      "legacy": {
-        "iso": "ta",
-        "approximate": true
       }
     },
     "k": {
@@ -400,10 +304,6 @@
       "aspirated": false,
       "display": {
         "Latn": "k"
-      },
-      "legacy": {
-        "iso": "ka",
-        "approximate": true
       }
     }
   },
@@ -416,10 +316,6 @@
       "length": "long",
       "display": {
         "Latn": "aa"
-      },
-      "legacy": {
-        "iso": "ā",
-        "approximate": true
       }
     },
     "a": {
@@ -430,10 +326,6 @@
       "length": "short",
       "display": {
         "Latn": "a"
-      },
-      "legacy": {
-        "iso": "a",
-        "approximate": true
       }
     },
     "e": {
@@ -444,10 +336,6 @@
       "length": "long",
       "display": {
         "Latn": "e"
-      },
-      "legacy": {
-        "iso": "ai",
-        "approximate": true
       }
     },
     "i": {
@@ -458,10 +346,6 @@
       "length": "long",
       "display": {
         "Latn": "i"
-      },
-      "legacy": {
-        "iso": "ī",
-        "approximate": true
       }
     },
     "o": {
@@ -472,10 +356,6 @@
       "length": "long",
       "display": {
         "Latn": "o"
-      },
-      "legacy": {
-        "iso": "au",
-        "approximate": true
       }
     },
     "u": {
@@ -486,10 +366,6 @@
       "length": "long",
       "display": {
         "Latn": "u"
-      },
-      "legacy": {
-        "iso": "ū",
-        "approximate": true
       }
     },
     "eo": {
@@ -500,10 +376,6 @@
       "length": "short",
       "display": {
         "Latn": "eo"
-      },
-      "legacy": {
-        "iso": "u",
-        "approximate": true
       }
     },
     "oe": {
@@ -514,10 +386,6 @@
       "length": "long",
       "display": {
         "Latn": "oe"
-      },
-      "legacy": {
-        "iso": "ē",
-        "approximate": true
       }
     },
     "yu": {
@@ -528,10 +396,6 @@
       "length": "long",
       "display": {
         "Latn": "yu"
-      },
-      "legacy": {
-        "iso": "ī",
-        "approximate": true
       }
     }
   },

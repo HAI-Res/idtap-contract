@@ -482,11 +482,13 @@ is `consonant`). The values come from the pack entry's `legacy` block:
   `indexOf(key)`, bugs included (Jon, 2026-11-12: "legacy block"), so the round trip is
   byte-identical. A stored string that is not a pack key is written back as-is with no
   copies, as today's code does. The corrected forms live in `ipa`/`display` for new UI.
-- **other packs:** `legacy.iso` names the nearest hindi-urdu key (approximate) and the
-  copies come from that entry, so pre-0.3.0 readers display and synthesize something.
-  Clusters project their first (onset) or last (coda) consonant; glides, tones,
-  orthography, romanization, word starts and sung vowels project to nothing.
-- `lyric.vowel` is projected; `sung` never is.
+- **every other pack projects nothing** (Jon, 2026-11-12, reversing an earlier draft
+  that mapped each Jyutping/Kurmanji entry to its nearest hindi-urdu key): all
+  platforms move to the tier together, so a non-Hindi piece leaves every legacy field
+  absent and every `'0.00'`/`'1.00'` consonant articulation removed. Those packs carry
+  no `legacy` blocks, and the validator rejects one if it appears.
+- Tones, orthography, romanization, word starts, clusters and sung vowels never project.
+  `lyric.vowel` is projected; `sung` never is.
 
 **Dual-write stays on through 0.3.x**; the legacy fields are dropped in a later minor.
 
@@ -523,7 +525,9 @@ hindi-urdu, no syllable carries `orthography`, `romanization`, `tone`, `wordStar
 `sung`, `t` is 0, no cluster, every key has a legacy form (not `ṇa`), and
 heal(project(piece)) gives back the same syllables (anchor, onset, nucleus, coda,
 lyric.vowel; `lyric.source` is not compared). For every other piece the old client's
-save drops the syllables and the next load rebuilds them losslessly. `system` and
+save drops the syllables and the next load rebuilds them losslessly. **For a non-Hindi piece the guard is the only protection:** its
+legacy fields are empty, so a pre-0.3.0 save that got through would keep nothing of
+its text, and the next load would have nothing to heal from. `system` and
 `lyricsText` are top-level fields that a `$set` save leaves in place, so they do not
 trip the guard. Reason codes: `fixtures/syllable/write-guard.json`.
 
@@ -606,6 +610,5 @@ Hindi/Urdu, Jyutping and Kurmanji packs are built together. Status: **drafted on
 | `kurmanji` | draft, Seba Kayan to review | 31 consonants incl. p̱ ṯ ḵ ç̱ (U+0331), ḥ, ʿ, flap r vs trill rr, x vs x̱; 8 vowels with context variants | [ɯ] glide after w; velar vs uvular x/x̱; [ɯɛ] after g, k; no Arabic-script forms |
 
 Validator checks: every pack against the schema; every hindi-urdu legacy key heals to
-a pack key and its `legacy` block equals `tables[indexOf(key)]`; every approximate
-`legacy.iso` of the other packs is a legacy hindi-urdu key; finals are consistent with
-nuclei and codas.
+a pack key and its `legacy` block equals `tables[indexOf(key)]`; no other pack carries
+a `legacy` block or sets `legacyExact`; finals are consistent with nuclei and codas.

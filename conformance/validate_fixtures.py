@@ -381,7 +381,6 @@ def check_system(fx):
 # --------------------------------------------------------------------------- packs (PROP-9)
 def check_pack(pack):
     errs = schema_errors(pack, "pack")
-    hindi = SYL.load_pack(SYL.LEGACY_PACK)
     codas = SYL.codas_of(pack)
     if pack["id"] == SYL.LEGACY_PACK:
         lt = pack["legacyTables"]
@@ -399,12 +398,14 @@ def check_pack(pack):
                 if "legacy" in e and key not in lt[isos]:
                     errs.append(f"{table}.{key}: legacy block for a key the tables lack")
     else:
-        for table in ("consonants", "vowels"):
-            for key, e in pack[table].items():
-                iso = (e.get("legacy") or {}).get("iso")
-                src = hindi["vowels"] if table == "vowels" else hindi["consonants"]
-                if iso is not None and (iso not in src or "legacy" not in src[iso]):
-                    errs.append(f"{table}.{key}: legacy iso {iso!r} is not a legacy hindi-urdu key")
+        # non-Hindi packs project nothing into the legacy fields (PROP-8)
+        if pack["flags"]["legacyExact"]:
+            errs.append("flags.legacyExact is true on a non-hindi-urdu pack")
+        maps = [pack["consonants"], pack["vowels"]] + ([codas] if codas is not pack["consonants"] else [])
+        for m in maps:
+            for key, e in m.items():
+                if "legacy" in e:
+                    errs.append(f"{key}: legacy block on a non-hindi-urdu pack")
     for key, f in (pack.get("finals") or {}).items():
         if (f["nucleus"] or "") + (f["coda"] or "") != key:
             errs.append(f"finals.{key}: key != nucleus + coda")

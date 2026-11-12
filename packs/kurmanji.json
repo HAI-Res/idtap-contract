@@ -16,7 +16,8 @@
     "Syllable = onset (one or more consonants, e.g. xw) + vowel + optional coda. Clusters are arrays of keys on the syllable.",
     "Context variants are realizations, not separate phonemes: the syllable stores the letter; a variant is something `sung` may record.",
     "Test piece: Dengbêj Gazîn, 'Her wayê wayê wayê' (Çakır ed. 2026, song record 152).",
-    "Arabic-script (Kurdish) display forms are not given yet."
+    "Arabic-script (Kurdish) display forms are not given yet.",
+    "No `legacy` blocks (Jon, 2026-11-12): every platform moves to the syllable tier together, so a non-Hindi piece projects nothing into the pre-0.3.0 per-trajectory fields. The write guard is the only protection against a pre-0.3.0 save."
   ],
   "unverified": [
     "consonants.w.variants: the [ɯ] glide before front vowels",
@@ -40,10 +41,6 @@
       "aspirated": false,
       "display": {
         "Latn": "b"
-      },
-      "legacy": {
-        "iso": "ba",
-        "approximate": true
       }
     },
     "c": {
@@ -54,10 +51,6 @@
       "aspirated": false,
       "display": {
         "Latn": "c"
-      },
-      "legacy": {
-        "iso": "ja",
-        "approximate": true
       }
     },
     "ç": {
@@ -68,10 +61,6 @@
       "aspirated": true,
       "display": {
         "Latn": "ç"
-      },
-      "legacy": {
-        "iso": "cha",
-        "approximate": true
       }
     },
     "ç̱": {
@@ -84,10 +73,6 @@
         "Latn": "ç̱"
       },
       "pharyngealized": true,
-      "legacy": {
-        "iso": "ca",
-        "approximate": true
-      },
       "note": "Thackston's underlined ç: unaspirated, pharyngealized; not maintained by all speakers (p. 4)."
     },
     "d": {
@@ -98,10 +83,6 @@
       "aspirated": false,
       "display": {
         "Latn": "d"
-      },
-      "legacy": {
-        "iso": "da",
-        "approximate": true
       }
     },
     "f": {
@@ -112,10 +93,6 @@
       "aspirated": false,
       "display": {
         "Latn": "f"
-      },
-      "legacy": {
-        "iso": "pha",
-        "approximate": true
       }
     },
     "g": {
@@ -126,10 +103,6 @@
       "aspirated": false,
       "display": {
         "Latn": "g"
-      },
-      "legacy": {
-        "iso": "ga",
-        "approximate": true
       }
     },
     "h": {
@@ -140,10 +113,6 @@
       "aspirated": false,
       "display": {
         "Latn": "h"
-      },
-      "legacy": {
-        "iso": "ha",
-        "approximate": true
       }
     },
     "ḥ": {
@@ -155,10 +124,6 @@
       "display": {
         "Latn": "ḥ"
       },
-      "legacy": {
-        "iso": "ha",
-        "approximate": true
-      },
       "note": "Thackston's underlined h; elsewhere not distinguished from h."
     },
     "j": {
@@ -169,10 +134,6 @@
       "aspirated": false,
       "display": {
         "Latn": "j"
-      },
-      "legacy": {
-        "iso": "ja",
-        "approximate": true
       }
     },
     "k": {
@@ -183,10 +144,6 @@
       "aspirated": true,
       "display": {
         "Latn": "k"
-      },
-      "legacy": {
-        "iso": "kha",
-        "approximate": true
       }
     },
     "ḵ": {
@@ -199,10 +156,6 @@
         "Latn": "ḵ"
       },
       "pharyngealized": true,
-      "legacy": {
-        "iso": "ka",
-        "approximate": true
-      },
       "note": "Thackston's underlined k: unaspirated, pharyngealized; not maintained by all speakers."
     },
     "l": {
@@ -213,10 +166,6 @@
       "aspirated": false,
       "display": {
         "Latn": "l"
-      },
-      "legacy": {
-        "iso": "la",
-        "approximate": true
       }
     },
     "m": {
@@ -227,10 +176,6 @@
       "aspirated": false,
       "display": {
         "Latn": "m"
-      },
-      "legacy": {
-        "iso": "ma",
-        "approximate": true
       }
     },
     "n": {
@@ -241,10 +186,6 @@
       "aspirated": false,
       "display": {
         "Latn": "n"
-      },
-      "legacy": {
-        "iso": "na",
-        "approximate": true
       }
     },
     "p": {
@@ -255,10 +196,6 @@
       "aspirated": true,
       "display": {
         "Latn": "p"
-      },
-      "legacy": {
-        "iso": "pha",
-        "approximate": true
       }
     },
     "p̱": {
@@ -271,10 +208,6 @@
         "Latn": "p̱"
       },
       "pharyngealized": true,
-      "legacy": {
-        "iso": "pa",
-        "approximate": true
-      },
       "note": "Thackston's underlined p: unaspirated, pharyngealized; not maintained by all speakers."
     },
     "q": {
@@ -285,10 +218,6 @@
       "aspirated": false,
       "display": {
         "Latn": "q"
-      },
-      "legacy": {
-        "iso": "ka",
-        "approximate": true
       }
     },
     "r": {
@@ -299,10 +228,6 @@
       "aspirated": false,
       "display": {
         "Latn": "r"
-      },
-      "legacy": {
-        "iso": "ra",
-        "approximate": true
       },
       "note": "Flap; does not occur word-initially."
     },
@@ -315,10 +240,6 @@
       "display": {
         "Latn": "rr"
       },
-      "legacy": {
-        "iso": "ra",
-        "approximate": true
-      },
       "note": "Trill; every initial r is trilled. Spelled rr only sporadically (pirr); a transcriber writes rr wherever a trill is heard."
     },
     "s": {
@@ -329,10 +250,6 @@
       "aspirated": false,
       "display": {
         "Latn": "s"
-      },
-      "legacy": {
-        "iso": "sa",
-        "approximate": true
       }
     },
     "ş": {
@@ -343,10 +260,6 @@
       "aspirated": false,
       "display": {
         "Latn": "ş"
-      },
-      "legacy": {
-        "iso": "śa",
-        "approximate": true
       }
     },
     "t": {
@@ -357,10 +270,6 @@
       "aspirated": true,
       "display": {
         "Latn": "t"
-      },
-      "legacy": {
-        "iso": "tha",
-        "approximate": true
       }
     },
     "ṯ": {
@@ -373,10 +282,6 @@
         "Latn": "ṯ"
       },
       "pharyngealized": true,
-      "legacy": {
-        "iso": "ta",
-        "approximate": true
-      },
       "note": "Thackston's underlined t: unaspirated, pharyngealized; not maintained by all speakers."
     },
     "v": {
@@ -387,10 +292,6 @@
       "aspirated": false,
       "display": {
         "Latn": "v"
-      },
-      "legacy": {
-        "iso": "va",
-        "approximate": true
       }
     },
     "w": {
@@ -401,10 +302,6 @@
       "aspirated": false,
       "display": {
         "Latn": "w"
-      },
-      "legacy": {
-        "iso": "va",
-        "approximate": true
       },
       "variants": [
         {
@@ -424,10 +321,6 @@
       "display": {
         "Latn": "x"
       },
-      "legacy": {
-        "iso": "kha",
-        "approximate": true
-      },
       "variants": [
         {
           "ipa": "χ",
@@ -445,10 +338,6 @@
       "aspirated": false,
       "display": {
         "Latn": "x̱"
-      },
-      "legacy": {
-        "iso": "ga",
-        "approximate": true
       },
       "note": "Thackston's underlined x, the voiced counterpart of x (Arabic ghayn).",
       "variants": [
@@ -468,10 +357,6 @@
       "aspirated": false,
       "display": {
         "Latn": "y"
-      },
-      "legacy": {
-        "iso": "ya",
-        "approximate": true
       }
     },
     "z": {
@@ -482,10 +367,6 @@
       "aspirated": false,
       "display": {
         "Latn": "z"
-      },
-      "legacy": {
-        "iso": "sa",
-        "approximate": true
       }
     },
     "ʿ": {
@@ -511,10 +392,6 @@
       "display": {
         "Latn": "î"
       },
-      "legacy": {
-        "iso": "ī",
-        "approximate": true
-      },
       "example": "nîv [niv] half"
     },
     "i": {
@@ -525,10 +402,6 @@
       "length": "short",
       "display": {
         "Latn": "i"
-      },
-      "legacy": {
-        "iso": "i",
-        "approximate": true
       },
       "example": "dil [dɪl] heart",
       "variants": [
@@ -548,10 +421,6 @@
       "display": {
         "Latn": "ê"
       },
-      "legacy": {
-        "iso": "ē",
-        "approximate": true
-      },
       "example": "hêz [hez] power"
     },
     "e": {
@@ -562,10 +431,6 @@
       "length": "short",
       "display": {
         "Latn": "e"
-      },
-      "legacy": {
-        "iso": "ai",
-        "approximate": true
       },
       "example": "berhem [bæɾˈhæm] product",
       "variants": [
@@ -596,10 +461,6 @@
       "display": {
         "Latn": "û"
       },
-      "legacy": {
-        "iso": "ū",
-        "approximate": true
-      },
       "example": "bûn [bun] to be"
     },
     "u": {
@@ -610,10 +471,6 @@
       "length": "short",
       "display": {
         "Latn": "u"
-      },
-      "legacy": {
-        "iso": "u",
-        "approximate": true
       },
       "example": "du [dʊ] two",
       "variants": [
@@ -634,10 +491,6 @@
       "display": {
         "Latn": "o"
       },
-      "legacy": {
-        "iso": "ō",
-        "approximate": true
-      },
       "example": "nod [nod] ninety"
     },
     "a": {
@@ -648,10 +501,6 @@
       "length": "long",
       "display": {
         "Latn": "a"
-      },
-      "legacy": {
-        "iso": "ā",
-        "approximate": true
       },
       "example": "bav [bɑv] father"
     }

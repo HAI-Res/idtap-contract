@@ -160,50 +160,50 @@ def hindi_urdu():
 # --------------------------------------------------------------------------
 # jyutping
 # --------------------------------------------------------------------------
-# onset key: (ipa, place, manner, voiced, aspirated, labialized, legacyIso)
+# onset key: (ipa, place, manner, voiced, aspirated, labialized)
 JYUT_ONSETS = [
-    ('b',  'p',   'labial', 'stop', False, False, False, 'pa'),
-    ('p',  'pʰ',  'labial', 'stop', False, True,  False, 'pha'),
-    ('m',  'm',   'labial', 'nasal', True, False, False, 'ma'),
-    ('f',  'f',   'labiodental', 'fricative', False, False, False, 'pha'),
-    ('d',  't',   'alveolar', 'stop', False, False, False, 'ta'),
-    ('t',  'tʰ',  'alveolar', 'stop', False, True,  False, 'tha'),
-    ('n',  'n',   'alveolar', 'nasal', True, False, False, 'na'),
-    ('l',  'l',   'alveolar', 'lateral', True, False, False, 'la'),
-    ('g',  'k',   'velar', 'stop', False, False, False, 'ka'),
-    ('k',  'kʰ',  'velar', 'stop', False, True,  False, 'kha'),
-    ('ng', 'ŋ',   'velar', 'nasal', True, False, False, 'ṅa'),
-    ('h',  'h',   'glottal', 'fricative', False, False, False, 'ha'),
-    ('gw', 'kʷ',  'velar', 'stop', False, False, True, 'ka'),
-    ('kw', 'kʷʰ', 'velar', 'stop', False, True,  True, 'kha'),
-    ('w',  'w',   'labiovelar', 'approximant', True, False, False, 'va'),
-    ('z',  't͡s', 'alveolar', 'affricate', False, False, False, 'ca'),
-    ('c',  't͡sʰ', 'alveolar', 'affricate', False, True, False, 'cha'),
-    ('s',  's',   'alveolar', 'fricative', False, False, False, 'sa'),
-    ('j',  'j',   'palatal', 'approximant', True, False, False, 'ya'),
+    ('b',  'p',   'labial', 'stop', False, False, False),
+    ('p',  'pʰ',  'labial', 'stop', False, True,  False),
+    ('m',  'm',   'labial', 'nasal', True, False, False),
+    ('f',  'f',   'labiodental', 'fricative', False, False, False),
+    ('d',  't',   'alveolar', 'stop', False, False, False),
+    ('t',  'tʰ',  'alveolar', 'stop', False, True,  False),
+    ('n',  'n',   'alveolar', 'nasal', True, False, False),
+    ('l',  'l',   'alveolar', 'lateral', True, False, False),
+    ('g',  'k',   'velar', 'stop', False, False, False),
+    ('k',  'kʰ',  'velar', 'stop', False, True,  False),
+    ('ng', 'ŋ',   'velar', 'nasal', True, False, False),
+    ('h',  'h',   'glottal', 'fricative', False, False, False),
+    ('gw', 'kʷ',  'velar', 'stop', False, False, True),
+    ('kw', 'kʷʰ', 'velar', 'stop', False, True,  True),
+    ('w',  'w',   'labiovelar', 'approximant', True, False, False),
+    ('z',  't͡s', 'alveolar', 'affricate', False, False, False),
+    ('c',  't͡sʰ', 'alveolar', 'affricate', False, True, False),
+    ('s',  's',   'alveolar', 'fricative', False, False, False),
+    ('j',  'j',   'palatal', 'approximant', True, False, False),
 ]
-# coda key: (ipa, place, manner, voiced, legacyIso or None)
+# coda key: (ipa, place, manner, voiced)
 JYUT_CODAS = [
-    ('i',  'i̯', 'palatal', 'approximant', True, None),
-    ('u',  'u̯', 'labiovelar', 'approximant', True, None),
-    ('m',  'm',  'labial', 'nasal', True, 'ma'),
-    ('n',  'n',  'alveolar', 'nasal', True, 'na'),
-    ('ng', 'ŋ',  'velar', 'nasal', True, 'ṅa'),
-    ('p',  'p̚', 'labial', 'stop', False, 'pa'),
-    ('t',  't̚', 'alveolar', 'stop', False, 'ta'),
-    ('k',  'k̚', 'velar', 'stop', False, 'ka'),
+    ('i',  'i̯', 'palatal', 'approximant', True),
+    ('u',  'u̯', 'labiovelar', 'approximant', True),
+    ('m',  'm',  'labial', 'nasal', True),
+    ('n',  'n',  'alveolar', 'nasal', True),
+    ('ng', 'ŋ',  'velar', 'nasal', True),
+    ('p',  'p̚', 'labial', 'stop', False),
+    ('t',  't̚', 'alveolar', 'stop', False),
+    ('k',  'k̚', 'velar', 'stop', False),
 ]
-# nucleus key: (base ipa, height, backness, rounded, length, legacyIso, approximate)
+# nucleus key: (base ipa, height, backness, rounded, length)
 JYUT_NUCLEI = [
-    ('aa', 'aː', 'open', 'central', False, 'long', 'ā', False),
-    ('a',  'ɐ',  'near-open', 'central', False, 'short', 'a', False),
-    ('e',  'ɛː', 'open-mid', 'front', False, 'long', 'ai', False),
-    ('i',  'iː', 'close', 'front', False, 'long', 'ī', False),
-    ('o',  'ɔː', 'open-mid', 'back', True, 'long', 'au', False),
-    ('u',  'uː', 'close', 'back', True, 'long', 'ū', False),
-    ('eo', 'ɵ',  'close-mid', 'central', True, 'short', 'u', True),
-    ('oe', 'œː', 'open-mid', 'front', True, 'long', 'ē', True),
-    ('yu', 'yː', 'close', 'front', True, 'long', 'ī', True),
+    ('aa', 'aː', 'open', 'central', False, 'long'),
+    ('a',  'ɐ',  'near-open', 'central', False, 'short'),
+    ('e',  'ɛː', 'open-mid', 'front', False, 'long'),
+    ('i',  'iː', 'close', 'front', False, 'long'),
+    ('o',  'ɔː', 'open-mid', 'back', True, 'long'),
+    ('u',  'uː', 'close', 'back', True, 'long'),
+    ('eo', 'ɵ',  'close-mid', 'central', True, 'short'),
+    ('oe', 'œː', 'open-mid', 'front', True, 'long'),
+    ('yu', 'yː', 'close', 'front', True, 'long'),
 ]
 # final: (nucleus, coda, ipa). jyutping.org chart (57) + syllabic m, ng = 59.
 JYUT_FINALS = [
@@ -233,24 +233,20 @@ JYUT_RARE = {"a": "elided casual speech only (sei3 a6 sei3); added to Jyutping 2
 
 def jyutping():
     onsets = {}
-    for key, ipa, place, manner, voiced, asp, lab, leg in JYUT_ONSETS:
+    for key, ipa, place, manner, voiced, asp, lab in JYUT_ONSETS:
         e = {"ipa": ipa, "place": place, "manner": manner, "voiced": voiced,
-             "aspirated": asp, "display": {"Latn": key},
-             "legacy": {"iso": leg, "approximate": True}}
+             "aspirated": asp, "display": {"Latn": key}}
         if lab:
             e["labialized"] = True
         onsets[key] = e
     codas = {}
-    for key, ipa, place, manner, voiced, leg in JYUT_CODAS:
-        e = {"ipa": ipa, "place": place, "manner": manner, "voiced": voiced,
-             "aspirated": False, "display": {"Latn": key}}
-        if leg:
-            e["legacy"] = {"iso": leg, "approximate": True}
-        codas[key] = e
+    for key, ipa, place, manner, voiced in JYUT_CODAS:
+        codas[key] = {"ipa": ipa, "place": place, "manner": manner, "voiced": voiced,
+                      "aspirated": False, "display": {"Latn": key}}
     nuclei = {}
-    for key, ipa, h, b, r, ln, leg, approx in JYUT_NUCLEI:
+    for key, ipa, h, b, r, ln in JYUT_NUCLEI:
         nuclei[key] = {"ipa": ipa, "height": h, "backness": b, "rounded": r, "length": ln,
-                       "display": {"Latn": key}, "legacy": {"iso": leg, "approximate": True}}
+                       "display": {"Latn": key}}
     finals = {}
     for nuc, coda, ipa in JYUT_FINALS:
         key = (nuc or "") + (coda or "")
@@ -277,7 +273,7 @@ def jyutping():
             "Finals are enumerated, not nucleus x coda: the nucleus quality depends on the coda (i before ng/k is [e], u before ng/k is [o], o before u is [o], e before i is [e]).",
             "Finals IPA follows jyutping.org's chart. Wikipedia writes ing/ik as [ɪŋ ɪk] and ung/uk as [ʊŋ ʊk]; both are common transcriptions of the same sounds.",
             "Orthography (characters) is free text on the syllable: no validation or lookup in 0.3.0.",
-            "`legacy` maps an entry to the nearest hindi-urdu key so that pre-0.3.0 readers show and synthesize something; all are approximate, and the write guard stops a pre-0.3.0 client from saving such a piece.",
+            "No `legacy` blocks (Jon, 2026-11-12): every platform moves to the syllable tier together, so a non-Hindi piece projects nothing into the pre-0.3.0 per-trajectory fields. The write guard is the only protection against a pre-0.3.0 save.",
         ],
         "unverified": [
             "finals: Yingyao's inventory counts 60 finals; jyutping.org and Wikipedia give 57 + syllabic m, ng = 59. Candidates for the 60th: bare eo (jyutping.org section 3.1 lists 'eo [ɵ]'), en, um, up (chart labels with no example character).",
@@ -305,75 +301,73 @@ def jyutping():
 # kurmanji
 # --------------------------------------------------------------------------
 U = "̱"  # combining macron below: Thackston's underline
-# key: (ipa, place, manner, voiced, aspirated, pharyngealized, legacyIso, note)
+# key: (ipa, place, manner, voiced, aspirated, pharyngealized, note)
 KUR_CONSONANTS = [
-    ('b', 'b', 'labial', 'stop', True, False, False, 'ba', None),
-    ('c', 'd͡ʒ', 'postalveolar', 'affricate', True, False, False, 'ja', None),
-    ('ç', 't͡ʃʰ', 'postalveolar', 'affricate', False, True, False, 'cha', None),
-    ('ç' + U, 't͡ʃˤ', 'postalveolar', 'affricate', False, False, True, 'ca',
+    ('b', 'b', 'labial', 'stop', True, False, False, None),
+    ('c', 'd͡ʒ', 'postalveolar', 'affricate', True, False, False, None),
+    ('ç', 't͡ʃʰ', 'postalveolar', 'affricate', False, True, False, None),
+    ('ç' + U, 't͡ʃˤ', 'postalveolar', 'affricate', False, False, True,
      "Thackston's underlined ç: unaspirated, pharyngealized; not maintained by all speakers (p. 4)."),
-    ('d', 'd', 'alveolar', 'stop', True, False, False, 'da', None),
-    ('f', 'f', 'labiodental', 'fricative', False, False, False, 'pha', None),
-    ('g', 'g', 'velar', 'stop', True, False, False, 'ga', None),
-    ('h', 'h', 'glottal', 'fricative', False, False, False, 'ha', None),
-    ('ḥ', 'ħ', 'pharyngeal', 'fricative', False, False, False, 'ha',
+    ('d', 'd', 'alveolar', 'stop', True, False, False, None),
+    ('f', 'f', 'labiodental', 'fricative', False, False, False, None),
+    ('g', 'g', 'velar', 'stop', True, False, False, None),
+    ('h', 'h', 'glottal', 'fricative', False, False, False, None),
+    ('ḥ', 'ħ', 'pharyngeal', 'fricative', False, False, False,
      "Thackston's underlined h; elsewhere not distinguished from h."),
-    ('j', 'ʒ', 'postalveolar', 'fricative', True, False, False, 'ja', None),
-    ('k', 'kʰ', 'velar', 'stop', False, True, False, 'kha', None),
-    ('k' + U, 'kˤ', 'velar', 'stop', False, False, True, 'ka',
+    ('j', 'ʒ', 'postalveolar', 'fricative', True, False, False, None),
+    ('k', 'kʰ', 'velar', 'stop', False, True, False, None),
+    ('k' + U, 'kˤ', 'velar', 'stop', False, False, True,
      "Thackston's underlined k: unaspirated, pharyngealized; not maintained by all speakers."),
-    ('l', 'l', 'alveolar', 'lateral', True, False, False, 'la', None),
-    ('m', 'm', 'labial', 'nasal', True, False, False, 'ma', None),
-    ('n', 'n', 'alveolar', 'nasal', True, False, False, 'na', None),
-    ('p', 'pʰ', 'labial', 'stop', False, True, False, 'pha', None),
-    ('p' + U, 'pˤ', 'labial', 'stop', False, False, True, 'pa',
+    ('l', 'l', 'alveolar', 'lateral', True, False, False, None),
+    ('m', 'm', 'labial', 'nasal', True, False, False, None),
+    ('n', 'n', 'alveolar', 'nasal', True, False, False, None),
+    ('p', 'pʰ', 'labial', 'stop', False, True, False, None),
+    ('p' + U, 'pˤ', 'labial', 'stop', False, False, True,
      "Thackston's underlined p: unaspirated, pharyngealized; not maintained by all speakers."),
-    ('q', 'q', 'uvular', 'stop', False, False, False, 'ka', None),
-    ('r', 'ɾ', 'alveolar', 'flap', True, False, False, 'ra', "Flap; does not occur word-initially."),
-    ('rr', 'r', 'alveolar', 'trill', True, False, False, 'ra',
+    ('q', 'q', 'uvular', 'stop', False, False, False, None),
+    ('r', 'ɾ', 'alveolar', 'flap', True, False, False, "Flap; does not occur word-initially."),
+    ('rr', 'r', 'alveolar', 'trill', True, False, False,
      "Trill; every initial r is trilled. Spelled rr only sporadically (pirr); a transcriber writes rr wherever a trill is heard."),
-    ('s', 's', 'alveolar', 'fricative', False, False, False, 'sa', None),
-    ('ş', 'ʃ', 'postalveolar', 'fricative', False, False, False, 'śa', None),
-    ('t', 'tʰ', 'alveolar', 'stop', False, True, False, 'tha', None),
-    ('t' + U, 'tˤ', 'alveolar', 'stop', False, False, True, 'ta',
+    ('s', 's', 'alveolar', 'fricative', False, False, False, None),
+    ('ş', 'ʃ', 'postalveolar', 'fricative', False, False, False, None),
+    ('t', 'tʰ', 'alveolar', 'stop', False, True, False, None),
+    ('t' + U, 'tˤ', 'alveolar', 'stop', False, False, True,
      "Thackston's underlined t: unaspirated, pharyngealized; not maintained by all speakers."),
-    ('v', 'v', 'labiodental', 'fricative', True, False, False, 'va', None),
-    ('w', 'w', 'labiovelar', 'approximant', True, False, False, 'va', None),
-    ('x', 'x', 'velar', 'fricative', False, False, False, 'kha', None),
-    ('x' + U, 'ɣ', 'velar', 'fricative', True, False, False, 'ga',
+    ('v', 'v', 'labiodental', 'fricative', True, False, False, None),
+    ('w', 'w', 'labiovelar', 'approximant', True, False, False, None),
+    ('x', 'x', 'velar', 'fricative', False, False, False, None),
+    ('x' + U, 'ɣ', 'velar', 'fricative', True, False, False,
      "Thackston's underlined x, the voiced counterpart of x (Arabic ghayn)."),
-    ('y', 'j', 'palatal', 'approximant', True, False, False, 'ya', None),
-    ('z', 'z', 'alveolar', 'fricative', True, False, False, 'sa', None),
-    ('ʿ', 'ʕ', 'pharyngeal', 'fricative', True, False, False, None,
+    ('y', 'j', 'palatal', 'approximant', True, False, False, None),
+    ('z', 'z', 'alveolar', 'fricative', True, False, False, None),
+    ('ʿ', 'ʕ', 'pharyngeal', 'fricative', True, False, False,
      "Not part of the orthography; marks Arabic 'ayn in Thackston's vocabulary."),
 ]
-# key: (ipa, height, backness, rounded, length, legacyIso, example, variants)
+# key: (ipa, height, backness, rounded, length, example, variants)
 KUR_VOWELS = [
-    ('î', 'i', 'close', 'front', False, 'long', 'ī', 'nîv [niv] half', []),
-    ('i', 'ɪ', 'near-close', 'front', False, 'short', 'i', 'dil [dɪl] heart',
+    ('î', 'i', 'close', 'front', False, 'long', 'nîv [niv] half', []),
+    ('i', 'ɪ', 'near-close', 'front', False, 'short', 'dil [dɪl] heart',
      [{"ipa": "ɨ", "context": "often in closed syllables ending in m", "example": "vedixwim [ˈvædɪxwɨm] I drink"}]),
-    ('ê', 'e', 'close-mid', 'front', False, 'long', 'ē', 'hêz [hez] power', []),
-    ('e', 'æ', 'near-open', 'front', False, 'short', 'ai', 'berhem [bæɾˈhæm] product',
+    ('ê', 'e', 'close-mid', 'front', False, 'long', 'hêz [hez] power', []),
+    ('e', 'æ', 'near-open', 'front', False, 'short', 'berhem [bæɾˈhæm] product',
      [{"ipa": "ə", "context": "in the sequence ew", "example": "ew [əw] that"},
       {"ipa": "ɛ", "context": "followed by y in another syllable", "example": "odeya [oˈdɛjɑ] room"},
       {"ipa": "ɛ", "context": "after the stress, particularly word-finally", "example": "miróvek [mɪˈrovɛk] a man"}]),
-    ('û', 'u', 'close', 'back', True, 'long', 'ū', 'bûn [bun] to be', []),
-    ('u', 'ʊ', 'near-close', 'back', True, 'short', 'u', 'du [dʊ] two',
+    ('û', 'u', 'close', 'back', True, 'long', 'bûn [bun] to be', []),
+    ('u', 'ʊ', 'near-close', 'back', True, 'short', 'du [dʊ] two',
      [{"ipa": "ɯɛ", "context": "after g and k for some speakers, particularly in closed syllables", "example": "gur [gɯɛɾ] or [gʊɾ] wolf", "unverified": True}]),
-    ('o', 'o', 'close-mid', 'back', True, 'long', 'ō', 'nod [nod] ninety', []),
-    ('a', 'ɑ', 'open', 'back', False, 'long', 'ā', 'bav [bɑv] father', []),
+    ('o', 'o', 'close-mid', 'back', True, 'long', 'nod [nod] ninety', []),
+    ('a', 'ɑ', 'open', 'back', False, 'long', 'bav [bɑv] father', []),
 ]
 
 
 def kurmanji():
     cons = {}
-    for key, ipa, place, manner, voiced, asp, phar, leg, note in KUR_CONSONANTS:
+    for key, ipa, place, manner, voiced, asp, phar, note in KUR_CONSONANTS:
         e = {"ipa": ipa, "place": place, "manner": manner, "voiced": voiced,
              "aspirated": asp, "display": {"Latn": key}}
         if phar:
             e["pharyngealized"] = True
-        if leg:
-            e["legacy"] = {"iso": leg, "approximate": True}
         if note:
             e["note"] = note
         cons[key] = e
@@ -384,9 +378,9 @@ def kurmanji():
     cons["x" + U]["variants"] = [{"ipa": "ʁ", "context": "uvular realization", "unverified": True,
                                   "note": "As for x: velar or uvular not yet verified."}]
     vows = {}
-    for key, ipa, h, b, r, ln, leg, ex, var in KUR_VOWELS:
+    for key, ipa, h, b, r, ln, ex, var in KUR_VOWELS:
         e = {"ipa": ipa, "height": h, "backness": b, "rounded": r, "length": ln,
-             "display": {"Latn": key}, "legacy": {"iso": leg, "approximate": True}, "example": ex}
+             "display": {"Latn": key}, "example": ex}
         if var:
             e["variants"] = var
         vows[key] = e
@@ -408,6 +402,7 @@ def kurmanji():
             "Context variants are realizations, not separate phonemes: the syllable stores the letter; a variant is something `sung` may record.",
             "Test piece: Dengbêj Gazîn, 'Her wayê wayê wayê' (Çakır ed. 2026, song record 152).",
             "Arabic-script (Kurdish) display forms are not given yet.",
+            "No `legacy` blocks (Jon, 2026-11-12): every platform moves to the syllable tier together, so a non-Hindi piece projects nothing into the pre-0.3.0 per-trajectory fields. The write guard is the only protection against a pre-0.3.0 save.",
         ],
         "unverified": [
             "consonants.w.variants: the [ɯ] glide before front vowels",

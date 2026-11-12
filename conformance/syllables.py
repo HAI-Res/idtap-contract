@@ -140,11 +140,8 @@ def heal_piece(piece):
 def _legacy_entry(pack, table, key):
     """-> (iso, hindi, ipa, engTrans) written into the legacy fields for `key`,
     or None when the legacy fields cannot carry it."""
-    if key is None:
-        return None
-    if isinstance(key, list):
+    if key is None or isinstance(key, list):
         return None  # clusters are reduced by the caller
-    hindi = load_pack(LEGACY_PACK)
     if pack["id"] == LEGACY_PACK:
         e = pack[table].get(key) if table != "codas" else codas_of(pack).get(key)
         leg = (e or {}).get("legacy")
@@ -154,14 +151,9 @@ def _legacy_entry(pack, table, key):
         if leg is None:
             return None  # e.g. the new retroflex ṇa: no legacy form
         return (leg["iso"], leg.get("hindi"), leg.get("ipa"), leg.get("engTrans"))
-    src = pack[table] if table != "codas" else codas_of(pack)
-    e = src.get(key)
-    if not e or "legacy" not in e:
-        return None
-    iso = e["legacy"]["iso"]
-    hsrc = hindi["vowels"] if table == "vowels" else hindi["consonants"]
-    h = hsrc[iso]["legacy"]
-    return (iso, h.get("hindi"), h.get("ipa"), h.get("engTrans"))
+    # Any other pack projects nothing (Jon, 2026-11-12): all platforms move to
+    # the tier together; the write guard refuses pre-0.3.0 saves of such pieces.
+    return None
 
 
 def _cluster_head(key, onset):

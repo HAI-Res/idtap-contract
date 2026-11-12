@@ -176,27 +176,9 @@ def fx_cantonese():
         syl("y7", "i", onset="s", coda="k", tone="6", orthography="食", romanization="sik6", wordStart=True)])
     pc = piece([[p0, p1]], system={"phonology": "jyutping", "display": ["jyutping", "Hant"]},
                lyrics=["詩唔好 食"], title="Cantonese projection (fixture)")
-    hs = lambda iso: dict(zip(("Hindi", "Ipa", "EngTrans"), legacy_copies(iso)))  # noqa: E731
-
-    def cons(pre, iso):
-        d = {pre: iso}
-        d.update({pre + k: v for k, v in hs(iso).items()})
-        return d
-
-    def art(iso):
-        h, ipa, eng = legacy_copies(iso)
-        return {"name": "consonant", "stroke": iso, "hindi": h, "ipa": ipa, "engTrans": eng}
-
-    legacy = {
-        "y1": {"vowel": "ī", **cons("startConsonant", "sa"), "art0": art("sa"), "art1": None},
-        "y2": {"vowel": "ī", "art0": None, "art1": None},
-        "y3": {"vowel": "ī", "art0": None, "art1": None},
-        "y4": {**cons("endConsonant", "ma"), "art0": None, "art1": art("ma")},
-        "y5": {"vowel": "au", **cons("startConsonant", "ha"), "art0": art("ha"), "art1": None},
-        "y6": {"art0": None, "art1": None},
-        "y7": {"vowel": "ī", **cons("startConsonant", "sa"), **cons("endConsonant", "ka"),
-               "art0": art("sa"), "art1": art("ka")},
-    }
+    # Non-Hindi packs project nothing (Jon, 2026-11-12): every main-string
+    # trajectory ends with no vowel, no consonants, no consonant articulations.
+    legacy = {uid: {"art0": None, "art1": None} for uid in ("y1", "y2", "y3", "y4", "y5", "y6", "y7")}
     ipa = ["siː", "m̩", "hou̯", "sek̚"]
     pack = S.load_pack("jyutping")
     same(legacy, S.project_piece(pc), "cantonese projection")
@@ -208,7 +190,7 @@ def fx_cantonese():
         "name": "project-cantonese-tone-orthography",
         "scenario": "stripped",
         "kind": "project",
-        "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection carries only what the legacy fields can: approximate hindi-urdu keys from each pack entry's `legacy` (i -> ī, o -> au, s -> sa, h -> ha, m -> ma, k -> ka; glide u -> nothing). Tone, characters and romanization are dropped, so the write guard refuses a pre-0.3.0 save. IPA is derived from the finals table, never stored.",
+        "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection writes nothing into the legacy fields: no vowel, no consonants, no consonant articulations (non-Hindi packs carry no legacy mapping; every platform moves to the tier together). The write guard, which refuses a pre-0.3.0 save, is the only protection for such a piece. IPA is derived from the finals table, never stored.",
         "pieceJson": pc,
         "expected": {"legacy": legacy, "derivedIpa": ipa, "legacySafe": False,
                      "legacySafeReasons": reasons, "violations": []},

@@ -2,7 +2,7 @@
   "name": "project-cantonese-tone-orthography",
   "scenario": "stripped",
   "kind": "project",
-  "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection carries only what the legacy fields can: approximate hindi-urdu keys from each pack entry's `legacy` (i -> ī, o -> au, s -> sa, h -> ha, m -> ma, k -> ka; glide u -> nothing). Tone, characters and romanization are dropped, so the write guard refuses a pre-0.3.0 save. IPA is derived from the finals table, never stored.",
+  "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection writes nothing into the legacy fields: no vowel, no consonants, no consonant articulations (non-Hindi packs carry no legacy mapping; every platform moves to the tier together). The write guard, which refuses a pre-0.3.0 save, is the only protection for such a piece. IPA is derived from the finals table, never stored.",
   "pieceJson": {
     "raga": {
       "name": "Yaman",
@@ -325,57 +325,23 @@
   "expected": {
     "legacy": {
       "y1": {
-        "vowel": "ī",
-        "startConsonant": "sa",
-        "startConsonantHindi": "स",
-        "startConsonantIpa": "s",
-        "startConsonantEngTrans": "s",
-        "art0": {
-          "name": "consonant",
-          "stroke": "sa",
-          "hindi": "स",
-          "ipa": "s",
-          "engTrans": "s"
-        },
+        "art0": null,
         "art1": null
       },
       "y2": {
-        "vowel": "ī",
         "art0": null,
         "art1": null
       },
       "y3": {
-        "vowel": "ī",
         "art0": null,
         "art1": null
       },
       "y4": {
-        "endConsonant": "ma",
-        "endConsonantHindi": "म",
-        "endConsonantIpa": "m",
-        "endConsonantEngTrans": "m",
         "art0": null,
-        "art1": {
-          "name": "consonant",
-          "stroke": "ma",
-          "hindi": "म",
-          "ipa": "m",
-          "engTrans": "m"
-        }
+        "art1": null
       },
       "y5": {
-        "vowel": "au",
-        "startConsonant": "ha",
-        "startConsonantHindi": "ह",
-        "startConsonantIpa": "h",
-        "startConsonantEngTrans": "h",
-        "art0": {
-          "name": "consonant",
-          "stroke": "ha",
-          "hindi": "ह",
-          "ipa": "h",
-          "engTrans": "h"
-        },
+        "art0": null,
         "art1": null
       },
       "y6": {
@@ -383,29 +349,8 @@
         "art1": null
       },
       "y7": {
-        "vowel": "ī",
-        "startConsonant": "sa",
-        "startConsonantHindi": "स",
-        "startConsonantIpa": "s",
-        "startConsonantEngTrans": "s",
-        "endConsonant": "ka",
-        "endConsonantHindi": "क",
-        "endConsonantIpa": "k",
-        "endConsonantEngTrans": "k",
-        "art0": {
-          "name": "consonant",
-          "stroke": "sa",
-          "hindi": "स",
-          "ipa": "s",
-          "engTrans": "s"
-        },
-        "art1": {
-          "name": "consonant",
-          "stroke": "ka",
-          "hindi": "क",
-          "ipa": "k",
-          "engTrans": "k"
-        }
+        "art0": null,
+        "art1": null
       }
     },
     "derivedIpa": [
