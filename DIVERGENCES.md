@@ -122,6 +122,33 @@ The 🔴 markers on individual headings below mean "not yet implemented," NOT
   (preserve seems safer), and ideally make the ruleSet always available so the
   path is never hit. Low urgency given RAGA-1.
 
+## RAGA-4 🟡 DB "Yaman" has 8 pitches; every code default has 7 (DATA vs CODE)
+
+- **DB** (`ragas` collection, `name: "Yaman"`): rules edited on **2025-10-02T19:29:38Z**
+  via `RaagEditor.vue` → `POST /saveRaagRules` to include komal (lowered) **ma** → **8**
+  pitches. The document recorded only `updatedDate`, not who made the change.
+- **Code**: `src/ts/model/raga.ts` `yamanRuleSet`, the Python client's default, and the
+  Swift port all have **7** (shuddh ma only). Bhairavi (12, last edited 2023) is unaffected.
+- **Effect (2026-09-22, web):** `EditorComponent.getPieceFromJson` grafted the DB rule
+  set for the raga *name* over the piece's stored `ruleSet` before `Piece.fromJSON`.
+  Every saved Yaman piece has 7 `ratios`; against 8 rule-set pitches the `Raga` ctor
+  (correctly, PROP-1/RAGA-2) keeps the ratios and skips tuning sync, then the editor's
+  audio player indexed `ratios[7]` → `setValueAtTime(undefined)` → the editor could not
+  open **any** saved Yaman transcription. Reproduced on four uploads.
+- **Fix (idtap-platform PR `fix/raga-ruleset-overwrite`):** (1) the DB fetch is now a
+  **legacy heal only** — it runs when the piece has no stored `ruleSet` and never
+  overwrites one (this closes the "skip DB fetch when ruleSet already present" item
+  above); (2) the audio player tolerates a ratios/rule-set count mismatch (falls back to
+  the raga tuning table, warns with both counts); (3) `/saveRaagRules` records
+  `updatedBy`; (4) `RaagEditor` warns before overwriting an existing raga's rules and
+  offers a `<name>_<variant>` save instead.
+- **Still open (Jon's musical call):** whether "Yaman" should carry both mas. Either
+  answer must not affect saved pieces (they carry their own `ruleSet`) — only new
+  transcriptions and pre-PROP-1 legacy pieces read the DB rules. The Python client
+  should grow the same overwrite warning / variant-naming on its raga-rules write path.
+- **Canonical:** a piece's stored `ruleSet` + `ratios` are authoritative for that piece;
+  the DB rule set is a default for *new* pieces of that name.
+
 ## RAGA-3 🟡 ruleSet is fetched at DIFFERENT LAYERS — not a data divergence
 
 - Both sides recover the ruleSet from the DB by name; the layer differs:
