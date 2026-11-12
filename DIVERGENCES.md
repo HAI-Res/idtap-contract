@@ -306,3 +306,32 @@ two places, by design:
 2. For each 🔴, decide the canonical behavior with the project owner.
 3. Encode the decision as golden fixtures (→ 🟡).
 4. Apply fixes to both implementations; wire conformance suites into CI (→ 🟢).
+
+---
+
+## PACK-1 🟡 Hindi phoneme tables: three bugs — FIXED in the pack's display, KEPT in the legacy projection → PROP-9
+
+The tables compiled into `trajectory.ts` (and mirrored in `idtap/classes/trajectory.py`)
+have three bugs. `packs/hindi-urdu.json` fixes them in `ipa`/`display` and keeps them in
+each entry's `legacy` block, so the PROP-8 projection stays byte-identical to what
+today's clients write (Jon, 2026-11-12):
+
+| bug | today | pack `ipa` / `display` | `legacy` (projected) |
+|---|---|---|---|
+| no retroflex ṇ | slot 14 is `na` / न / `n` | new key `ṇa`: ɳ, ण, ṇ | none, so `ṇa` makes a piece not legacy-safe (`key`) |
+| `na` twice (indices 14 and 19) | `indexOf` always hits 14: न, IPA `n` | one key `na`: n̪, न | न, `n`, `n` (index 14) |
+| फ़ for pha | `pha` / फ़ (fa with nukta) / `ph` | फ, pʰ | फ़ |
+
+The Python synth already renders `na` dentally and has `ɳ` as a derived spec, so the
+pack agrees with it.
+
+## SYL-1 🟡 null consonants: TS counts them as present, Python as absent → PROP-8
+
+`Trajectory.fromJSON` (TS) builds with `new Trajectory({...obj})`, so a stored
+`"startConsonant": null` bypasses the constructor default and stays `null`;
+`firstTrajIdxs` tests `!== undefined` and starts a syllable there, and
+`convertCIsoToHindiAndIpa` looks up `indexOf(null)`. Python's `first_traj_idxs` tests
+`is not None`. **Canonical (PROP-8): null == absent** for `vowel`, `startConsonant` and
+`endConsonant`, in the heal and everywhere else. Python matches already; TS changes in
+its 0.3.0 PR. Python-saved documents are where nulls come from (`to_json` can emit
+`None`); the dry run should count them.

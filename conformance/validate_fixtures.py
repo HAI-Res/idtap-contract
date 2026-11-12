@@ -31,7 +31,7 @@ PACKS = os.path.join(HERE, "..", "packs")
 # repo keeps the same kind of constant (see README "Versioning") and asserts it
 # against contract.json in its conformance suite, so a bump that changes wire
 # semantics fails CI in every client until the client is updated.
-CONTRACT_VERSION = "0.2.0"
+CONTRACT_VERSION = "0.3.0"
 
 SARGAM = ["sa", "re", "ga", "ma", "pa", "dha", "ni"]
 YAMAN_RULESET = {

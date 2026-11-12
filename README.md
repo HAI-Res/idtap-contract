@@ -44,9 +44,12 @@ fixtures/<entity>/       golden fixtures: input json + context + expected values
     index.json
     stripped-*.json      canonical (stripped) form, context threaded separately
     legacy-embedded-*.json   legacy form, ratios/fundamental embedded in the json
+packs/                   phoneme packs as data (PROP-9): hindi-urdu, jyutping, kurmanji
 conformance/             reference runner + how each repo wires up its own tests
   validate_fixtures.py   self-check that fixtures are internally consistent
-tools/                   fixture generators (recompute expected values)
+  syllables.py           PROP-7/8/9 reference rules: heal, projection, re-homing,
+                         invariants, write guard (plain functions over the JSON)
+tools/                   fixture and pack generators
 ```
 
 ## The stripped format (what PR #887 removed)
@@ -91,7 +94,7 @@ reference loop and this repo's own self-check.
 
 ## Versioning
 
-The contract is versioned (`version` in `contract.json`, currently **0.2.0**;
+The contract is versioned (`version` in `contract.json`, currently **0.3.0**;
 `versionPolicy` there carries the changelog). Serialized documents carry no
 version field, so the assertion lives in each client's **conformance suite**, not
 in the loader:
@@ -107,7 +110,8 @@ in the loader:
    its constant bumped; a patch bump is reserved for fixture/doc additions and
    should be applied to the constant in the same sync commit.
 3. The constant is bumped **only** in the commit that implements the new
-   semantics (for 0.2.0: the PROP-6 vibrato heal + `id == 13` canonical rule).
+   semantics (for 0.2.0: the PROP-6 vibrato heal + `id == 13` canonical rule; for
+   0.3.0: the PROP-8 heal, projection and re-homing, with the packs bundled).
 
 This is deliberately a CI-time check. A load-time check would need a
 `contractVersion` field on the wire, which is a separate proposal.
@@ -134,6 +138,13 @@ This is deliberately a CI-time check. A load-time check would need a
       the whole threading chain; legacy full-embedded). Surfaced PIECE-1/2, SEM-1.
 - [x] **Supporting sub-schemas** — Articulation, Automation, Chikari, Group, Meter
       (structural). All consistent except METER-1 (PulseStructure.offsets).
+- [x] **System, syllables, packs (PROP-7/8/9, contract 0.3.0)** — `system`,
+      `syllable` and `pack` schemas; `Phrase.syllables`, `Piece.system`,
+      `Piece.lyricsText`; three packs; 12 fixtures under `fixtures/syllable/` and
+      `fixtures/system/` pinning the legacy heal (byte-identical round trip), the
+      projection, re-homing after split and merge, the load invariants and the
+      write guard. Reference rules in `conformance/syllables.py`; expected values
+      hand-written in `tools/generate_syllable_fixtures.py`. Under review.
 - [x] Wire conformance suites into `idtap` and `idtap-api` CI (2026-07-13)
 - [x] Publish contract version + compatibility assertion — designed above
       (`CONTRACT_VERSION` constant vs `contract.json`); reference check in
