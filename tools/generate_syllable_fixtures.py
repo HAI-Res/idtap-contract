@@ -44,7 +44,7 @@ def traj(uid, vowel=None, start=None, end=None, tid=0, dur=0.5, swara=0):
          "durTot": dur, "durArray": [1.0], "slope": 2.0, "articulations": {},
          "num": 0, "uniqueId": uid}
     if tid == 12:
-        t["articulations"] = {}
+        del t["articulations"]  # stored silences often have no articulations key
         return t
     if vowel is not None:
         t["vowel"] = vowel
@@ -151,6 +151,7 @@ def fx_heal_roundtrip():
     healed = S.heal_piece(pc)
     same(want, grid(healed), "heal")
     same(legacy_map(pc), S.project_piece(healed), "projection round trip")
+    same(pc, S.strip_syllables(S.apply_projection(healed)), "dual-write leaves the legacy document byte-identical")
     same((True, []), S.legacy_safe(healed), "legacy_safe")
     same([], S.check_invariants(healed), "invariants")
     emit("syllable", {
@@ -295,13 +296,20 @@ def fx_invariants():
     jy = {"phonology": "jyutping"}
     case("jyutping-bare-eo", piece([[phrase("p", [bare("v1")], [syl("v1", "eo", onset="s", tone="1")])]], system=jy),
          ["final-unknown"], "Bare eo is not among the 59 listed finals. It is a candidate for Yingyao's 60th final (unverified in packs/jyutping.json); if it is confirmed, this case becomes valid.")
+    case("jyutping-coda-cluster", piece([[phrase("p", [bare("v1")], [syl("v1", "aa", onset="s", coda=["n", "t"], tone="1")])]], system=jy),
+         ["cluster-not-allowed"], "A coda cluster in a pack with a finals table: reported once, not a crash and not also final-unknown.")
+    nouid = traj("v1", "ā")
+    nouid["uniqueId"] = None
+    case("traj-without-uniqueId", piece([[phrase("p", [nouid, traj("v2", "ī")], [syl("v2", "ī")])]]),
+         ["traj-uid-missing", "unanchored-start"],
+         "A main-string trajectory with no uniqueId cannot be anchored; loaders assign ids before healing, and heal/project/rehome refuse such a trajectory.")
     case("jyutping-syllabic-ng-ok", piece([[phrase("p", [bare("v1")], [syl("v1", None, coda="ng", lyric=None, tone="5")])]], system=jy),
          [], "ng5 (五): a syllabic nasal, allowed by jyutping.")
     emit("syllable", {
         "name": "invariants",
         "scenario": "validation",
         "kind": "invariants",
-        "description": "Load-time invariants, one case each. Codes: anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+        "description": "Load-time invariants, one case each. Codes: traj-uid-missing, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
         "cases": cases,
     })
 

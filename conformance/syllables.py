@@ -74,6 +74,15 @@ def has_phonetics(t):
     return any(val(t, k) is not None for k in ("vowel", "startConsonant", "endConsonant"))
 
 
+def uid_of(t):
+    """A trajectory's uniqueId. Heal, projection and re-homing need one on every
+    main-string trajectory: loaders assign ids before healing (PROP-8 heal step 1)."""
+    u = t.get("uniqueId")
+    if not isinstance(u, str) or not u:
+        raise ValueError("trajectory without uniqueId: assign ids before heal/project/rehome")
+    return u
+
+
 def track_flat(track):
     """[(phrase_idx, traj_idx, traj)] over the main string, in order."""
     return [(pi, ti, t) for pi, ph in enumerate(track) for ti, t in enumerate(main(ph))]
@@ -110,7 +119,7 @@ def heal_phrase(ph):
                 break
             span.append(t)
         first, last = span[0], span[-1]
-        syl = {"anchor": {"traj": first["uniqueId"], "t": 0}}
+        syl = {"anchor": {"traj": uid_of(first), "t": 0}}
         if val(first, "startConsonant") is not None:
             syl["onset"] = first["startConsonant"]
         vowel = val(first, "vowel")
@@ -173,7 +182,7 @@ def spans(track):
         if silent(t):
             cur = None
             continue
-        uid = t.get("uniqueId")
+        uid = uid_of(t)
         if uid in anchors:
             cur = (anchors[uid], [])
             out.append(cur)
@@ -194,7 +203,7 @@ def project_piece(piece):
     for track in piece["phraseGrid"]:
         sp, uncovered = spans(track)
         for _, _, t in track_flat(track):
-            res[t["uniqueId"]] = {"art0": None, "art1": None}
+            res[uid_of(t)] = {"art0": None, "art1": None}
         for syl, trajs in sp:
             v = _legacy_entry(pack, "vowels", (syl.get("lyric") or {}).get("vowel"))
             on = _legacy_entry(pack, "consonants", _cluster_head(syl.get("onset"), True))
@@ -234,36 +243,64 @@ def apply_projection(piece):
     proj = project_piece(pc)
     for track in pc["phraseGrid"]:
         for _, _, t in track_flat(track):
-            p = proj[t["uniqueId"]]
+            p = proj[uid_of(t)]
             for k in WIRE_FIELDS:
                 t.pop(k, None)
                 if k in p:
                     t[k] = p[k]
-            arts = t.setdefault("articulations", {})
+            had = t.get("articulations")
+            arts = dict(had or {})
             for key, name in (("0.00", "art0"), ("1.00", "art1")):
-                if arts.get(key, {}).get("name") == "consonant":
+                if (arts.get(key) or {}).get("name") == "consonant":
                     del arts[key]
                 if p[name]:
                     arts[key] = p[name]
+            if arts or isinstance(had, dict):
+                t["articulations"] = arts  # an empty dict stays empty; absent/null stay as they were
     return pc
 
 
 # --------------------------------------------------------------------- derived
+def final_key(syl):
+    """Key into pack["finals"] (nucleus + coda), or None when the coda is a
+    cluster (no finals table lists clusters; check_invariants reports it)."""
+    co = syl.get("coda")
+    if isinstance(co, list):
+        return None
+    return (syl.get("nucleus") or "") + (co or "")
+
+
+def _keys(x):
+    return x if isinstance(x, list) else [x] if x is not None else []
+
+
 def derive_ipa(syl, pack):
-    """Jyutping: onset IPA + the final's realization (IPA is derived, never stored)."""
+    """Onset IPA + the final's realization where the pack has `finals`
+    (Jyutping), else nucleus + coda IPA. IPA is derived, never stored.
+    Returns None when any part is not in the pack: never raises, the
+    violation is check_invariants' to report."""
     parts = []
-    on = syl.get("onset")
-    for k in (on if isinstance(on, list) else [on] if on else []):
-        parts.append(pack["consonants"][k]["ipa"])
+    for k in _keys(syl.get("onset")):
+        e = pack["consonants"].get(k)
+        if e is None:
+            return None
+        parts.append(e["ipa"])
     if pack.get("finals") is not None:
-        fk = (syl.get("nucleus") or "") + (syl.get("coda") or "")
-        parts.append(pack["finals"][fk]["ipa"])
+        f = pack["finals"].get(final_key(syl)) if final_key(syl) is not None else None
+        if f is None:
+            return None
+        parts.append(f["ipa"])
     else:
-        if syl.get("nucleus"):
-            parts.append(pack["vowels"][syl["nucleus"]].get("ipa", ""))
-        co = syl.get("coda")
-        for k in (co if isinstance(co, list) else [co] if co else []):
-            parts.append(codas_of(pack)[k]["ipa"])
+        if syl.get("nucleus") is not None:
+            e = pack["vowels"].get(syl["nucleus"])
+            if e is None:
+                return None
+            parts.append(e.get("ipa", ""))
+        for k in _keys(syl.get("coda")):
+            e = codas_of(pack).get(k)
+            if e is None:
+                return None
+            parts.append(e["ipa"])
     return "".join(parts)
 
 
@@ -277,7 +314,13 @@ def check_invariants(piece):
         any_syl = any(ph.get("syllables") for ph in track)
         anchored = set()
         for pi, ph in enumerate(track):
-            idx = {t.get("uniqueId"): (i, t) for i, t in enumerate(main(ph))}
+            idx = {}
+            for i, t in enumerate(main(ph)):
+                u = t.get("uniqueId")
+                if isinstance(u, str) and u:
+                    idx[u] = (i, t)
+                else:
+                    v.append(("traj-uid-missing", f"track {k} phrase {pi} traj {i}"))
             last = -1
             for si, s in enumerate(ph.get("syllables") or []):
                 where = f"track {k} phrase {pi} syllable {si}"
@@ -315,9 +358,11 @@ def check_invariants(piece):
                     elif s["tone"] not in pack["tones"]:
                         v.append(("key-unknown", where))
                 if pack.get("finals") is not None:
-                    fk = (nuc or "") + (s.get("coda") or "")
-                    f = pack["finals"].get(fk)
-                    if f is None:
+                    fk = final_key(s)
+                    f = pack["finals"].get(fk) if fk is not None else None
+                    if fk is None:
+                        pass  # coda cluster: already reported as cluster-not-allowed
+                    elif f is None:
                         v.append(("final-unknown", where))
                     elif f.get("syllabic") and not pack["flags"]["syllabicNasals"]:
                         v.append(("syllabic-not-allowed", where))
@@ -326,7 +371,7 @@ def check_invariants(piece):
         if any_syl:
             prev_silent = True  # the track start counts as a silence
             for pi, ti, t in track_flat(track):
-                if not silent(t) and prev_silent and t.get("uniqueId") not in anchored:
+                if not silent(t) and prev_silent and (t.get("uniqueId") or None) not in anchored:
                     v.append(("unanchored-start", f"track {k} phrase {pi} traj {ti}"))
                 prev_silent = silent(t)
     return sorted(v)
@@ -402,7 +447,7 @@ def rehome(before, after):
     pc = copy.deepcopy(after)
     dropped = []
     for k, track in enumerate(pc["phraseGrid"]):
-        where = {t.get("uniqueId"): (pi, ti) for pi, ti, t in track_flat(track)}
+        where = {uid_of(t): (pi, ti) for pi, ti, t in track_flat(track)}
         old = before["phraseGrid"][k] if k < len(before["phraseGrid"]) else []
         pool = [s for ph in old for s in ph.get("syllables") or []]
         buckets = [[] for _ in track]

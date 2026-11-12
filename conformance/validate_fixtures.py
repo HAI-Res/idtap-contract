@@ -15,11 +15,12 @@ import json, math, os, sys, glob
 
 import syllables as SYL  # PROP-7/8/9 reference rules (same folder)
 
-try:  # schema validation of the PROP-7/8/9 fixtures and packs; CI installs it
+try:  # schema validation of the PROP-7/8/9 fixtures and packs
     import jsonschema
-    from referencing import Registry, Resource
+    from referencing import Registry, Resource  # jsonschema >= 4.18
 except ImportError:  # pragma: no cover
-    jsonschema = None
+    sys.exit("validate_fixtures.py needs jsonschema >= 4.18 (pip install -U jsonschema): "
+             "without it the syllable/system fixtures and the packs are not schema-checked")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIX = os.path.join(HERE, "..", "fixtures")
@@ -281,10 +282,7 @@ _VALIDATORS = {}
 
 
 def schema_errors(instance, name):
-    """Errors of `instance` against schemas/<name>.schema.json ([] when
-    jsonschema is not installed; main() says so)."""
-    if jsonschema is None:
-        return []
+    """Errors of `instance` against schemas/<name>.schema.json."""
     if name not in _VALIDATORS:
         reg, mine = Registry(), None
         for path in glob.glob(os.path.join(SCHEMAS, "*.schema.json")):
@@ -465,9 +463,6 @@ def main():
         total += 1
         fails += 0 if ok else 1
         print(f"  {'PASS' if ok else 'FAIL'}  {pack['id']}  {info}")
-    if jsonschema is None:
-        print("\n  NOTE: jsonschema not installed; schema validation of syllable/system "
-              "fixtures and packs was skipped (pip install jsonschema)")
     print(f"\n{total - fails}/{total} fixtures consistent; contract version "
           f"{'OK' if version_ok else 'MISMATCH'}")
     sys.exit(1 if fails or not version_ok else 0)

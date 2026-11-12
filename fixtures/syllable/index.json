@@ -34,7 +34,7 @@
     {
       "name": "invariants",
       "scenario": "validation",
-      "description": "Load-time invariants, one case each. Codes: anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0."
+      "description": "Load-time invariants, one case each. Codes: traj-uid-missing, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0."
     },
     {
       "name": "write-guard",

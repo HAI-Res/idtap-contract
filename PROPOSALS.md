@@ -448,6 +448,8 @@ silence trajectory (id 12), whichever comes first, along the track's main-string
 trajectories in phrase order, so it can cross a phrase boundary.
 
 ### Invariants (checked on load; codes in `fixtures/syllable/invariants.json`)
+- `traj-uid-missing`: every main-string trajectory has a uniqueId (heal, projection and
+  re-homing refuse one without; loaders assign ids first).
 - `anchor-missing`: every anchor names a trajectory of the same phrase's main string.
 - `anchor-silence`: never a silence. `anchor-order`: anchors in trajectory order, at most
   one per trajectory.
@@ -455,13 +457,15 @@ trajectories in phrase order, so it can cross a phrase boundary.
   trajectory and every non-silent trajectory after a silence start a syllable.
 - `anchor-t`: `t` is 0 (a later minor may let a system allow otherwise).
 - `key-unknown`, `cluster-not-allowed`, `tone-not-allowed`, `nucleus-missing`,
-  `final-unknown`, `syllabic-not-allowed`: keys against the pack. Syllabic m/ng (no
+  `final-unknown`, `syllabic-not-allowed`: keys against the pack (a coda cluster in a pack
+  with `finals` is reported once, as `cluster-not-allowed`). Syllabic m/ng (no
   nucleus, coda m|ng) are valid only where the pack lists them as syllabic finals
   (Jyutping).
 What a client does with a violation (refuse, repair, warn) is its choice in 0.3.0.
 
 ### Heal: legacy → syllables (normative, `conformance/syllables.py` `heal_piece`)
-1. Uniqueids are assigned before healing (loaders already do) and persisted.
+1. Uniqueids are assigned before healing (loaders already do) and persisted; the
+   reference heal raises on a main-string trajectory without one.
 2. A phrase with a `syllables` key keeps it, even `[]`; its legacy fields are ignored on
    load and rewritten by the projection (`mixed-healed-and-legacy-phrases`).
 3. A phrase without the key: if no main-string trajectory anywhere in its **track** has a
