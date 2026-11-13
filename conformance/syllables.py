@@ -471,6 +471,9 @@ def legacy_safe(piece):
     always dual-writes, so on a well-formed document the stored legacy fields
     are the projection; stale fields make it unsafe ('boundary').
     -> (bool, sorted reason codes)."""
+    if any(code == "syllable-malformed" for code, _ in check_invariants(piece)):
+        # a tier the guard cannot read: refuse rather than let an old client drop it
+        return (False, ["unreadable"])
     reasons = set()
     pack = pack_of(piece)
     if pack["id"] != LEGACY_PACK:

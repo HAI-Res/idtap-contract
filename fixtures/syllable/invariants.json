@@ -2,7 +2,7 @@
   "name": "invariants",
   "scenario": "validation",
   "kind": "invariants",
-  "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+  "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed, syllable-malformed (schema-invalid cases, `schemaInvalid: true`). Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
   "cases": [
     {
       "name": "anchor-missing",
@@ -2045,6 +2045,593 @@
         "warnings": [
           "track-not-vocal"
         ]
+      }
+    },
+    {
+      "name": "malformed-no-anchor",
+      "schemaInvalid": true,
+      "description": "An entry with no anchor. The schema rejects the document; a client that meets one from a buggy writer reports syllable-malformed, carries the entries through byte-identical, does not project that phrase, and the guard refuses an old client's save ('unreadable').",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2",
+                    "vowel": "ī"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                },
+                {
+                  "anchor": {
+                    "traj": "v2",
+                    "t": 0
+                  },
+                  "nucleus": "ī",
+                  "lyric": {
+                    "vowel": "ī",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "syllable-malformed",
+          "unanchored-start"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "malformed-null-entry",
+      "schemaInvalid": true,
+      "description": "A null entry. The schema rejects the document; a client that meets one from a buggy writer reports syllable-malformed, carries the entries through byte-identical, does not project that phrase, and the guard refuses an old client's save ('unreadable').",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2",
+                    "vowel": "ī"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                null,
+                {
+                  "anchor": {
+                    "traj": "v2",
+                    "t": 0
+                  },
+                  "nucleus": "ī",
+                  "lyric": {
+                    "vowel": "ī",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "syllable-malformed",
+          "unanchored-start"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "malformed-not-array",
+      "schemaInvalid": true,
+      "description": "syllables is a string, not an array. The schema rejects the document; a client that meets one from a buggy writer reports syllable-malformed, carries the entries through byte-identical, does not project that phrase, and the guard refuses an old client's save ('unreadable').",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2",
+                    "vowel": "ī"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": "ā"
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "syllable-malformed",
+          "unanchored-start"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "malformed-null-lyric",
+      "schemaInvalid": true,
+      "description": "lyric present but null. The schema rejects the document; a client that meets one from a buggy writer reports syllable-malformed, carries the entries through byte-identical, does not project that phrase, and the guard refuses an old client's save ('unreadable').",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v2",
+                    "vowel": "ī"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": null
+                },
+                {
+                  "anchor": {
+                    "traj": "v2",
+                    "t": 0
+                  },
+                  "nucleus": "ī",
+                  "lyric": {
+                    "vowel": "ī",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "syllable-malformed",
+          "unanchored-start"
+        ],
+        "warnings": []
       }
     },
     {

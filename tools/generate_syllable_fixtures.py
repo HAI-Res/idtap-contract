@@ -368,13 +368,27 @@ def fx_invariants():
     sitar["instrumentation"] = ["Sitar", "Vocal (M)"]
     case("track-not-vocal", sitar, [], "Track 0 is a Sitar but carries syllables: a warning, not an error (a sung bol or a mislabelled track). Vocal labels: 'Vocal (M)', 'Vocal (F)'. Track 1 is vocal with no syllables: nothing to report; tracks are independent.",
          warnings=["track-not-vocal"])
+    for name, mut, desc in (
+        ("malformed-no-anchor", lambda ph: ph["syllables"].__setitem__(0, {"lyric": {"vowel": "ā", "source": "pack"}}),
+         "An entry with no anchor."),
+        ("malformed-null-entry", lambda ph: ph["syllables"].__setitem__(0, None), "A null entry."),
+        ("malformed-not-array", lambda ph: ph.__setitem__("syllables", "ā"), "syllables is a string, not an array."),
+        ("malformed-null-lyric", lambda ph: ph["syllables"][0].__setitem__("lyric", None), "lyric present but null."),
+    ):
+        pc = piece([[phrase("p", [traj("v1", "ā"), traj("v2", "ī")], [syl("v1", "ā"), syl("v2", "ī")])]])
+        mut(pc["phraseGrid"][0][0])
+        cases.append({"name": name, "schemaInvalid": True,
+                      "description": desc + " The schema rejects the document; a client that meets one from a buggy writer reports syllable-malformed, carries the entries through byte-identical, does not project that phrase, and the guard refuses an old client's save ('unreadable').",
+                      "pieceJson": pc,
+                      "expected": dict(zip(("violations", "warnings"), S.split_violations(S.check_invariants(pc))))})
+        assert "syllable-malformed" in [c for c, _ in S.check_invariants(pc)], name
     case("jyutping-syllabic-ng-ok", piece([[phrase("p", [bare("v1")], [syl("v1", None, coda="ng", lyric=None, tone="5")])]], system=jy),
          [], "ng5 (五): a syllabic nasal, allowed by jyutping.")
     emit("syllable", {
         "name": "invariants",
         "scenario": "validation",
         "kind": "invariants",
-        "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+        "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed, syllable-malformed (schema-invalid cases, `schemaInvalid: true`). Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
         "cases": cases,
     })
 
@@ -414,13 +428,19 @@ def fx_guard():
     tiered_sitar["instrumentation"] = ["Sitar"]
     case("tier-on-instrumental-track", tiered_sitar, ["boundary"],
          "A tier stored on a Sitar track. The heal never builds syllables on a non-vocal track, so an old client's save would lose it: unsafe.")
+    bad = base()
+    bad["phraseGrid"][0][0]["syllables"][0] = {"lyric": {"vowel": "ā", "source": "pack"}}
+    same((False, ["unreadable"]), S.legacy_safe(bad), "guard unreadable")
+    cases.append({"name": "unreadable-tier", "schemaInvalid": True,
+                  "description": "A stored entry with no anchor (syllable-malformed). The guard cannot read the tier, so it refuses an old client's save rather than let it drop the tier.",
+                  "pieceJson": bad, "expected": {"legacySafe": False, "legacySafeReasons": ["unreadable"]}})
     case("regrouped-by-heal", base(second=syl("w2", "ā")), ["boundary"],
          "Two adjacent syllables with the same vowel and no consonant between them: the heal would merge them into one, so the legacy fields cannot hold the boundary.")
     emit("syllable", {
         "name": "write-guard",
         "scenario": "validation",
         "kind": "guard",
-        "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary.",
+        "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary, unreadable.",
         "cases": cases,
     })
 

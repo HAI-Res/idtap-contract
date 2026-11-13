@@ -44,12 +44,12 @@
     {
       "name": "invariants",
       "scenario": "validation",
-      "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0."
+      "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed, syllable-malformed (schema-invalid cases, `schemaInvalid: true`). Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0."
     },
     {
       "name": "write-guard",
       "scenario": "validation",
-      "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary."
+      "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary, unreadable."
     }
   ]
 }

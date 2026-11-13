@@ -320,6 +320,10 @@ def check_syllable(fx):
         ok = True
         for c in fx["cases"]:
             good, errs = piece_schema_ok(c["pieceJson"])
+            if c.get("schemaInvalid"):
+                # a document from a buggy writer: the schema must reject it, and the
+                # rules must still report it instead of crashing
+                good, errs = (not good), ([] if not good else ["expected a schema error"])
             if kind == "invariants":
                 good = good and _violations(c["pieceJson"], c["expected"])
             else:
