@@ -16,7 +16,7 @@ Terms
   absent      a legacy field that is missing OR null (null == absent, PROP-8;
               see DIVERGENCES.md SYL-1 for the TS behaviour this overrides).
 """
-import copy, json, os
+import copy, json, os, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PACKS_DIR = os.path.join(HERE, "..", "packs")
@@ -57,6 +57,15 @@ def resolve_system(piece):
 
 def pack_of(piece):
     return load_pack(resolve_system(piece)["phonology"])
+
+
+def nfc(x):
+    """Pack keys are NFC (0.3.1). Look up a stored key in NFC; never rewrite it."""
+    if isinstance(x, str):
+        return unicodedata.normalize("NFC", x)
+    if isinstance(x, list):
+        return [nfc(y) for y in x]
+    return x
 
 
 def codas_of(pack):
@@ -172,7 +181,7 @@ def _legacy_entry(pack, table, key):
     if key is None or isinstance(key, list):
         return None  # clusters are reduced by the caller
     if pack["id"] == LEGACY_PACK:
-        e = pack[table].get(key) if table != "codas" else codas_of(pack).get(key)
+        e = pack[table].get(nfc(key)) if table != "codas" else codas_of(pack).get(nfc(key))
         leg = (e or {}).get("legacy")
         if e is None:
             # unknown stored string: today's code keeps it and its copies are undefined
@@ -294,7 +303,7 @@ def final_key(syl):
     co = syl.get("coda")
     if isinstance(co, list):
         return None
-    return (syl.get("nucleus") or "") + (co or "")
+    return nfc((syl.get("nucleus") or "") + (co or ""))
 
 
 def _keys(x):
@@ -308,7 +317,7 @@ def derive_ipa(syl, pack):
     violation is check_invariants' to report."""
     parts = []
     for k in _keys(syl.get("onset")):
-        e = pack["consonants"].get(k)
+        e = pack["consonants"].get(nfc(k))
         if e is None:
             return None
         parts.append(e["ipa"])
@@ -319,12 +328,12 @@ def derive_ipa(syl, pack):
         parts.append(f["ipa"])
     else:
         if syl.get("nucleus") is not None:
-            e = pack["vowels"].get(syl["nucleus"])
+            e = pack["vowels"].get(nfc(syl["nucleus"]))
             if e is None:
                 return None
             parts.append(e.get("ipa", ""))
         for k in _keys(syl.get("coda")):
-            e = codas_of(pack).get(k)
+            e = codas_of(pack).get(nfc(k))
             if e is None:
                 return None
             parts.append(e["ipa"])
@@ -392,17 +401,17 @@ def check_invariants(piece):
                     if isinstance(x, list) and not pack["flags"][flag]:
                         v.append(("cluster-not-allowed", where))
                     for key in (x if isinstance(x, list) else [x] if x is not None else []):
-                        if key not in table:
+                        if nfc(key) not in table:
                             v.append(("key-unknown", where))
                 nuc = s.get("nucleus")
-                if nuc is not None and nuc not in pack["vowels"]:
+                if nuc is not None and nfc(nuc) not in pack["vowels"]:
                     v.append(("key-unknown", where))
                 # editors keep nucleus and lyric.vowel in sync; absent == null
                 if nuc != (s.get("lyric") or {}).get("vowel"):
                     v.append(("nucleus-lyric-mismatch", where))
                 for obs in ("lyric", "sung"):
                     ov = (s.get(obs) or {}).get("vowel")
-                    if ov is not None and ov not in pack["vowels"]:
+                    if ov is not None and nfc(ov) not in pack["vowels"]:
                         v.append(("key-unknown", where))
                 if s.get("tone") is not None:
                     if not pack["flags"]["tones"]:
@@ -496,7 +505,7 @@ def legacy_safe(piece):
                                      (s.get("coda"), codas_of(pack)),
                                      (s.get("nucleus"), pack["vowels"]),
                                      ((s.get("lyric") or {}).get("vowel"), pack["vowels"])):
-                        if isinstance(k, str) and k in table and "legacy" not in table[k]:
+                        if isinstance(k, str) and nfc(k) in table and "legacy" not in table[nfc(k)]:
                             reasons.add("key")
     if not reasons:
         rebuilt = heal_piece(strip_syllables(piece))

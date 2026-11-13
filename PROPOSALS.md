@@ -687,5 +687,5 @@ a `legacy` block or sets `legacyExact`; finals are consistent with nuclei and co
   legacy `engTrans` is a transliteration, not a sound hint. Yingyao reviews the jyutping
   hints and Seba the kurmanji ones; the Hindi reviewer is open.
 - **Pack keys are NFC.** Kurmanji ḵ and ṯ are the precomposed U+1E35 and U+1E6F. p̱, ç̱ and x̱
-  have no precomposed form and keep U+0331. Clients should NFC-normalize typed input before
-  looking up a key.
+  have no precomposed form and keep U+0331. Every key lookup NFC-normalizes the stored or typed
+  key; a stored key is never rewritten (`invariants` kurmanji-decomposed-key-ok).

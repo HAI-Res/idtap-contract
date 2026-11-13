@@ -382,6 +382,9 @@ def fx_invariants():
                       "pieceJson": pc,
                       "expected": dict(zip(("violations", "warnings"), S.split_violations(S.check_invariants(pc))))})
         assert "syllable-malformed" in [c for c, _ in S.check_invariants(pc)], name
+    dec = "k\u0331"  # decomposed underlined k: NFC is U+1E35, the pack key
+    case("kurmanji-decomposed-key-ok", piece([[phrase("p", [bare("v1")], [syl("v1", "e", onset=dec)])]], system=kur),
+         [], "Onset stored decomposed (k + U+0331). Pack keys are NFC and lookups NFC-normalize the stored key, so it resolves to the pack's precomposed key; the stored bytes are never rewritten.")
     case("jyutping-syllabic-ng-ok", piece([[phrase("p", [bare("v1")], [syl("v1", None, coda="ng", lyric=None, tone="5")])]], system=jy),
          [], "ng5 (五): a syllabic nasal, allowed by jyutping.")
     emit("syllable", {
