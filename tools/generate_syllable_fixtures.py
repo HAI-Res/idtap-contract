@@ -233,7 +233,7 @@ def fx_instrumental():
     sitar = phrase("ph-s", [traj("s1", "a"), traj("s2", "a"), traj("s3", "ē")])
     unlabelled = phrase("ph-u", [traj("u1", "a"), traj("u2", "a")])
     pc = piece([[voc], [sitar], [unlabelled]], title="Instrumental tracks (fixture)")
-    pc["instrumentation"] = ["Vocal (M)", "Sitar"]  # track 2 has no label
+    pc["instrumentation"] = ["Vocal (M)", "Sitar", ""]  # track 2 is unlabelled
     want = [[[syl("v1", "ā", onset="ba")]], [None], [None]]
     healed = S.heal_piece(pc)
     same(want, grid(healed), "only the vocal track is healed")
@@ -245,7 +245,7 @@ def fx_instrumental():
         "name": "heal-instrumental-tracks-untouched",
         "scenario": "legacy",
         "kind": "heal",
-        "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2 has no instrumentation label. Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal).",
+        "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2's label is empty. (Keep instrumentation as long as phraseGrid: today's TS loader drops tracks beyond it.) Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal).",
         "pieceJson": pc,
         "expected": {"syllables": want, "legacyRoundTrip": True,
                      "legacySafe": True, "legacySafeReasons": [], "violations": []},

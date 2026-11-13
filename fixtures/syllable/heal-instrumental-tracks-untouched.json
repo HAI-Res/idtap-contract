@@ -2,7 +2,7 @@
   "name": "heal-instrumental-tracks-untouched",
   "scenario": "legacy",
   "kind": "heal",
-  "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2 has no instrumentation label. Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal).",
+  "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2's label is empty. (Keep instrumentation as long as phraseGrid: today's TS loader drops tracks beyond it.) Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal).",
   "pieceJson": {
     "raga": {
       "name": "Yaman",
@@ -273,7 +273,8 @@
     ],
     "instrumentation": [
       "Vocal (M)",
-      "Sitar"
+      "Sitar",
+      ""
     ],
     "durTot": 1.5,
     "durArrayGrid": [

@@ -484,7 +484,7 @@ Every code except `track-not-vocal` is an error. What a client does with an erro
    load and rewritten by the projection (`mixed-healed-and-legacy-phrases`).
 3. **Vocal tracks only** (Jon, 2026-11-13). A track is vocal when
    `instrumentation[track]` is `'Vocal (M)'` or `'Vocal (F)'`. On any other track,
-   including one with no label, nothing is created: its phrases keep no `syllables` key
+   including one with an empty or missing label, nothing is created: its phrases keep no `syllables` key
    and the projection leaves its legacy fields exactly as stored. The production dump of
    2026-11-13 has about 10,000 vowels on Sitar, Sarangi, Sarod and Veena tracks, 9,875 of
    them the editor's default `a`; they are not text (`heal-instrumental-tracks-untouched`).
