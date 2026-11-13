@@ -543,7 +543,7 @@ hindi-urdu, no syllable carries `orthography`, `romanization`, `tone`, `wordStar
 `sung`, `t` is 0, no cluster, every onset, coda, nucleus and lyric vowel key has a
 legacy form (not `ṇa`; reason `key`), and **healing the stored legacy fields gives back
 the stored syllables** (anchor, onset, nucleus, coda, lyric.vowel; `lyric.source` is not
-compared; reason `boundary`). The guard reads what is in the database, because that is
+compared; reason `boundary`). Only phrases that have a stored tier are compared: a phrase without `syllables` is a plain legacy phrase, and a pre-0.3.0 save drops nothing from it (`untiered-legacy`; platform session, 2026-11-13). The guard reads what is in the database, because that is
 what a pre-0.3.0 save keeps (Jon, 2026-11-13; earlier drafts compared
 heal(project(piece)), which passed a phrase with `syllables: []` beside stale legacy
 fields). A 0.3.0 save always dual-writes, so on a well-formed document the stored legacy
@@ -555,6 +555,19 @@ legacy fields are empty, so a pre-0.3.0 save that got through would keep nothing
 its text, and the next load would have nothing to heal from. `system` and
 `lyricsText` are top-level fields that a `$set` save leaves in place, so they do not
 trip the guard. Reason codes: `fixtures/syllable/write-guard.json`.
+
+**Header and refusal (decided 2026-11-13 with the platform, Python and Swift sessions).**
+`X-IDTAP-Client: <client>/<contract version>`, where client is `web`, `python` or `swift`
+and the version is the **contract** version the client implements (`web/0.3.0`,
+`python/0.3.0`, `swift/0.3.0`), not its package or app version (Python ships 0.3.0 as
+0.1.59). The header is also the server's CSRF check, which accepts bare `web` (open
+tabs from before the deploy) or `<client>/<semver>`. No header, bare `web`, an
+unparseable value or a version below 0.3.0 all count as below 0.3.0. The guard runs on
+`/updateTranscription` and on the Bearer-auth `/api/transcription` route that scripts use.
+Every client sends the header on every save. A refusal is HTTP **409** with body
+`{"error": "write-guard", "reasons": [...], "minContract": "0.3.0"}`, where the reasons
+are the `legacy_safe` codes. Clients show it, keep local edits and never retry. The
+server logs each refusal with the header value and the reasons.
 
 ### Rollout order (plan, "Release sequence")
 1. **Contract 0.3.0** (this branch).

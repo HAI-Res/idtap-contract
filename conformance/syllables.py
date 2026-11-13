@@ -472,7 +472,11 @@ def legacy_safe(piece):
         rebuilt = heal_piece(strip_syllables(piece))
         for ta, tb in zip(piece["phraseGrid"], rebuilt["phraseGrid"]):
             for pa, pb in zip(ta, tb):
-                if _comparable(pa.get("syllables") or []) != _comparable(pb["syllables"]):
+                # A phrase with no stored tier (absent or null) is not compared:
+                # a pre-0.3.0 save keeps its legacy fields and drops nothing.
+                if pa.get("syllables") is None:
+                    continue
+                if _comparable(pa["syllables"]) != _comparable(pb["syllables"]):
                     reasons.add("boundary")
     return (not reasons, sorted(reasons))
 

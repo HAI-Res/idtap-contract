@@ -352,6 +352,10 @@ def fx_guard():
     stale = piece([[phrase("p", [traj("w1", "ā", start="ba"), traj("w2", "ā")], [])]])
     case("stale-legacy-beside-empty-syllables", stale, ["boundary"],
          "syllables: [] but the trajectories still carry 'ba' + 'ā' (a stale write). A pre-0.3.0 save would keep those fields and the next load would heal a syllable the tier says does not exist, so the guard, which reads the stored legacy fields, refuses.")
+    untiered = piece([[phrase("p", [traj("w1", "ā", start="ba"), traj("w2", "ā")])]])
+    untiered["phraseGrid"][0][0].pop("syllables", None)
+    case("untiered-legacy", untiered, [],
+         "No phrase has a syllables key: a plain legacy piece, as almost every stored piece is while the web flag is off. A pre-0.3.0 save drops nothing, so it is allowed. Only phrases with a stored tier are compared.")
     case("regrouped-by-heal", base(second=syl("w2", "ā")), ["boundary"],
          "Two adjacent syllables with the same vowel and no consonant between them: the heal would merge them into one, so the legacy fields cannot hold the boundary.")
     emit("syllable", {
