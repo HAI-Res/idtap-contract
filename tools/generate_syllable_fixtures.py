@@ -183,6 +183,8 @@ def fx_cantonese():
     pack = S.load_pack("jyutping")
     same(legacy, S.project_piece(pc), "cantonese projection")
     same(ipa, [S.derive_ipa(s, pack) for ph in pc["phraseGrid"][0] for s in ph["syllables"]], "ipa")
+    nine = ["1", "4", "2", "9"]  # sik6 is checked (-k): tone 6 -> 9
+    same(nine, [S.derived_tone(s, pack) for ph in pc["phraseGrid"][0] for s in ph["syllables"]], "nine-tone")
     reasons = ["orthography", "pack", "romanization", "tone", "wordStart"]
     same((False, reasons), S.legacy_safe(pc), "legacy_safe")
     same([], errors(pc), "invariants")
@@ -190,9 +192,9 @@ def fx_cantonese():
         "name": "project-cantonese-tone-orthography",
         "scenario": "stripped",
         "kind": "project",
-        "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection writes nothing into the legacy fields: no vowel, no consonants, no consonant articulations (non-Hindi packs carry no legacy mapping; every platform moves to the tier together). The write guard, which refuses a pre-0.3.0 save, is the only protection for such a piece. IPA is derived from the finals table, never stored.",
+        "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection writes nothing into the legacy fields: no vowel, no consonants, no consonant articulations (non-Hindi packs carry no legacy mapping; every platform moves to the tier together). The write guard, which refuses a pre-0.3.0 save, is the only protection for such a piece. IPA is derived from the finals table and the nine-tone number from (tone, coda); neither is stored.",
         "pieceJson": pc,
-        "expected": {"legacy": legacy, "derivedIpa": ipa, "legacySafe": False,
+        "expected": {"legacy": legacy, "derivedIpa": ipa, "nineTone": nine, "legacySafe": False,
                      "legacySafeReasons": reasons, "violations": []},
     })
 

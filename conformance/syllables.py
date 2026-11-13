@@ -312,6 +312,19 @@ def derive_ipa(syl, pack):
     return "".join(parts)
 
 
+def derived_tone(syl, pack, system="nine"):
+    """A tone number in one of the pack's toneSystems (Jyutping 'nine'):
+    the stored tone, mapped when the syllable is checked. None without a tone."""
+    tone = syl.get("tone")
+    ts = (pack.get("toneSystems") or {}).get(system)
+    if tone is None or ts is None:
+        return tone
+    coda = syl.get("coda")
+    if isinstance(coda, str) and coda in ts["checkedCodas"]:
+        return ts["checked"].get(tone, tone)
+    return tone
+
+
 # --------------------------------------------------------------------- invariants
 def check_invariants(piece):
     """-> sorted list of (code, location). Codes in WARNINGS are warn level;

@@ -562,8 +562,17 @@ trip the guard. Reason codes: `fixtures/syllable/write-guard.json`.
    (heal, project, rehome, invariants, packs bundled), idtap-platform (model + server
    guard), idtap-swift. Each bumps `CONTRACT_VERSION` to 0.3.0 in the commit that
    implements the semantics, never before.
-3. **Dry run** over a DB dump: load every piece with the new model, heal, re-serialize,
-   assert the legacy fields round-trip byte-for-byte. Zero diffs is the gate.
+3. **Dry run** over a DB dump (Jon, 2026-11-13). For every piece, run two serializations
+   side by side: **A** = today's production client, load → save; **B** = the 0.3.0
+   client, load → heal → save (dual-write). **Gate: B's legacy fields (the nine wire
+   fields and the `'0.00'`/`'1.00'` consonant articulations) equal A's, byte-for-byte,
+   on every piece; zero diffs.** Comparing against A rather than the raw stored bytes
+   isolates what 0.3.0 changes from what today's load → save already normalizes
+   (`engTrans` added to old consonant mirrors, stored display copies kept, SYL-1 nulls).
+   Also reported, not gated: A vs raw stored bytes per field (how much today's
+   normalization touches), counts of `''` and `null` phonetic fields, pieces whose
+   tracks are not vocal but carry phonetic fields, and every invariant violation in B.
+   Run it in TS (the reference) and Python; both must give zero diffs.
 4. **PyPI 0.1.57, and installed where it matters** (cluster, Jon's machines) before
    anything writes the new keys. This is the hard constraint, as in PROP-6: `idtap`
    0.1.56 raises `ValueError: Invalid parameter: 'syllables'` in `Phrase._validate_parameters`
@@ -631,7 +640,7 @@ Hindi/Urdu, Jyutping and Kurmanji packs are built together. Status: **drafted on
 | pack | status | contents | open |
 |---|---|---|---|
 | `hindi-urdu` | complete | 33 consonants, 10 vowels + `_`; `legacy` blocks = today's tables exactly; `legacyTables` verbatim | Urdu (Arab) consonant forms unreviewed; three table bugs fixed in display (DIVERGENCES PACK-1) |
-| `jyutping` | draft, Yingyao Yu to review | 19 onsets, 8 codas, 9 nuclei, 59 finals with IPA, 6 tones | Yingyao counts 60 finals, the sources give 59 (candidates: bare eo, en, um, up); tones 2 and 5 are 25/23 in her list and 35/13 on jyutping.org (both kept) |
+| `jyutping` | draft, Yingyao Yu to review | 19 onsets, 8 codas, 9 nuclei, 59 finals with IPA, 6 tones stored; the nine-tone count derived (`toneSystems.nine`: checked 1, 3, 6 → 7, 8, 9; Jon, 2026-11-13) | Yingyao counts 60 finals, the sources give 59 (candidates: bare eo, en, um, up); tones 2 and 5 are 25/23 in her list and 35/13 on jyutping.org (both kept) |
 | `kurmanji` | draft, Seba Kayan to review | 31 consonants incl. p̱ ṯ ḵ ç̱ (U+0331), ḥ, ʿ, flap r vs trill rr, x vs x̱; 8 vowels with context variants | [ɯ] glide after w; velar vs uvular x/x̱; [ɯɛ] after g, k; no Arabic-script forms |
 
 Validator checks: every pack against the schema; every hindi-urdu legacy key heals to

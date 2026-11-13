@@ -345,6 +345,10 @@ def check_syllable(fx):
         ipa = [SYL.derive_ipa(s, pack) for tr in pc["phraseGrid"] for ph in tr for s in ph["syllables"]]
         ok = ok and ipa == exp["derivedIpa"]
         notes.append("ipa " + " ".join(ipa))
+        if "nineTone" in exp:
+            nine = [SYL.derived_tone(s, pack) for tr in pc["phraseGrid"] for ph in tr for s in ph["syllables"]]
+            ok = ok and nine == exp["nineTone"]
+            notes.append("nine-tone " + " ".join(nine))
     elif kind == "rehome":
         out, dropped = SYL.rehome(pc, fx["pieceAfterEdit"])
         ok = _grid(out) == exp["syllables"] and dropped == exp["dropped"]
@@ -411,6 +415,11 @@ def check_pack(pack):
             errs.append(f"finals.{key}: unknown coda")
         if f.get("syllabic") and not pack["flags"]["syllabicNasals"]:
             errs.append(f"finals.{key}: syllabic final without flags.syllabicNasals")
+    for name, ts in (pack.get("toneSystems") or {}).items():
+        if any(k not in (pack.get("tones") or {}) for k in ts["checked"]):
+            errs.append(f"toneSystems.{name}: maps a tone the pack lacks")
+        if any(c not in codas for c in ts["checkedCodas"]):
+            errs.append(f"toneSystems.{name}: unknown checked coda")
     if pack["flags"]["tones"] != bool(pack.get("tones")):
         errs.append("flags.tones disagrees with tones")
     n = {k: len(pack[k]) for k in ("consonants", "vowels")}

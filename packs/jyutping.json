@@ -738,5 +738,20 @@
       "checkedChao": "2"
     }
   },
+  "toneSystems": {
+    "nine": {
+      "description": "The traditional nine-tone count (ILE). Stored tone stays 1-6 (Jyutping); the nine-tone number is derived from (tone, coda): on a checked syllable (coda p, t or k) tones 1, 3, 6 are 7, 8, 9. Lossless both ways. A checked syllable with any other tone (a colloquial changed tone, e.g. 2) keeps its number.",
+      "checkedCodas": [
+        "p",
+        "t",
+        "k"
+      ],
+      "checked": {
+        "1": "7",
+        "3": "8",
+        "6": "9"
+      }
+    }
+  },
   "toneNotes": "Checked (entering) syllables, finals in -p -t -k, take tones 1, 3, 6 in Jyutping (ILE 7, 8, 9); `checkedChao` is their short contour. Tone is a label on the syllable in 0.3.0; contours are reference shapes for later overlay and query work."
 }

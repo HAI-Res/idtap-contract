@@ -69,6 +69,20 @@
         }
       }
     },
+    "toneSystems": {
+      "description": "Alternative tone counts derived from the stored tone, keyed by name (Jyutping: 'nine'). A derived number is never stored on a syllable.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["description", "checkedCodas", "checked"],
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": "string" },
+          "checkedCodas": { "type": "array", "items": { "type": "string" } },
+          "checked": { "description": "Stored tone -> derived tone on a syllable whose coda is in checkedCodas.", "type": "object", "additionalProperties": { "type": "string" } }
+        }
+      }
+    },
     "toneNotes": { "type": "string" },
     "legacyTables": { "description": "hindi-urdu only: the eight arrays compiled into the pre-0.3.0 clients, verbatim, so the `legacy` blocks can be checked against them.", "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } }
   },
