@@ -480,7 +480,9 @@ trajectories in phrase order, so it can cross a phrase boundary.
   schema; the code exists so a client that meets one from a buggy writer reports it
   instead of crashing. Clients carry the entries through byte-identical and do not
   project that phrase; the write guard refuses an old client's save (reason
-  `unreadable`).
+  `unreadable`). The reference `legacy_safe` returns `(False, ['unreadable'])` for any such
+  document (`invariants` malformed-* cases, `write-guard` unreadable-tier; both marked
+  `schemaInvalid`).
 Every code except `track-not-vocal` is an error. What a client does with an error
 (refuse, repair, warn) is its choice in 0.3.0; a warning is shown, never refused.
 
