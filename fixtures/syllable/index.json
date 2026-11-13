@@ -4,7 +4,7 @@
     {
       "name": "heal-legacy-hindi-roundtrip",
       "scenario": "legacy",
-      "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and an instrumental track with no phonetic data (-> syllables [])."
+      "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and a vocal track with no phonetic data (-> syllables [])."
     },
     {
       "name": "project-cantonese-tone-orthography",
@@ -15,6 +15,11 @@
       "name": "mixed-healed-and-legacy-phrases",
       "scenario": "mixed",
       "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'. The write guard reads the STORED legacy fields, so as loaded the piece is not legacy-safe (healing the stale 'ā' disagrees with the stored syllable: boundary); once a 0.3.0 client saves it (dual-write) it is."
+    },
+    {
+      "name": "heal-instrumental-tracks-untouched",
+      "scenario": "legacy",
+      "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2 has no instrumentation label. Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal)."
     },
     {
       "name": "rehome-split-at-syllable-boundary",

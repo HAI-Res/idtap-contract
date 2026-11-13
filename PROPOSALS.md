@@ -482,8 +482,17 @@ Every code except `track-not-vocal` is an error. What a client does with an erro
    reference heal raises on a row-0 trajectory without one.
 2. A phrase with a `syllables` key keeps it, even `[]`; its legacy fields are ignored on
    load and rewritten by the projection (`mixed-healed-and-legacy-phrases`).
-3. A phrase without the key: if no row-0 trajectory anywhere in its **track** has a
-   vowel or consonant, `syllables = []` (instrumental tracks). Otherwise run
+3. **Vocal tracks only** (Jon, 2026-11-13). A track is vocal when
+   `instrumentation[track]` is `'Vocal (M)'` or `'Vocal (F)'`. On any other track,
+   including one with no label, nothing is created: its phrases keep no `syllables` key
+   and the projection leaves its legacy fields exactly as stored. The production dump of
+   2026-11-13 has about 10,000 vowels on Sitar, Sarangi, Sarod and Veena tracks, 9,875 of
+   them the editor's default `a`; they are not text (`heal-instrumental-tracks-untouched`).
+   A tier already stored on a non-vocal track is kept, not projected, and warned about
+   (`track-not-vocal`). The write guard calls it unsafe, since the heal would not rebuild
+   it (`tier-on-instrumental-track`).
+4. On a vocal track, a phrase without the key: if no row-0 trajectory anywhere in the
+   track has a vowel or consonant, `syllables = []`. Otherwise run
    `firstTrajIdxs` (null == absent); each start index opens a syllable that spans up to
    the next start or a silence. `onset` = first trajectory's `startConsonant`,
    `nucleus` = its `vowel`, `coda` = last trajectory's `endConsonant`,
@@ -491,7 +500,7 @@ Every code except `track-not-vocal` is an error. What a client does with an erro
    vowel still becomes a syllable (lyric.vowel null), so no extent leaks over it.
 
 ### Projection: syllables → legacy fields (normative, `project_piece`)
-For every syllable and the trajectories it spans: `vowel` on every spanned trajectory,
+On vocal tracks only (non-vocal tracks are never projected). For every syllable and the trajectories it spans: `vowel` on every spanned trajectory,
 `startConsonant` + three copies + the `'0.00'` mirror on the first, `endConsonant` +
 three copies + the `'1.00'` mirror on the last; every other row-0 trajectory has
 all of them cleared (a stale `'0.00'`/`'1.00'` articulation is removed only when its name

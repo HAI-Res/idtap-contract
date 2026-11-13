@@ -157,7 +157,7 @@ def fx_heal_roundtrip():
         "name": "heal-legacy-hindi-roundtrip",
         "scenario": "legacy",
         "kind": "heal",
-        "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and an instrumental track with no phonetic data (-> syllables []).",
+        "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and a vocal track with no phonetic data (-> syllables []).",
         "pieceJson": pc,
         "expected": {"syllables": want, "legacyRoundTrip": True, "legacySafe": True,
                      "legacySafeReasons": [], "violations": []},
@@ -225,6 +225,30 @@ def fx_mixed():
         "expected": {"syllables": want, "legacyRoundTrip": False,
                      "legacyAfterProjection": {"m1": proj["m1"], "m2": proj["m2"]},
                      "legacySafe": False, "legacySafeReasons": ["boundary"], "violations": []},
+    })
+
+
+def fx_instrumental():
+    voc = phrase("ph-v", [traj("v1", "ā", start="ba"), traj("v2", "ā")])
+    sitar = phrase("ph-s", [traj("s1", "a"), traj("s2", "a"), traj("s3", "ē")])
+    unlabelled = phrase("ph-u", [traj("u1", "a"), traj("u2", "a")])
+    pc = piece([[voc], [sitar], [unlabelled]], title="Instrumental tracks (fixture)")
+    pc["instrumentation"] = ["Vocal (M)", "Sitar"]  # track 2 has no label
+    want = [[[syl("v1", "ā", onset="ba")]], [None], [None]]
+    healed = S.heal_piece(pc)
+    same(want, grid(healed), "only the vocal track is healed")
+    same(legacy_map(pc), S.project_piece(healed), "non-vocal legacy fields stand")
+    same(pc, S.strip_syllables(S.apply_projection(healed)), "dual-write leaves every track byte-identical")
+    same((True, []), S.legacy_safe(pc), "legacy_safe")
+    same([], errors(healed), "invariants")
+    emit("syllable", {
+        "name": "heal-instrumental-tracks-untouched",
+        "scenario": "legacy",
+        "kind": "heal",
+        "description": "Syllables live on vocal tracks only (Jon, 2026-11-13). Track 0 is 'Vocal (M)' and is healed. Track 1 is a Sitar whose trajectories carry the editor's default vowel 'a' (and one 'e-macron'); track 2 has no instrumentation label. Neither gets a syllables key, and the projection leaves their stored legacy fields exactly as they are: not rewritten, not cleared. A tier stored on a non-vocal track is kept, not projected, and warned about (track-not-vocal).",
+        "pieceJson": pc,
+        "expected": {"syllables": want, "legacyRoundTrip": True,
+                     "legacySafe": True, "legacySafeReasons": [], "violations": []},
     })
 
 
@@ -356,6 +380,10 @@ def fx_guard():
     untiered["phraseGrid"][0][0].pop("syllables", None)
     case("untiered-legacy", untiered, [],
          "No phrase has a syllables key: a plain legacy piece, as almost every stored piece is while the web flag is off. A pre-0.3.0 save drops nothing, so it is allowed. Only phrases with a stored tier are compared.")
+    tiered_sitar = piece([[phrase("p", [traj("w1", "ā", start="ba"), traj("w2", "ā")], [syl("w1", "ā", onset="ba")])]])
+    tiered_sitar["instrumentation"] = ["Sitar"]
+    case("tier-on-instrumental-track", tiered_sitar, ["boundary"],
+         "A tier stored on a Sitar track. The heal never builds syllables on a non-vocal track, so an old client's save would lose it: unsafe.")
     case("regrouped-by-heal", base(second=syl("w2", "ā")), ["boundary"],
          "Two adjacent syllables with the same vowel and no consonant between them: the heal would merge them into one, so the legacy fields cannot hold the boundary.")
     emit("syllable", {
@@ -409,6 +437,7 @@ def main():
     fx_heal_roundtrip()
     fx_cantonese()
     fx_mixed()
+    fx_instrumental()
     fx_rehome("rehome-split-at-syllable-boundary", 2,
               [[syl("r1", "ā", onset="ba")], [syl("r3", "ī", onset="ga")]], True, [],
               "Split ph-r0 between r2 and r3, at a syllable boundary. The ga syllable follows r3 into the new phrase ph-r1; the legacy fields are unchanged and the piece stays legacy-safe.")
