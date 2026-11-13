@@ -1,16 +1,17 @@
 {
   "name": "idtap-contract",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "versionPolicy": {
     "assert": "Each implementation keeps a constant CONTRACT_VERSION and asserts it equals contract.json `version` in its conformance suite (see README 'Versioning').",
     "minor": "bumped when wire semantics change (a client built against an older minor must not load newer data without the matching heal); clients assert exact match.",
     "patch": "reserved for fixture/doc additions that change no semantics.",
     "changelog": {
+      "0.3.0": "PROP-7 Piece.system {pitch, phonology, rhythm, display} (absent = Hindustani); PROP-8 Phrase.syllables (anchor {traj, t=0}, onset/nucleus/coda/tone keys, lyric + sung vowels with provenance), normative heal (firstTrajIdxs rule) and projection (dual-write of the legacy per-trajectory fields), re-homing after phrase edits, load invariants, and the pre-0.3.0 write guard; PROP-9 phoneme packs as data (packs/*.json, pack.schema.json: hindi-urdu, jyutping, kurmanji). Piece.lyricsText added.",
       "0.2.0": "PROP-6 vibrato v2: vibObj is {rate, extentStart, extentEnd, vertOffset, phase}; v1 {periods, vertOffset, initUp, extent} accepted as LEGACY and healed losslessly; canonical form emits vibObj only when id == 13 (PROP-6b).",
       "0.1.0": "initial contract: PROP-1 ruleSet, PROP-2 dates/collections, PROP-3 chikari; 10 entities."
     }
   },
-  "description": "Language-neutral serialization contract (JSON Schemas + golden fixtures) for the IDTAP data model, shared by idtap (TS) and idtap-api (Python).",
+  "description": "Language-neutral serialization contract (JSON Schemas + golden fixtures) for the IDTAP data model, shared by idtap (TS), idtap-api (Python) and idtap-swift.",
   "entities": {
     "pitch": {
       "schema": "schemas/pitch.schema.json",
@@ -70,10 +71,32 @@
       "fixtures": "fixtures/meter/",
       "status": "complete",
       "kind": "structural"
+    },
+    "syllable": {
+      "schema": "schemas/syllable.schema.json",
+      "fixtures": "fixtures/syllable/",
+      "status": "complete",
+      "notes": "PROP-8. Reference rules in conformance/syllables.py; fixtures kinds heal, project, rehome, invariants, guard"
+    },
+    "system": {
+      "schema": "schemas/system.schema.json",
+      "fixtures": "fixtures/system/",
+      "status": "complete",
+      "notes": "PROP-7. Only `phonology` has semantics in 0.3.0"
     }
   },
   "roadmap": [],
   "divergences": "DIVERGENCES.md",
-  "status": "model complete — 10 entities; awaiting owner review of DIVERGENCES.md before applying fixes",
-  "proposals": "PROPOSALS.md"
+  "status": "model complete — 12 entities + 3 phoneme packs (0.3.0: PROP-7/8/9 under review)",
+  "proposals": "PROPOSALS.md",
+  "packs": {
+    "schema": "schemas/pack.schema.json",
+    "dir": "packs/",
+    "ids": [
+      "hindi-urdu",
+      "jyutping",
+      "kurmanji"
+    ],
+    "notes": "PROP-9. jyutping and kurmanji are drafts pending speaker review; see each pack's `unverified`."
+  }
 }

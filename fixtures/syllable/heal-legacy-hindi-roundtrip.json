@@ -1,0 +1,687 @@
+{
+  "name": "heal-legacy-hindi-roundtrip",
+  "scenario": "legacy",
+  "kind": "heal",
+  "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and an instrumental track with no phonetic data (-> syllables []).",
+  "pieceJson": {
+    "raga": {
+      "name": "Yaman",
+      "fundamental": 246.0,
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "tuning": {
+        "sa": 1,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "pa": 1.4983070768766815,
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        }
+      }
+    },
+    "phraseGrid": [
+      [
+        {
+          "durTot": 2.0,
+          "durArray": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "chikaris": {},
+          "startTime": 0.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "ba",
+                    "hindi": "ब",
+                    "ipa": "b",
+                    "engTrans": "b"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "a1",
+                "vowel": "ā",
+                "startConsonant": "ba",
+                "startConsonantHindi": "ब",
+                "startConsonantIpa": "b",
+                "startConsonantEngTrans": "b"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "a2",
+                "vowel": "ā"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "ba",
+                    "hindi": "ब",
+                    "ipa": "b",
+                    "engTrans": "b"
+                  },
+                  "1.00": {
+                    "name": "consonant",
+                    "stroke": "la",
+                    "hindi": "ल",
+                    "ipa": "l",
+                    "engTrans": "l"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "a3",
+                "vowel": "u",
+                "startConsonant": "ba",
+                "startConsonantHindi": "ब",
+                "startConsonantIpa": "b",
+                "startConsonantEngTrans": "b",
+                "endConsonant": "la",
+                "endConsonantHindi": "ल",
+                "endConsonantIpa": "l",
+                "endConsonantEngTrans": "l"
+              },
+              {
+                "id": 12,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "num": 0,
+                "uniqueId": "a4"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-a",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false
+        },
+        {
+          "durTot": 3.5,
+          "durArray": [
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285,
+            0.14285714285714285
+          ],
+          "chikaris": {},
+          "startTime": 2.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "ma",
+                    "hindi": "म",
+                    "ipa": "m",
+                    "engTrans": "m"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "b1",
+                "vowel": "ō",
+                "startConsonant": "ma",
+                "startConsonantHindi": "म",
+                "startConsonantIpa": "m",
+                "startConsonantEngTrans": "m"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "ra",
+                    "hindi": "र",
+                    "ipa": "r",
+                    "engTrans": "r"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "b2",
+                "vowel": "ā",
+                "startConsonant": "ra",
+                "startConsonantHindi": "र",
+                "startConsonantIpa": "r",
+                "startConsonantEngTrans": "r"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "b3",
+                "vowel": "ā"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "pha",
+                    "hindi": "फ़",
+                    "ipa": "pʰ",
+                    "engTrans": "ph"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "b4",
+                "vowel": "a",
+                "startConsonant": "pha",
+                "startConsonantHindi": "फ़",
+                "startConsonantIpa": "pʰ",
+                "startConsonantEngTrans": "ph"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "1.00": {
+                    "name": "consonant",
+                    "stroke": "na",
+                    "hindi": "न",
+                    "ipa": "n",
+                    "engTrans": "n"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "b5",
+                "vowel": "a",
+                "endConsonant": "na",
+                "endConsonantHindi": "न",
+                "endConsonantIpa": "n",
+                "endConsonantEngTrans": "n"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "b6",
+                "vowel": "ī"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "b7"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-b",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false
+        },
+        {
+          "durTot": 1.0,
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "chikaris": {},
+          "startTime": 5.5,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "c1",
+                "vowel": "ī"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "consonant",
+                    "stroke": "na",
+                    "hindi": "न",
+                    "ipa": "n",
+                    "engTrans": "n"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "c2",
+                "vowel": "ī",
+                "startConsonant": "na",
+                "startConsonantHindi": "न",
+                "startConsonantIpa": "n",
+                "startConsonantEngTrans": "n"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-c",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false
+        }
+      ],
+      [
+        {
+          "durTot": 1.0,
+          "durArray": [
+            0.5,
+            0.5
+          ],
+          "chikaris": {},
+          "startTime": 0.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "i1"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 4,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {},
+                "num": 0,
+                "uniqueId": "i2"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-i",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false
+        }
+      ]
+    ],
+    "instrumentation": [
+      "Vocal (F)",
+      "Vocal (F)"
+    ],
+    "durTot": 6.5,
+    "durArrayGrid": [
+      [
+        0.3076923076923077,
+        0.5384615384615384,
+        0.15384615384615385
+      ],
+      [
+        0.15384615384615385
+      ]
+    ],
+    "sectionCatGrid": [
+      [],
+      []
+    ],
+    "meters": [],
+    "title": "Babul mora (fixture)",
+    "_id": "fixture000000000000000000"
+  },
+  "expected": {
+    "syllables": [
+      [
+        [
+          {
+            "anchor": {
+              "traj": "a1",
+              "t": 0
+            },
+            "onset": "ba",
+            "nucleus": "ā",
+            "lyric": {
+              "vowel": "ā",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "a3",
+              "t": 0
+            },
+            "onset": "ba",
+            "nucleus": "u",
+            "coda": "la",
+            "lyric": {
+              "vowel": "u",
+              "source": "pack"
+            }
+          }
+        ],
+        [
+          {
+            "anchor": {
+              "traj": "b1",
+              "t": 0
+            },
+            "onset": "ma",
+            "nucleus": "ō",
+            "lyric": {
+              "vowel": "ō",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "b2",
+              "t": 0
+            },
+            "onset": "ra",
+            "nucleus": "ā",
+            "lyric": {
+              "vowel": "ā",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "b4",
+              "t": 0
+            },
+            "onset": "pha",
+            "nucleus": "a",
+            "coda": "na",
+            "lyric": {
+              "vowel": "a",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "b6",
+              "t": 0
+            },
+            "nucleus": "ī",
+            "lyric": {
+              "vowel": "ī",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "b7",
+              "t": 0
+            },
+            "lyric": {
+              "vowel": null,
+              "source": "pack"
+            }
+          }
+        ],
+        [
+          {
+            "anchor": {
+              "traj": "c1",
+              "t": 0
+            },
+            "nucleus": "ī",
+            "lyric": {
+              "vowel": "ī",
+              "source": "pack"
+            }
+          },
+          {
+            "anchor": {
+              "traj": "c2",
+              "t": 0
+            },
+            "onset": "na",
+            "nucleus": "ī",
+            "lyric": {
+              "vowel": "ī",
+              "source": "pack"
+            }
+          }
+        ]
+      ],
+      [
+        []
+      ]
+    ],
+    "legacyRoundTrip": true,
+    "legacySafe": true,
+    "legacySafeReasons": [],
+    "violations": []
+  }
+}

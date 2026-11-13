@@ -13,15 +13,26 @@ Exit 0 = all pass.
 """
 import json, math, os, sys, glob
 
+import syllables as SYL  # PROP-7/8/9 reference rules (same folder)
+
+try:  # schema validation of the PROP-7/8/9 fixtures and packs
+    import jsonschema
+    from referencing import Registry, Resource  # jsonschema >= 4.18
+except ImportError:  # pragma: no cover
+    sys.exit("validate_fixtures.py needs jsonschema >= 4.18 (pip install -U jsonschema): "
+             "without it the syllable/system fixtures and the packs are not schema-checked")
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIX = os.path.join(HERE, "..", "fixtures")
 CONTRACT = os.path.join(HERE, "..", "contract.json")
+SCHEMAS = os.path.join(HERE, "..", "schemas")
+PACKS = os.path.join(HERE, "..", "packs")
 
 # The contract version this runner was written against. Each implementation
 # repo keeps the same kind of constant (see README "Versioning") and asserts it
 # against contract.json in its conformance suite, so a bump that changes wire
 # semantics fails CI in every client until the client is updated.
-CONTRACT_VERSION = "0.2.0"
+CONTRACT_VERSION = "0.3.0"
 
 SARGAM = ["sa", "re", "ga", "ma", "pa", "dha", "ni"]
 YAMAN_RULESET = {
@@ -266,12 +277,166 @@ def check_meter(fx):
     return ok, f"offsets={[[round(x, 3) for x in g] for g in got]}"
 
 
+# --------------------------------------------------------------------------- schemas
+_VALIDATORS = {}
+
+
+def schema_errors(instance, name):
+    """Errors of `instance` against schemas/<name>.schema.json."""
+    if name not in _VALIDATORS:
+        reg, mine = Registry(), None
+        for path in glob.glob(os.path.join(SCHEMAS, "*.schema.json")):
+            sch = json.load(open(path, encoding="utf-8"))
+            reg = reg.with_resource(sch["$id"], Resource.from_contents(sch))
+            if os.path.basename(path) == name + ".schema.json":
+                mine = sch
+        _VALIDATORS[name] = jsonschema.Draft202012Validator(mine, registry=reg)
+    return [f"{'/'.join(map(str, e.absolute_path))}: {e.message[:120]}"
+            for e in _VALIDATORS[name].iter_errors(instance)]
+
+
+def piece_schema_ok(*pieces):
+    errs = [e for pc in pieces for e in schema_errors(pc, "piece")]
+    return not errs, errs
+
+
+# --------------------------------------------------------------------------- syllable (PROP-8)
+def _guard(pc, exp):
+    return SYL.legacy_safe(pc) == (exp["legacySafe"], exp["legacySafeReasons"])
+
+
+def _violations(pc, exp):
+    """Errors must equal expected.violations, warnings expected.warnings ([])."""
+    return SYL.split_violations(SYL.check_invariants(pc)) == (exp["violations"], exp.get("warnings", []))
+
+
+_grid = SYL.syllable_grid
+
+
+def check_syllable(fx):
+    kind, exp = fx["kind"], fx.get("expected")
+    notes = []
+    if kind in ("invariants", "guard"):
+        ok = True
+        for c in fx["cases"]:
+            good, errs = piece_schema_ok(c["pieceJson"])
+            if kind == "invariants":
+                good = good and _violations(c["pieceJson"], c["expected"])
+            else:
+                good = good and _guard(c["pieceJson"], c["expected"])
+            if not good:
+                notes.append(f"case {c['name']} FAILED {errs[:2]}")
+            ok = ok and good
+        return ok, f"{len(fx['cases'])} cases" + ("; " + "; ".join(notes) if notes else "")
+    pc = fx["pieceJson"]
+    if kind == "heal":
+        out = SYL.heal_piece(pc)
+        ok = _grid(out) == exp["syllables"]
+        proj = SYL.project_piece(out)
+        if exp.get("legacyRoundTrip"):
+            ok = ok and proj == SYL.stored_legacy(pc)
+            notes.append("heal->project identical")
+        for uid, want in (exp.get("legacyAfterProjection") or {}).items():
+            ok = ok and proj[uid] == want
+    elif kind == "project":
+        out = pc
+        ok = SYL.project_piece(pc) == exp["legacy"]
+        pack = SYL.pack_of(pc)
+        ipa = [SYL.derive_ipa(s, pack) for tr in pc["phraseGrid"] for ph in tr for s in ph["syllables"]]
+        ok = ok and ipa == exp["derivedIpa"]
+        notes.append("ipa " + " ".join(ipa))
+        if "nineTone" in exp:
+            nine = [SYL.derived_tone(s, pack) for tr in pc["phraseGrid"] for ph in tr for s in ph["syllables"]]
+            ok = ok and nine == exp["nineTone"]
+            notes.append("nine-tone " + " ".join(nine))
+    elif kind == "rehome":
+        out, dropped = SYL.rehome(pc, fx["pieceAfterEdit"])
+        ok = _grid(out) == exp["syllables"] and dropped == exp["dropped"]
+        if exp.get("legacyUnchanged"):
+            ok = ok and SYL.project_piece(out) == SYL.project_piece(pc)
+    else:
+        return False, f"unknown kind {kind}"
+    good, errs = piece_schema_ok(pc, out)
+    ok = ok and good and _guard(out, exp) and _violations(out, exp)
+    notes.append(f"legacySafe={exp['legacySafe']} {exp['legacySafeReasons']}")
+    return ok, "; ".join(notes + errs[:3])
+
+
+# --------------------------------------------------------------------------- system (PROP-7)
+def check_system(fx):
+    pc, exp = fx["pieceJson"], fx["expected"]
+    res = SYL.resolve_system(pc)
+    ok = res == exp["resolved"] and res["phonology"] == exp["pack"]
+    ok = ok and os.path.exists(os.path.join(PACKS, exp["pack"] + ".json"))
+    ok = ok and ("system" in pc) == exp["syllableUi"]
+    healed = SYL.heal_piece(pc)
+    ok = ok and _violations(healed, exp)
+    if "derivedIpa" in exp:
+        pack = SYL.pack_of(pc)
+        ok = ok and [SYL.derive_ipa(s, pack) for s in healed["phraseGrid"][0][0]["syllables"]] == exp["derivedIpa"]
+    good, errs = piece_schema_ok(pc, healed)
+    return ok and good, f"phonology={res['phonology']}" + (f" ipa={' '.join(exp['derivedIpa'])}" if "derivedIpa" in exp else "") + (f" {errs[:2]}" if errs else "")
+
+
+# --------------------------------------------------------------------------- packs (PROP-9)
+def check_pack(pack):
+    errs = schema_errors(pack, "pack")
+    codas = SYL.codas_of(pack)
+    if pack["id"] == SYL.LEGACY_PACK:
+        lt = pack["legacyTables"]
+        # every stored legacy key heals to a pack key, and each legacy block is
+        # exactly what today's code writes for it: tables[indexOf(key)]
+        for table, isos, cols in (("consonants", "cIsos", ("cHindis", "cIpas", "cEngTrans")),
+                                  ("vowels", "vIsos", ("vHindis", "vIpas", "vEngTrans"))):
+            for key in lt[isos]:
+                e = pack[table].get(key)
+                i = lt[isos].index(key)
+                want = {"iso": key, "hindi": lt[cols[0]][i], "ipa": lt[cols[1]][i], "engTrans": lt[cols[2]][i]}
+                if e is None or e.get("legacy") != want:
+                    errs.append(f"{table}.{key}: legacy block != tables[indexOf]")
+            for key, e in pack[table].items():
+                if "legacy" in e and key not in lt[isos]:
+                    errs.append(f"{table}.{key}: legacy block for a key the tables lack")
+    else:
+        # non-Hindi packs project nothing into the legacy fields (PROP-8)
+        if pack["flags"]["legacyExact"]:
+            errs.append("flags.legacyExact is true on a non-hindi-urdu pack")
+        maps = [pack["consonants"], pack["vowels"]] + ([codas] if codas is not pack["consonants"] else [])
+        for m in maps:
+            for key, e in m.items():
+                if "legacy" in e:
+                    errs.append(f"{key}: legacy block on a non-hindi-urdu pack")
+    for key, f in (pack.get("finals") or {}).items():
+        if (f["nucleus"] or "") + (f["coda"] or "") != key:
+            errs.append(f"finals.{key}: key != nucleus + coda")
+        if f["nucleus"] is not None and f["nucleus"] not in pack["vowels"]:
+            errs.append(f"finals.{key}: unknown nucleus")
+        if f["coda"] is not None and f["coda"] not in codas:
+            errs.append(f"finals.{key}: unknown coda")
+        if f.get("syllabic") and not pack["flags"]["syllabicNasals"]:
+            errs.append(f"finals.{key}: syllabic final without flags.syllabicNasals")
+    for name, ts in (pack.get("toneSystems") or {}).items():
+        if any(k not in (pack.get("tones") or {}) for k in ts["checked"]):
+            errs.append(f"toneSystems.{name}: maps a tone the pack lacks")
+        if any(c not in codas for c in ts["checkedCodas"]):
+            errs.append(f"toneSystems.{name}: unknown checked coda")
+    if pack["flags"]["tones"] != bool(pack.get("tones")):
+        errs.append("flags.tones disagrees with tones")
+    n = {k: len(pack[k]) for k in ("consonants", "vowels")}
+    if pack.get("finals"):
+        n["finals"] = len(pack["finals"])
+    if pack.get("tones"):
+        n["tones"] = len(pack["tones"])
+    return not errs, " ".join(f"{k}={v}" for k, v in n.items()) + (f" ERR {errs[:3]}" if errs else "")
+
+
 CHECKERS = {"pitch": check_pitch, "raga": check_raga,
             "trajectory": check_trajectory, "phrase": check_phrase,
             "piece": check_piece,
             "articulation": check_structural, "automation": check_structural,
             "chikari": check_structural, "group": check_structural,
-            "meter": check_meter}
+            "meter": check_meter,
+            "syllable": check_syllable, "system": check_system}
 
 
 def check_contract_version():
@@ -298,6 +463,13 @@ def main():
             total += 1
             fails += 0 if ok else 1
             print(f"  {'PASS' if ok else 'FAIL'}  {fx['name']}  {info}")
+    print("== packs ==")
+    for path in sorted(glob.glob(os.path.join(PACKS, "*.json"))):
+        pack = json.load(open(path, encoding="utf-8"))
+        ok, info = check_pack(pack)
+        total += 1
+        fails += 0 if ok else 1
+        print(f"  {'PASS' if ok else 'FAIL'}  {pack['id']}  {info}")
     print(f"\n{total - fails}/{total} fixtures consistent; contract version "
           f"{'OK' if version_ok else 'MISMATCH'}")
     sys.exit(1 if fails or not version_ok else 0)

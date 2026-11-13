@@ -1,0 +1,45 @@
+{
+  "entity": "syllable",
+  "fixtures": [
+    {
+      "name": "heal-legacy-hindi-roundtrip",
+      "scenario": "legacy",
+      "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and an instrumental track with no phonetic data (-> syllables [])."
+    },
+    {
+      "name": "project-cantonese-tone-orthography",
+      "scenario": "stripped",
+      "description": "Cantonese piece (system.phonology jyutping) with tone, orthography, romanization and word starts. si1 is a melisma over y1-y3 that crosses the phrase boundary (y3 is the first trajectory of ph-y1 and is not an anchor); m4 is a syllabic nasal (no nucleus, coda m); hou2 has a glide coda the legacy fields cannot hold; sik6 is a checked syllable after a silence. Projection writes nothing into the legacy fields: no vowel, no consonants, no consonant articulations (non-Hindi packs carry no legacy mapping; every platform moves to the tier together). The write guard, which refuses a pre-0.3.0 save, is the only protection for such a piece. IPA is derived from the finals table and the nine-tone number from (tone, coda); neither is stored."
+    },
+    {
+      "name": "mixed-healed-and-legacy-phrases",
+      "scenario": "mixed",
+      "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'. The write guard reads the STORED legacy fields, so as loaded the piece is not legacy-safe (healing the stale 'ā' disagrees with the stored syllable: boundary); once a 0.3.0 client saves it (dual-write) it is."
+    },
+    {
+      "name": "rehome-split-at-syllable-boundary",
+      "scenario": "edit",
+      "description": "Split ph-r0 between r2 and r3, at a syllable boundary. The ga syllable follows r3 into the new phrase ph-r1; the legacy fields are unchanged and the piece stays legacy-safe."
+    },
+    {
+      "name": "rehome-split-mid-melisma",
+      "scenario": "edit",
+      "description": "Split between r1 and r2, inside the melisma ba-ā (r1-r2). The syllable stays in ph-r0 and its extent continues into ph-r1 (r2 is not an anchor), so the legacy fields are unchanged. The heal would start a new syllable at r2 (first of a phrase), so the piece is no longer legacy-safe: a mid-melisma split locks out pre-0.3.0 writers."
+    },
+    {
+      "name": "rehome-merge",
+      "scenario": "edit",
+      "description": "Merge ph-r0 and ph-r1 into one phrase. The edit deletes ph-r1 and its syllable list; re-homing pools every syllable of the track from before the edit, so ga survives in the merged phrase."
+    },
+    {
+      "name": "invariants",
+      "scenario": "validation",
+      "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0."
+    },
+    {
+      "name": "write-guard",
+      "scenario": "validation",
+      "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary."
+    }
+  ]
+}

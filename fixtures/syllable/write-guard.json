@@ -1,0 +1,1393 @@
+{
+  "name": "write-guard",
+  "scenario": "validation",
+  "kind": "guard",
+  "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary.",
+  "cases": [
+    {
+      "name": "plain-hindi",
+      "description": "Heal reproduces it: a pre-0.3.0 save is allowed (it drops the syllables; the next load rebuilds them).",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": true,
+        "legacySafeReasons": []
+      }
+    },
+    {
+      "name": "explicit-hindustani-system",
+      "description": "An explicit hindi-urdu system is still legacy-safe; `system` is a top-level field that a $set save leaves in place.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "hindi-urdu"
+        }
+      },
+      "expected": {
+        "legacySafe": true,
+        "legacySafeReasons": []
+      }
+    },
+    {
+      "name": "word-start",
+      "description": "Word starts have no legacy field.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "wordStart": true,
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "wordStart"
+        ]
+      }
+    },
+    {
+      "name": "orthography",
+      "description": "Written forms have no legacy field.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "orthography": "बा",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "orthography"
+        ]
+      }
+    },
+    {
+      "name": "sung-vowel",
+      "description": "Sung vowels are not projected.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  },
+                  "sung": {
+                    "vowel": "a",
+                    "source": "model"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "sung"
+        ]
+      }
+    },
+    {
+      "name": "retroflex-na",
+      "description": "ṇa is new in the fixed pack and has no legacy form.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ṇa",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "key"
+        ]
+      }
+    },
+    {
+      "name": "kurmanji-pack",
+      "description": "Any pack other than hindi-urdu.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "w",
+                  "nucleus": "a",
+                  "lyric": {
+                    "vowel": "a",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000",
+        "system": {
+          "phonology": "kurmanji"
+        }
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "pack"
+        ]
+      }
+    },
+    {
+      "name": "stale-legacy-beside-empty-syllables",
+      "description": "syllables: [] but the trajectories still carry 'ba' + 'ā' (a stale write). A pre-0.3.0 save would keep those fields and the next load would heal a syllable the tier says does not exist, so the guard, which reads the stored legacy fields, refuses.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": []
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "boundary"
+        ]
+      }
+    },
+    {
+      "name": "regrouped-by-heal",
+      "description": "Two adjacent syllables with the same vowel and no consonant between them: the heal would merge them into one, so the legacy fields cannot hold the boundary.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 1.0,
+              "durArray": [
+                0.5,
+                0.5
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {
+                      "0.00": {
+                        "name": "consonant",
+                        "stroke": "ba",
+                        "hindi": "ब",
+                        "ipa": "b",
+                        "engTrans": "b"
+                      }
+                    },
+                    "num": 0,
+                    "uniqueId": "w1",
+                    "vowel": "ā",
+                    "startConsonant": "ba",
+                    "startConsonantHindi": "ब",
+                    "startConsonantIpa": "b",
+                    "startConsonantEngTrans": "b"
+                  },
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "w2",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "w1",
+                    "t": 0
+                  },
+                  "onset": "ba",
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                },
+                {
+                  "anchor": {
+                    "traj": "w2",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 1.0,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "legacySafe": false,
+        "legacySafeReasons": [
+          "boundary"
+        ]
+      }
+    }
+  ]
+}
