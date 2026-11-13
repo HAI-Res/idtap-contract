@@ -349,6 +349,12 @@ def check_syllable(fx):
             nine = [SYL.derived_tone(s, pack) for tr in pc["phraseGrid"] for ph in tr for s in ph["syllables"]]
             ok = ok and nine == exp["nineTone"]
             notes.append("nine-tone " + " ".join(nine))
+        if "appliedArticulations" in exp:
+            applied = SYL.apply_projection(pc)
+            got = {t["uniqueId"]: t.get("articulations")
+                   for tr in applied["phraseGrid"] for ph in tr for t in ph["trajectoryGrid"][0]}
+            ok = ok and all(got.get(u) == a for u, a in exp["appliedArticulations"].items())
+            notes.append("articulations after apply")
     elif kind == "rehome":
         out, dropped = SYL.rehome(pc, fx["pieceAfterEdit"])
         ok = _grid(out) == exp["syllables"] and dropped == exp["dropped"]
