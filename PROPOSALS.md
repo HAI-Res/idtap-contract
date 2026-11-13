@@ -543,7 +543,7 @@ hindi-urdu, no syllable carries `orthography`, `romanization`, `tone`, `wordStar
 `sung`, `t` is 0, no cluster, every onset, coda, nucleus and lyric vowel key has a
 legacy form (not `ṇa`; reason `key`), and **healing the stored legacy fields gives back
 the stored syllables** (anchor, onset, nucleus, coda, lyric.vowel; `lyric.source` is not
-compared; reason `boundary`). The guard reads what is in the database, because that is
+compared; reason `boundary`). Only phrases that have a stored tier are compared: a phrase without `syllables` is a plain legacy phrase, and a pre-0.3.0 save drops nothing from it (`untiered-legacy`; platform session, 2026-11-13). The guard reads what is in the database, because that is
 what a pre-0.3.0 save keeps (Jon, 2026-11-13; earlier drafts compared
 heal(project(piece)), which passed a phrase with `syllables: []` beside stale legacy
 fields). A 0.3.0 save always dual-writes, so on a well-formed document the stored legacy
