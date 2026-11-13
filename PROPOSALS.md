@@ -421,7 +421,10 @@ sung vowels with provenance; the legacy fields are dual-written through 0.3.x. S
 - **null vs absent differs between clients** (SYL-1): TS `fromJSON` spreads `...obj`, so
   a stored `null` consonant bypasses the constructor default and counts as present in
   `firstTrajIdxs`; Python treats `None` as absent. Normative: null == absent.
-- **Syllables live on the main string** (`trajectoryGrid[0]`), as `firstTrajIdxs` does.
+- **Syllables live on row 0 of trajectoryGrid (the melodic row; the only row on a vocal track)**, as `firstTrajIdxs` does. Syllables are per
+  track via phrases: any number of tracks may carry them (a duet is two vocal tracks),
+  and tracks are independent of one another; nothing in one track's tier refers to
+  another's.
 
 ### Wire shape (`schemas/syllable.schema.json`, `Phrase.syllables`)
 ```
@@ -444,13 +447,13 @@ stored (plan, pack-level call of 12 Nov). `Phrase.syllables` **absent** = not ye
 healed; `[]` = healed, no syllables. Canonical output always emits it.
 
 **Extent is implied:** a syllable runs from its anchor to the next anchor or to a
-silence trajectory (id 12), whichever comes first, along the track's main-string
+silence trajectory (id 12), whichever comes first, along the track's row-0
 trajectories in phrase order, so it can cross a phrase boundary.
 
 ### Invariants (checked on load; codes in `fixtures/syllable/invariants.json`)
-- `traj-uid-missing`: every main-string trajectory has a uniqueId (heal, projection and
+- `traj-uid-missing`: every row-0 trajectory has a uniqueId (heal, projection and
   re-homing refuse one without; loaders assign ids first).
-- `anchor-missing`: every anchor names a trajectory of the same phrase's main string.
+- `anchor-missing`: every anchor names a trajectory of the same phrase's row 0.
 - `anchor-silence`: never a silence. `anchor-order`: anchors in trajectory order, at most
   one per trajectory.
 - `unanchored-start`: in a track that has any syllable, the track's first non-silent
@@ -461,14 +464,25 @@ trajectories in phrase order, so it can cross a phrase boundary.
   with `finals` is reported once, as `cluster-not-allowed`). Syllabic m/ng (no
   nucleus, coda m|ng) are valid only where the pack lists them as syllabic finals
   (Jyutping).
-What a client does with a violation (refuse, repair, warn) is its choice in 0.3.0.
+- `nucleus-lyric-mismatch` (error): `nucleus` and `lyric.vowel` must agree (absent
+  nucleus == null lyric.vowel). Both stay on the wire (Jon, 2026-11-13): `nucleus` is the
+  pack key IPA is derived from, `lyric.vowel` is the vowel the text says with its
+  provenance, and the projection reads `lyric.vowel`. **Editors keep them in sync**: any
+  edit of one writes the other, and a person's override sets `lyric.source: 'human'`.
+  Disagreement is therefore corrupt data, not a reading.
+- `track-not-vocal` (**warning**): a track whose `instrumentation[track]` is not a vocal
+  label carries syllables (a sung bol on an instrumental track, or a mislabelled track).
+  Vocal labels, pack-independent: `'Vocal (M)'`, `'Vocal (F)'` (`VOCAL_INSTRUMENTS`, the
+  list idtap-platform and idtap-client already use).
+Every code except `track-not-vocal` is an error. What a client does with an error
+(refuse, repair, warn) is its choice in 0.3.0; a warning is shown, never refused.
 
 ### Heal: legacy → syllables (normative, `conformance/syllables.py` `heal_piece`)
 1. Uniqueids are assigned before healing (loaders already do) and persisted; the
-   reference heal raises on a main-string trajectory without one.
+   reference heal raises on a row-0 trajectory without one.
 2. A phrase with a `syllables` key keeps it, even `[]`; its legacy fields are ignored on
    load and rewritten by the projection (`mixed-healed-and-legacy-phrases`).
-3. A phrase without the key: if no main-string trajectory anywhere in its **track** has a
+3. A phrase without the key: if no row-0 trajectory anywhere in its **track** has a
    vowel or consonant, `syllables = []` (instrumental tracks). Otherwise run
    `firstTrajIdxs` (null == absent); each start index opens a syllable that spans up to
    the next start or a silence. `onset` = first trajectory's `startConsonant`,
@@ -479,7 +493,7 @@ What a client does with a violation (refuse, repair, warn) is its choice in 0.3.
 ### Projection: syllables → legacy fields (normative, `project_piece`)
 For every syllable and the trajectories it spans: `vowel` on every spanned trajectory,
 `startConsonant` + three copies + the `'0.00'` mirror on the first, `endConsonant` +
-three copies + the `'1.00'` mirror on the last; every other main-string trajectory has
+three copies + the `'1.00'` mirror on the last; every other row-0 trajectory has
 all of them cleared (a stale `'0.00'`/`'1.00'` articulation is removed only when its name
 is `consonant`). The values come from the pack entry's `legacy` block:
 - **hindi-urdu:** exact, `{iso, hindi, ipa, engTrans}` = today's tables at
@@ -526,9 +540,16 @@ projection is unchanged by any of them.
 A save from a client whose `X-IDTAP-Client` is below 0.3.0 is **refused** when the
 stored piece is not legacy-safe. Legacy-safe (`legacy_safe`) means: the pack is
 hindi-urdu, no syllable carries `orthography`, `romanization`, `tone`, `wordStart` or
-`sung`, `t` is 0, no cluster, every key has a legacy form (not `ṇa`), and
-heal(project(piece)) gives back the same syllables (anchor, onset, nucleus, coda,
-lyric.vowel; `lyric.source` is not compared). For every other piece the old client's
+`sung`, `t` is 0, no cluster, every onset, coda, nucleus and lyric vowel key has a
+legacy form (not `ṇa`; reason `key`), and **healing the stored legacy fields gives back
+the stored syllables** (anchor, onset, nucleus, coda, lyric.vowel; `lyric.source` is not
+compared; reason `boundary`). The guard reads what is in the database, because that is
+what a pre-0.3.0 save keeps (Jon, 2026-11-13; earlier drafts compared
+heal(project(piece)), which passed a phrase with `syllables: []` beside stale legacy
+fields). A 0.3.0 save always dual-writes, so on a well-formed document the stored legacy
+fields are the projection and the two definitions agree; stale fields make a piece
+unsafe until a 0.3.0 client saves it (`stale-legacy-beside-empty-syllables`,
+`mixed-healed-and-legacy-phrases`). For every other piece the old client's
 save drops the syllables and the next load rebuilds them losslessly. **For a non-Hindi piece the guard is the only protection:** its
 legacy fields are empty, so a pre-0.3.0 save that got through would keep nothing of
 its text, and the next load would have nothing to heal from. `system` and

@@ -306,11 +306,11 @@ def _guard(pc, exp):
 
 
 def _violations(pc, exp):
-    return [c for c, _ in SYL.check_invariants(pc)] == exp["violations"]
+    """Errors must equal expected.violations, warnings expected.warnings ([])."""
+    return SYL.split_violations(SYL.check_invariants(pc)) == (exp["violations"], exp.get("warnings", []))
 
 
-def _grid(pc):
-    return [[ph.get("syllables") for ph in tr] for tr in pc["phraseGrid"]]
+_grid = SYL.syllable_grid
 
 
 def check_syllable(fx):
@@ -334,9 +334,7 @@ def check_syllable(fx):
         ok = _grid(out) == exp["syllables"]
         proj = SYL.project_piece(out)
         if exp.get("legacyRoundTrip"):
-            before = {t["uniqueId"]: SYL.legacy_of_traj(t)
-                      for tr in pc["phraseGrid"] for _, _, t in SYL.track_flat(tr)}
-            ok = ok and proj == before
+            ok = ok and proj == SYL.stored_legacy(pc)
             notes.append("heal->project identical")
         for uid, want in (exp.get("legacyAfterProjection") or {}).items():
             ok = ok and proj[uid] == want
@@ -368,7 +366,7 @@ def check_system(fx):
     ok = ok and os.path.exists(os.path.join(PACKS, exp["pack"] + ".json"))
     ok = ok and ("system" in pc) == exp["syllableUi"]
     healed = SYL.heal_piece(pc)
-    ok = ok and [c for c, _ in SYL.check_invariants(healed)] == exp["violations"]
+    ok = ok and _violations(healed, exp)
     if "derivedIpa" in exp:
         pack = SYL.pack_of(pc)
         ok = ok and [SYL.derive_ipa(s, pack) for s in healed["phraseGrid"][0][0]["syllables"]] == exp["derivedIpa"]

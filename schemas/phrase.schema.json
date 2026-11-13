@@ -16,7 +16,7 @@
     },
     "startTime": { "type": ["number", "null"] },
     "trajectoryGrid": {
-      "description": "String-indexed grid: trajectoryGrid[string][i] = Trajectory. Row 0 = main string.",
+      "description": "String-indexed grid: trajectoryGrid[string][i] = Trajectory. Row 0 = the melodic row (the only row on a vocal track); the syllable tier lives on it.",
       "type": "array",
       "items": { "type": "array", "items": { "$ref": "trajectory.schema.json" } }
     },
@@ -27,7 +27,7 @@
     "adHocCategorizationGrid": { "type": "array" },
     "isSectionStart": { "type": ["boolean", "null"] },
     "syllables": {
-      "description": "PROP-8 (contract 0.3.0): the syllable tier of this phrase's main string (trajectoryGrid[0]). ABSENT = not yet healed: the loader builds it from the legacy per-trajectory fields (vowel, startConsonant, endConsonant) by the firstTrajIdxs rule; [] = healed, no syllables. Canonical output always emits it and dual-writes the legacy fields projected from it through 0.3.x. Syllables follow their trajectory: after any phrase split, merge or moved division each syllable is re-homed to the phrase that now holds its anchor trajectory.",
+      "description": "PROP-8 (contract 0.3.0): the syllable tier of this phrase's row 0 of trajectoryGrid (the melodic row; the only row on a vocal track). Syllables are per track via phrases: any number of tracks may carry them, and tracks are independent. ABSENT = not yet healed: the loader builds it from the legacy per-trajectory fields (vowel, startConsonant, endConsonant) by the firstTrajIdxs rule; [] = healed, no syllables. Canonical output always emits it and dual-writes the legacy fields projected from it through 0.3.x. Syllables follow their trajectory: after any phrase split, merge or moved division each syllable is re-homed to the phrase that now holds its anchor trajectory.",
       "type": "array",
       "items": { "$ref": "syllable.schema.json" }
     },

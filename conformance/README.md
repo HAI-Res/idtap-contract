@@ -103,7 +103,7 @@ functions. Each `fixtures/syllable/*.json` has a `kind`; the adapter does:
 | `heal` | load `pieceJson` (phrases without `syllables` heal) | each phrase's syllables equal `expected.syllables[track][phrase]`; when `legacyRoundTrip`, re-serializing gives back every legacy field and the `'0.00'`/`'1.00'` consonant articulations of the input exactly; `legacyAfterProjection[uid]` where given |
 | `project` | load, serialize | the legacy fields of each trajectory equal `expected.legacy[uid]` (`art0`/`art1` = the consonant articulations, `null` = none); `derivedIpa` from the pack in syllable order |
 | `rehome` | load `pieceJson`, apply the structural edit in `pieceAfterEdit`, run your re-homing | syllables per phrase equal `expected.syllables`; `dropped`; the legacy fields equal those before the edit |
-| `invariants` | each case: load, validate | the violation codes equal `expected.violations` (sorted; `[]` = valid) |
+| `invariants` | each case: load, validate | error codes equal `expected.violations` and warning codes (`track-not-vocal`) equal `expected.warnings` (each sorted; `[]` = none) |
 | `guard` | each case | your legacy-safe check gives `expected.legacySafe` with `legacySafeReasons` |
 
 Every kind except `invariants`/`guard` also carries `legacySafe`, `legacySafeReasons`
@@ -111,6 +111,8 @@ and `violations` for the loaded piece. `fixtures/system/*` assert `expected.reso
 (the system after defaults), `pack`, `syllableUi` (`"system" in pieceJson`), and
 `derivedIpa` where present. Bundle `packs/*.json` as data; do not copy their tables
 into code.
+
+The write guard reads the stored legacy fields, not the projection (PROP-8).
 
 Legacy-field shape used by `expected.legacy`: the nine wire fields (`vowel`,
 `startConsonant{,Hindi,Ipa,EngTrans}`, `endConsonant{,Hindi,Ipa,EngTrans}`), absent

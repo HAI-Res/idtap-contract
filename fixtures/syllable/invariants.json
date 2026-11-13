@@ -2,7 +2,7 @@
   "name": "invariants",
   "scenario": "validation",
   "kind": "invariants",
-  "description": "Load-time invariants, one case each. Codes: traj-uid-missing, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+  "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
   "cases": [
     {
       "name": "anchor-missing",
@@ -124,7 +124,8 @@
         "violations": [
           "anchor-missing",
           "unanchored-start"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -276,7 +277,8 @@
       "expected": {
         "violations": [
           "anchor-silence"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -430,7 +432,8 @@
       "expected": {
         "violations": [
           "anchor-order"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -592,7 +595,8 @@
       "expected": {
         "violations": [
           "unanchored-start"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -714,7 +718,8 @@
       "expected": {
         "violations": [
           "anchor-t"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -837,7 +842,8 @@
       "expected": {
         "violations": [
           "tone-not-allowed"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -963,7 +969,8 @@
       "expected": {
         "violations": [
           "cluster-not-allowed"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -1086,7 +1093,8 @@
       "expected": {
         "violations": [
           "key-unknown"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -1210,7 +1218,8 @@
       "expected": {
         "violations": [
           "nucleus-missing"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -1336,7 +1345,8 @@
         }
       },
       "expected": {
-        "violations": []
+        "violations": [],
+        "warnings": []
       }
     },
     {
@@ -1462,7 +1472,8 @@
       "expected": {
         "violations": [
           "final-unknown"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
@@ -1592,12 +1603,13 @@
       "expected": {
         "violations": [
           "cluster-not-allowed"
-        ]
+        ],
+        "warnings": []
       }
     },
     {
       "name": "traj-without-uniqueId",
-      "description": "A main-string trajectory with no uniqueId cannot be anchored; loaders assign ids before healing, and heal/project/rehome refuse such a trajectory.",
+      "description": "A row-0 trajectory with no uniqueId cannot be anchored; loaders assign ids before healing, and heal/project/rehome refuse such a trajectory.",
       "pieceJson": {
         "raga": {
           "name": "Yaman",
@@ -1736,6 +1748,302 @@
         "violations": [
           "traj-uid-missing",
           "unanchored-start"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "nucleus-lyric-mismatch",
+      "description": "nucleus 'ā' with lyric.vowel 'ī'. Editors keep the two in sync (absent nucleus == null lyric.vowel); the projection reads lyric.vowel and IPA reads nucleus, so a mismatch is an error.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ī",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Vocal (F)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [
+          "nucleus-lyric-mismatch"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "name": "track-not-vocal",
+      "description": "Track 0 is a Sitar but carries syllables: a warning, not an error (a sung bol or a mislabelled track). Vocal labels: 'Vocal (M)', 'Vocal (F)'. Track 1 is vocal with no syllables: nothing to report; tracks are independent.",
+      "pieceJson": {
+        "raga": {
+          "name": "Yaman",
+          "fundamental": 246.0,
+          "ratios": [
+            1,
+            1.122462048309373,
+            1.2599210498948732,
+            1.4142135623730951,
+            1.4983070768766815,
+            1.681792830507429,
+            1.8877486253633868
+          ],
+          "tuning": {
+            "sa": 1,
+            "re": {
+              "lowered": 1.0594630943592953,
+              "raised": 1.122462048309373
+            },
+            "ga": {
+              "lowered": 1.189207115002721,
+              "raised": 1.2599210498948732
+            },
+            "ma": {
+              "lowered": 1.3348398541700344,
+              "raised": 1.4142135623730951
+            },
+            "pa": 1.4983070768766815,
+            "dha": {
+              "lowered": 1.5874010519681994,
+              "raised": 1.681792830507429
+            },
+            "ni": {
+              "lowered": 1.7817974362806785,
+              "raised": 1.8877486253633868
+            }
+          }
+        },
+        "phraseGrid": [
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "v1",
+                    "vowel": "ā"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "p",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": [
+                {
+                  "anchor": {
+                    "traj": "v1",
+                    "t": 0
+                  },
+                  "nucleus": "ā",
+                  "lyric": {
+                    "vowel": "ā",
+                    "source": "pack"
+                  }
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "durTot": 0.5,
+              "durArray": [
+                1.0
+              ],
+              "chikaris": {},
+              "startTime": 0.0,
+              "trajectoryGrid": [
+                [
+                  {
+                    "id": 0,
+                    "pitches": [
+                      {
+                        "swara": 0,
+                        "raised": true,
+                        "oct": 0,
+                        "logOffset": 0.0
+                      }
+                    ],
+                    "durTot": 0.5,
+                    "durArray": [
+                      1.0
+                    ],
+                    "slope": 2.0,
+                    "articulations": {},
+                    "num": 0,
+                    "uniqueId": "s1"
+                  }
+                ]
+              ],
+              "instrumentation": [
+                "Vocal (F)"
+              ],
+              "groupsGrid": [
+                []
+              ],
+              "categorizationGrid": [],
+              "uniqueId": "q",
+              "adHocCategorizationGrid": [],
+              "isSectionStart": false,
+              "syllables": []
+            }
+          ]
+        ],
+        "instrumentation": [
+          "Sitar",
+          "Vocal (M)"
+        ],
+        "durTot": 0.5,
+        "durArrayGrid": [
+          [
+            1.0
+          ],
+          [
+            1.0
+          ]
+        ],
+        "sectionCatGrid": [
+          [],
+          []
+        ],
+        "meters": [],
+        "title": "Contract Fixture (syllables)",
+        "_id": "fixture000000000000000000"
+      },
+      "expected": {
+        "violations": [],
+        "warnings": [
+          "track-not-vocal"
         ]
       }
     },
@@ -1859,7 +2167,8 @@
         }
       },
       "expected": {
-        "violations": []
+        "violations": [],
+        "warnings": []
       }
     }
   ]

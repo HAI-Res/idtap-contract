@@ -15,7 +15,7 @@ ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, os.path.join(ROOT, "conformance"))
 sys.path.insert(0, HERE)
 import syllables as S  # noqa: E402
-from generate_packs import C_ISOS, C_HINDIS, C_IPAS, C_ENGTRANS  # noqa: E402
+from generate_packs import legacy_consonant  # noqa: E402
 
 RAGA = {
     "name": "Yaman", "fundamental": 246.0,
@@ -33,12 +33,12 @@ RAGA = {
 # ------------------------------------------------------------------ builders
 def legacy_copies(iso):
     """What a pre-0.3.0 client stores beside an iso consonant: tables[indexOf]."""
-    i = C_ISOS.index(iso)
-    return C_HINDIS[i], C_IPAS[i], C_ENGTRANS[i]
+    leg = legacy_consonant(iso)
+    return leg["hindi"], leg["ipa"], leg["engTrans"]
 
 
 def traj(uid, vowel=None, start=None, end=None, tid=0, dur=0.5, swara=0):
-    """A main-string trajectory as a pre-0.3.0 client writes it: the nine wire
+    """A row-0 trajectory as a pre-0.3.0 client writes it: the nine wire
     fields plus the 'consonant' articulation mirrors at 0.00 / 1.00."""
     t = {"id": tid, "pitches": [{"swara": swara, "raised": True, "oct": 0, "logOffset": 0.0}],
          "durTot": dur, "durArray": [1.0], "slope": 2.0, "articulations": {},
@@ -109,13 +109,12 @@ def syl(traj_uid, nucleus=None, onset=None, coda=None, lyric=..., source="pack",
     return s
 
 
-def legacy_map(pc):
-    return {t["uniqueId"]: S.legacy_of_traj(t)
-            for track in pc["phraseGrid"] for _, _, t in S.track_flat(track)}
+legacy_map = S.stored_legacy
+grid = S.syllable_grid
 
 
-def grid(pc):
-    return [[ph.get("syllables") for ph in track] for track in pc["phraseGrid"]]
+def errors(pc):
+    return S.split_violations(S.check_invariants(pc))[0]
 
 
 FIXTURES = {"syllable": [], "system": []}
@@ -153,7 +152,7 @@ def fx_heal_roundtrip():
     same(legacy_map(pc), S.project_piece(healed), "projection round trip")
     same(pc, S.strip_syllables(S.apply_projection(healed)), "dual-write leaves the legacy document byte-identical")
     same((True, []), S.legacy_safe(healed), "legacy_safe")
-    same([], S.check_invariants(healed), "invariants")
+    same([], errors(healed), "invariants")
     emit("syllable", {
         "name": "heal-legacy-hindi-roundtrip",
         "scenario": "legacy",
@@ -177,7 +176,7 @@ def fx_cantonese():
         syl("y7", "i", onset="s", coda="k", tone="6", orthography="食", romanization="sik6", wordStart=True)])
     pc = piece([[p0, p1]], system={"phonology": "jyutping", "display": ["jyutping", "Hant"]},
                lyrics=["詩唔好 食"], title="Cantonese projection (fixture)")
-    # Non-Hindi packs project nothing (Jon, 2026-11-12): every main-string
+    # Non-Hindi packs project nothing (Jon, 2026-11-12): every row-0
     # trajectory ends with no vowel, no consonants, no consonant articulations.
     legacy = {uid: {"art0": None, "art1": None} for uid in ("y1", "y2", "y3", "y4", "y5", "y6", "y7")}
     ipa = ["siː", "m̩", "hou̯", "sek̚"]
@@ -186,7 +185,7 @@ def fx_cantonese():
     same(ipa, [S.derive_ipa(s, pack) for ph in pc["phraseGrid"][0] for s in ph["syllables"]], "ipa")
     reasons = ["orthography", "pack", "romanization", "tone", "wordStart"]
     same((False, reasons), S.legacy_safe(pc), "legacy_safe")
-    same([], S.check_invariants(pc), "invariants")
+    same([], errors(pc), "invariants")
     emit("syllable", {
         "name": "project-cantonese-tone-orthography",
         "scenario": "stripped",
@@ -213,16 +212,17 @@ def fx_mixed():
     same(want, grid(healed), "mixed heal")
     proj = S.project_piece(healed)
     same("ī", proj["m1"]["vowel"], "syllables win over a disagreeing legacy field")
-    same((True, []), S.legacy_safe(healed), "legacy_safe")
+    same((False, ["boundary"]), S.legacy_safe(healed), "legacy_safe on the stored (stale) fields")
+    same((True, []), S.legacy_safe(S.apply_projection(healed)), "legacy_safe after a 0.3.0 save")
     emit("syllable", {
         "name": "mixed-healed-and-legacy-phrases",
         "scenario": "mixed",
         "kind": "heal",
-        "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'.",
+        "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'. The write guard reads the STORED legacy fields, so as loaded the piece is not legacy-safe (healing the stale 'ā' disagrees with the stored syllable: boundary); once a 0.3.0 client saves it (dual-write) it is.",
         "pieceJson": pc,
         "expected": {"syllables": want, "legacyRoundTrip": False,
                      "legacyAfterProjection": {"m1": proj["m1"], "m2": proj["m2"]},
-                     "legacySafe": True, "legacySafeReasons": [], "violations": []},
+                     "legacySafe": False, "legacySafeReasons": ["boundary"], "violations": []},
     })
 
 
@@ -249,7 +249,7 @@ def fx_rehome(name, split_at, want, safe, reasons, desc, merge=False):
     same([], dropped, name + " dropped")
     same(S.project_piece(before), S.project_piece(got), name + " projection unchanged by the edit")
     same((safe, reasons), S.legacy_safe(got), name + " legacy_safe")
-    same([], S.check_invariants(got), name + " invariants")
+    same([], errors(got), name + " invariants")
     emit("syllable", {"name": name, "scenario": "edit", "kind": "rehome", "description": desc,
                       "pieceJson": before, "pieceAfterEdit": after,
                       "expected": {"syllables": [want], "dropped": [], "legacyUnchanged": True,
@@ -260,11 +260,11 @@ def fx_rehome(name, split_at, want, safe, reasons, desc, merge=False):
 def fx_invariants():
     cases = []
 
-    def case(name, pc, codes, desc):
-        got = [c for c, _ in S.check_invariants(pc)]
-        same(sorted(codes), got, "invariants " + name)
+    def case(name, pc, codes, desc, warnings=()):
+        errs, warns = S.split_violations(S.check_invariants(pc))
+        same((sorted(codes), sorted(warnings)), (errs, warns), "invariants " + name)
         cases.append({"name": name, "description": desc, "pieceJson": pc,
-                      "expected": {"violations": sorted(codes)}})
+                      "expected": {"violations": sorted(codes), "warnings": sorted(warnings)}})
 
     case("anchor-missing", piece([[phrase("p", [traj("v1", "ā")], [syl("nope", "ā")])]]),
          ["anchor-missing", "unanchored-start"],
@@ -302,14 +302,23 @@ def fx_invariants():
     nouid["uniqueId"] = None
     case("traj-without-uniqueId", piece([[phrase("p", [nouid, traj("v2", "ī")], [syl("v2", "ī")])]]),
          ["traj-uid-missing", "unanchored-start"],
-         "A main-string trajectory with no uniqueId cannot be anchored; loaders assign ids before healing, and heal/project/rehome refuse such a trajectory.")
+         "A row-0 trajectory with no uniqueId cannot be anchored; loaders assign ids before healing, and heal/project/rehome refuse such a trajectory.")
+    mis = syl("v1", "ā")
+    mis["lyric"]["vowel"] = "ī"
+    case("nucleus-lyric-mismatch", piece([[phrase("p", [traj("v1", "ā")], [mis])]]),
+         ["nucleus-lyric-mismatch"],
+         "nucleus 'ā' with lyric.vowel 'ī'. Editors keep the two in sync (absent nucleus == null lyric.vowel); the projection reads lyric.vowel and IPA reads nucleus, so a mismatch is an error.")
+    sitar = piece([[phrase("p", [traj("v1", "ā")], [syl("v1", "ā")])], [phrase("q", [traj("s1")], [])]])
+    sitar["instrumentation"] = ["Sitar", "Vocal (M)"]
+    case("track-not-vocal", sitar, [], "Track 0 is a Sitar but carries syllables: a warning, not an error (a sung bol or a mislabelled track). Vocal labels: 'Vocal (M)', 'Vocal (F)'. Track 1 is vocal with no syllables: nothing to report; tracks are independent.",
+         warnings=["track-not-vocal"])
     case("jyutping-syllabic-ng-ok", piece([[phrase("p", [bare("v1")], [syl("v1", None, coda="ng", lyric=None, tone="5")])]], system=jy),
          [], "ng5 (五): a syllabic nasal, allowed by jyutping.")
     emit("syllable", {
         "name": "invariants",
         "scenario": "validation",
         "kind": "invariants",
-        "description": "Load-time invariants, one case each. Codes: traj-uid-missing, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
+        "description": "Load-time invariants, one case each. Errors (`violations`): traj-uid-missing, nucleus-lyric-mismatch, anchor-missing, anchor-silence, anchor-order, unanchored-start, anchor-t, key-unknown, cluster-not-allowed, tone-not-allowed, nucleus-missing, final-unknown, syllabic-not-allowed. Warnings (`warnings`): track-not-vocal. A client reports them; what it does next (refuse, repair, warn) is its own choice in 0.3.0.",
         "cases": cases,
     })
 
@@ -338,13 +347,16 @@ def fx_guard():
     case("retroflex-na", base(onset="ṇa"), ["key"], "ṇa is new in the fixed pack and has no legacy form.")
     case("kurmanji-pack", piece([[phrase("p", [bare("w1")], [syl("w1", "a", onset="w")])]], system={"phonology": "kurmanji"}),
          ["pack"], "Any pack other than hindi-urdu.")
+    stale = piece([[phrase("p", [traj("w1", "ā", start="ba"), traj("w2", "ā")], [])]])
+    case("stale-legacy-beside-empty-syllables", stale, ["boundary"],
+         "syllables: [] but the trajectories still carry 'ba' + 'ā' (a stale write). A pre-0.3.0 save would keep those fields and the next load would heal a syllable the tier says does not exist, so the guard, which reads the stored legacy fields, refuses.")
     case("regrouped-by-heal", base(second=syl("w2", "ā")), ["boundary"],
          "Two adjacent syllables with the same vowel and no consonant between them: the heal would merge them into one, so the legacy fields cannot hold the boundary.")
     emit("syllable", {
         "name": "write-guard",
         "scenario": "validation",
         "kind": "guard",
-        "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means heal(project(piece)) gives back the same syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary.",
+        "description": "PROP-8 write guard: the server refuses a save from a client below 0.3.0 when the stored piece is not legacy-safe. Legacy-safe means healing the STORED legacy fields gives back the stored syllables (anchor, onset, nucleus, coda, lyric.vowel; lyric.source is not compared) and no syllable carries a field the legacy fields cannot hold. Reason codes: pack, orthography, romanization, tone, wordStart, sung, anchorT, cluster, key, boundary.",
         "cases": cases,
     })
 
@@ -377,7 +389,7 @@ def fx_systems():
         resolved.update(system or {})
         same(resolved, S.resolve_system(pc), name)
         healed = S.heal_piece(pc)
-        same([], S.check_invariants(healed), name + " invariants")
+        same([], errors(healed), name + " invariants")
         exp = {"resolved": resolved, "pack": resolved["phonology"], "syllableUi": system is not None, "violations": []}
         if ipa:
             pack = S.load_pack(resolved["phonology"])

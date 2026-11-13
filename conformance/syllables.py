@@ -8,7 +8,10 @@ just this module's output played back.
 
 Terms
   track       phraseGrid[k]: one phrase sequence (one singer).
-  main(ph)    ph["trajectoryGrid"][0]: syllables live on the main string only.
+  row0(ph)    ph["trajectoryGrid"][0]: row 0 of trajectoryGrid (the melodic row;
+              the only row on a vocal track). Syllables live on row 0 only.
+              Syllables are per track via phrases: any number of tracks may
+              carry them, and tracks are independent of one another.
   silence     a trajectory with id == 12.
   absent      a legacy field that is missing OR null (null == absent, PROP-8;
               see DIVERGENCES.md SYL-1 for the TS behaviour this overrides).
@@ -21,6 +24,11 @@ PACKS_DIR = os.path.join(HERE, "..", "packs")
 HINDUSTANI = {"pitch": "raga", "phonology": "hindi-urdu", "rhythm": "tala",
               "display": ["sargam", "Deva"]}
 LEGACY_PACK = "hindi-urdu"
+# Instrumentation labels that count as a vocal track, pack-independent (the same
+# list as idtap-platform piece.ts / trajectory.ts and idtap-client enums.py).
+VOCAL_INSTRUMENTS = ("Vocal (M)", "Vocal (F)")
+# Invariant codes reported at warn level: a client shows them, never refuses.
+WARNINGS = {"track-not-vocal"}
 WIRE_FIELDS = ["vowel",
                "startConsonant", "startConsonantHindi", "startConsonantIpa", "startConsonantEngTrans",
                "endConsonant", "endConsonantHindi", "endConsonantIpa", "endConsonantEngTrans"]
@@ -56,7 +64,7 @@ def codas_of(pack):
 
 
 # --------------------------------------------------------------------- helpers
-def main(ph):
+def row0(ph):
     grid = ph.get("trajectoryGrid") or [[]]
     return grid[0] if grid else []
 
@@ -76,7 +84,7 @@ def has_phonetics(t):
 
 def uid_of(t):
     """A trajectory's uniqueId. Heal, projection and re-homing need one on every
-    main-string trajectory: loaders assign ids before healing (PROP-8 heal step 1)."""
+    row-0 trajectory: loaders assign ids before healing (PROP-8 heal step 1)."""
     u = t.get("uniqueId")
     if not isinstance(u, str) or not u:
         raise ValueError("trajectory without uniqueId: assign ids before heal/project/rehome")
@@ -84,8 +92,8 @@ def uid_of(t):
 
 
 def track_flat(track):
-    """[(phrase_idx, traj_idx, traj)] over the main string, in order."""
-    return [(pi, ti, t) for pi, ph in enumerate(track) for ti, t in enumerate(main(ph))]
+    """[(phrase_idx, traj_idx, traj)] over row 0 of trajectoryGrid, in order."""
+    return [(pi, ti, t) for pi, ph in enumerate(track) for ti, t in enumerate(row0(ph))]
 
 
 # --------------------------------------------------------------------- heal
@@ -108,7 +116,7 @@ def first_traj_idxs(trajs):
 
 
 def heal_phrase(ph):
-    trajs = main(ph)
+    trajs = row0(ph)
     idxs = first_traj_idxs(trajs)
     out = []
     for n, i in enumerate(idxs):
@@ -135,7 +143,7 @@ def heal_phrase(ph):
 def heal_piece(piece):
     """Normative heal. A phrase that already has `syllables` keeps them (even []).
     A phrase without the key is healed from its legacy fields; if its track has
-    no phonetic data on any main-string trajectory, it gets []. Returns a copy."""
+    no phonetic data on any row-0 trajectory, it gets []. Returns a copy."""
     pc = copy.deepcopy(piece)
     for track in pc["phraseGrid"]:
         phonetic = any(has_phonetics(t) for _, _, t in track_flat(track))
@@ -196,7 +204,7 @@ def spans(track):
 def project_piece(piece):
     """Normative projection syllables -> legacy fields. Returns
     {trajUniqueId: {wire field: value, ..., "art0": {...}|None, "art1": {...}|None}}
-    for every main-string trajectory; absent fields are omitted, "art0"/"art1"
+    for every row-0 trajectory; absent fields are omitted, "art0"/"art1"
     are the 'consonant' articulations at '0.00' / '1.00' (None = none)."""
     pack = pack_of(piece)
     res = {}
@@ -306,7 +314,8 @@ def derive_ipa(syl, pack):
 
 # --------------------------------------------------------------------- invariants
 def check_invariants(piece):
-    """-> sorted list of violation codes (with location). Empty = valid."""
+    """-> sorted list of (code, location). Codes in WARNINGS are warn level;
+    every other code is an error. See split_violations."""
     pack = pack_of(piece)
     codas = codas_of(pack)
     v = []
@@ -315,7 +324,7 @@ def check_invariants(piece):
         anchored = set()
         for pi, ph in enumerate(track):
             idx = {}
-            for i, t in enumerate(main(ph)):
+            for i, t in enumerate(row0(ph)):
                 u = t.get("uniqueId")
                 if isinstance(u, str) and u:
                     idx[u] = (i, t)
@@ -348,6 +357,9 @@ def check_invariants(piece):
                 nuc = s.get("nucleus")
                 if nuc is not None and nuc not in pack["vowels"]:
                     v.append(("key-unknown", where))
+                # editors keep nucleus and lyric.vowel in sync; absent == null
+                if nuc != (s.get("lyric") or {}).get("vowel"):
+                    v.append(("nucleus-lyric-mismatch", where))
                 for obs in ("lyric", "sung"):
                     ov = (s.get(obs) or {}).get("vowel")
                     if ov is not None and ov not in pack["vowels"]:
@@ -368,6 +380,9 @@ def check_invariants(piece):
                         v.append(("syllabic-not-allowed", where))
                 elif nuc is None and not pack["flags"]["nucleusOptional"]:
                     v.append(("nucleus-missing", where))
+        instr = (piece.get("instrumentation") or [])
+        if any_syl and k < len(instr) and instr[k] not in VOCAL_INSTRUMENTS:
+            v.append(("track-not-vocal", f"track {k} ({instr[k]})"))
         if any_syl:
             prev_silent = True  # the track start counts as a silence
             for pi, ti, t in track_flat(track):
@@ -375,6 +390,24 @@ def check_invariants(piece):
                     v.append(("unanchored-start", f"track {k} phrase {pi} traj {ti}"))
                 prev_silent = silent(t)
     return sorted(v)
+
+
+def split_violations(found):
+    """-> (error codes, warning codes), each sorted."""
+    codes = [c for c, _ in found]
+    return ([c for c in codes if c not in WARNINGS], [c for c in codes if c in WARNINGS])
+
+
+# --------------------------------------------------------------------- fixture helpers
+def syllable_grid(piece):
+    """phraseGrid-shaped list of each phrase's syllables (None = key absent)."""
+    return [[ph.get("syllables") for ph in tr] for tr in piece["phraseGrid"]]
+
+
+def stored_legacy(piece):
+    """{uid: legacy_of_traj(t)} for every row-0 trajectory, as stored."""
+    return {uid_of(t): legacy_of_traj(t)
+            for tr in piece["phraseGrid"] for _, _, t in track_flat(tr)}
 
 
 # --------------------------------------------------------------------- write guard
@@ -392,9 +425,12 @@ def _comparable(syls):
 
 
 def legacy_safe(piece):
-    """PROP-8 write guard. True when a pre-0.3.0 client may save this piece:
-    dropping its syllables loses nothing, because heal(project(piece)) rebuilds
-    them. -> (bool, sorted reason codes)."""
+    """PROP-8 write guard, evaluated on the STORED piece. True when a pre-0.3.0
+    client may save it: dropping its syllables loses nothing, because healing
+    the stored legacy fields rebuilds exactly the stored syllables. A 0.3.0 save
+    always dual-writes, so on a well-formed document the stored legacy fields
+    are the projection; stale fields make it unsafe ('boundary').
+    -> (bool, sorted reason codes)."""
     reasons = set()
     pack = pack_of(piece)
     if pack["id"] != LEGACY_PACK:
@@ -411,13 +447,16 @@ def legacy_safe(piece):
                     if isinstance(s.get(f), list):
                         reasons.add("cluster")
                 if pack["id"] == LEGACY_PACK:
-                    for f, table in (("onset", "consonants"), ("coda", "codas")):
-                        k = s.get(f)
-                        if isinstance(k, str) and k in codas_of(pack) and \
-                                "legacy" not in codas_of(pack)[k]:
+                    # a pack key with no legacy form (e.g. the new ṇa) cannot be
+                    # projected; an unknown string is written back as-is
+                    for k, table in ((s.get("onset"), pack["consonants"]),
+                                     (s.get("coda"), codas_of(pack)),
+                                     (s.get("nucleus"), pack["vowels"]),
+                                     ((s.get("lyric") or {}).get("vowel"), pack["vowels"])):
+                        if isinstance(k, str) and k in table and "legacy" not in table[k]:
                             reasons.add("key")
     if not reasons:
-        rebuilt = heal_piece(strip_syllables(apply_projection(piece)))
+        rebuilt = heal_piece(strip_syllables(piece))
         for ta, tb in zip(piece["phraseGrid"], rebuilt["phraseGrid"]):
             for pa, pb in zip(ta, tb):
                 if _comparable(pa.get("syllables") or []) != _comparable(pb["syllables"]):

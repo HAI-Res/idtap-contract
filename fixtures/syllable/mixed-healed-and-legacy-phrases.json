@@ -2,7 +2,7 @@
   "name": "mixed-healed-and-legacy-phrases",
   "scenario": "mixed",
   "kind": "heal",
-  "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'.",
+  "description": "One phrase carries syllables (written by a 0.3.0 client), the next has none (last saved by a pre-0.3.0 client). The loader keeps the first phrase's syllables and heals the second from its legacy fields. Where a phrase has syllables they win: m1's stale stored vowel 'ā' is ignored and the projection rewrites it to 'ī'. The write guard reads the STORED legacy fields, so as loaded the piece is not legacy-safe (healing the stale 'ā' disagrees with the stored syllable: boundary); once a 0.3.0 client saves it (dual-write) it is.",
   "pieceJson": {
     "raga": {
       "name": "Yaman",
@@ -325,8 +325,10 @@
         "vowel": "ī"
       }
     },
-    "legacySafe": true,
-    "legacySafeReasons": [],
+    "legacySafe": false,
+    "legacySafeReasons": [
+      "boundary"
+    ],
     "violations": []
   }
 }
