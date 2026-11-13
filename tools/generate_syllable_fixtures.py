@@ -200,7 +200,7 @@ def fx_cantonese():
 
 
 def fx_articulation_overwrite():
-    pluck = {"name": "pluck", "stroke": "d"}
+    pluck = {"name": "pluck", "stroke": "d", "strokeNickname": "da"}  # canonical, as TS saves it
     a1 = traj("o1", "ā"); a1["articulations"]["0.00"] = dict(pluck)
     a2 = traj("o2", "ā"); a2["articulations"]["1.00"] = {"name": "dampen"}
     a3 = traj("o3", "ī"); a3["articulations"]["0.00"] = dict(pluck)
@@ -212,16 +212,16 @@ def fx_articulation_overwrite():
     want = {
         "o1": {"0.00": {"name": "consonant", "stroke": "ba", "hindi": h, "ipa": ipa, "engTrans": eng}},
         "o2": {"1.00": {"name": "consonant", "stroke": "ma", "hindi": hm, "ipa": ipam, "engTrans": engm}},
-        "o3": {"0.00": dict(pluck)},
     }
     applied = S.apply_projection(pc)
-    got = {t["uniqueId"]: t.get("articulations") for t in applied["phraseGrid"][0][0]["trajectoryGrid"][0]}
-    same(want, got, "articulations after the projection")
+    got = {t["uniqueId"]: t.get("articulations") or {} for t in applied["phraseGrid"][0][0]["trajectoryGrid"][0]}
+    same(want, {u: {k: got[u].get(k) for k in a} for u, a in want.items()}, "consonant mirrors after the projection")
+    same(dict(pluck), got["o3"]["0.00"], "reference keeps o3's pluck (not checked: load-time rules govern it)")
     emit("syllable", {
         "name": "project-articulation-overwrite",
         "scenario": "articulations",
         "kind": "project",
-        "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Where the tier has no consonant, the existing non-consonant articulation is kept (o3's pluck). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
+        "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Only the keys the tier writes are checked (appliedArticulations lists uid -> key -> expected articulation). What happens to a non-consonant articulation at a key the tier does not write (o3's pluck) is outside the projection: today's Trajectory constructors decide it at load, and Swift and TS differ there (DIVERGENCES.md ART-1). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
         "pieceJson": pc,
         "expected": {"legacy": S.project_piece(pc), "derivedIpa": [S.derive_ipa(x, S.pack_of(pc)) for x in pc["phraseGrid"][0][0]["syllables"]],
                      "appliedArticulations": want,
