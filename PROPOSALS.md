@@ -474,6 +474,13 @@ trajectories in phrase order, so it can cross a phrase boundary.
   label carries syllables (a sung bol on an instrumental track, or a mislabelled track).
   Vocal labels, pack-independent: `'Vocal (M)'`, `'Vocal (F)'` (`VOCAL_INSTRUMENTS`, the
   list idtap-platform and idtap-client already use).
+- `syllable-malformed` (error; platform session, 2026-11-13): a stored `syllables` that
+  is not an array, or an entry that is not an object with a non-empty string
+  `anchor.traj` (and, if present, an object `lyric`). Such a document already fails the
+  schema; the code exists so a client that meets one from a buggy writer reports it
+  instead of crashing. Clients carry the entries through byte-identical and do not
+  project that phrase; the write guard refuses an old client's save (reason
+  `unreadable`).
 Every code except `track-not-vocal` is an error. What a client does with an error
 (refuse, repair, warn) is its choice in 0.3.0; a warning is shown, never refused.
 

@@ -335,3 +335,13 @@ pack agrees with it.
 `endConsonant`, in the heal and everywhere else. Python matches already; TS changes in
 its 0.3.0 PR. Python-saved documents are where nulls come from (`to_json` can emit
 `None`); the dry run should count them.
+
+## ART-1: plucks on vocal trajectories at load (found 2026-11-13, open)
+idtap-swift's ported Trajectory constructor applies the vocal rule from TS
+`trajectory.ts` (the `vox` block) when the track's instrument is threaded in, and drops
+`pluck` articulations on vocal trajectories at load. On the path the platform's
+conformance adapter exercises, the TS loader keeps them (adding `strokeNickname`). The
+2026-11-13 dump has 172 plucks at `'0.00'` on vocal tracks. Not a syllable-tier issue,
+and not gated by `project-articulation-overwrite`, which checks only the keys the tier
+writes. Decide which behaviour is canonical before Swift saves to production.
+

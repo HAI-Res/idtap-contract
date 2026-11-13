@@ -353,7 +353,8 @@ def check_syllable(fx):
             applied = SYL.apply_projection(pc)
             got = {t["uniqueId"]: t.get("articulations")
                    for tr in applied["phraseGrid"] for ph in tr for t in ph["trajectoryGrid"][0]}
-            ok = ok and all(got.get(u) == a for u, a in exp["appliedArticulations"].items())
+            ok = ok and all((got.get(u) or {}).get(k) == v
+                            for u, a in exp["appliedArticulations"].items() for k, v in a.items())
             notes.append("articulations after apply")
     elif kind == "rehome":
         out, dropped = SYL.rehome(pc, fx["pieceAfterEdit"])

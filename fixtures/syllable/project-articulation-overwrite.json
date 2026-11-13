@@ -2,7 +2,7 @@
   "name": "project-articulation-overwrite",
   "scenario": "articulations",
   "kind": "project",
-  "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Where the tier has no consonant, the existing non-consonant articulation is kept (o3's pluck). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
+  "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Only the keys the tier writes are checked (appliedArticulations lists uid -> key -> expected articulation). What happens to a non-consonant articulation at a key the tier does not write (o3's pluck) is outside the projection: today's Trajectory constructors decide it at load, and Swift and TS differ there (DIVERGENCES.md ART-1). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
   "pieceJson": {
     "raga": {
       "name": "Yaman",
@@ -72,7 +72,8 @@
                 "articulations": {
                   "0.00": {
                     "name": "pluck",
-                    "stroke": "d"
+                    "stroke": "d",
+                    "strokeNickname": "da"
                   }
                 },
                 "num": 0,
@@ -121,7 +122,8 @@
                 "articulations": {
                   "0.00": {
                     "name": "pluck",
-                    "stroke": "d"
+                    "stroke": "d",
+                    "strokeNickname": "da"
                   }
                 },
                 "num": 0,
@@ -244,12 +246,6 @@
           "hindi": "म",
           "ipa": "m",
           "engTrans": "m"
-        }
-      },
-      "o3": {
-        "0.00": {
-          "name": "pluck",
-          "stroke": "d"
         }
       }
     },

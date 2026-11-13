@@ -355,6 +355,10 @@ def check_invariants(piece):
         any_syl = any(ph.get("syllables") for ph in track)
         anchored = set()
         for pi, ph in enumerate(track):
+            raw = ph.get("syllables")
+            if raw is not None and not isinstance(raw, list):
+                v.append(("syllable-malformed", f"track {k} phrase {pi} syllables"))
+                continue
             idx = {}
             for i, t in enumerate(row0(ph)):
                 u = t.get("uniqueId")
@@ -365,7 +369,11 @@ def check_invariants(piece):
             last = -1
             for si, s in enumerate(ph.get("syllables") or []):
                 where = f"track {k} phrase {pi} syllable {si}"
-                a = s["anchor"]
+                a = s.get("anchor") if isinstance(s, dict) else None
+                if (not isinstance(a, dict) or not isinstance(a.get("traj"), str) or not a["traj"]
+                        or ("lyric" in s and not isinstance(s["lyric"], dict))):
+                    v.append(("syllable-malformed", where))
+                    continue
                 if a["traj"] not in idx:
                     v.append(("anchor-missing", where))
                     continue
