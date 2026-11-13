@@ -2,7 +2,7 @@
   "name": "heal-legacy-hindi-roundtrip",
   "scenario": "legacy",
   "kind": "heal",
-  "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and an instrumental track with no phonetic data (-> syllables []).",
+  "description": "Legacy-only Hindustani piece (no syllables key anywhere). Heal by the firstTrajIdxs rule, then project: every legacy field and 'consonant' articulation mirror comes back identical. Covers: melisma (a1-a2, b2-b3, b4-b5), a coda that ends a syllable (a3 la, b5 na), a silence (a4), a vowel change with no consonant (b6), a group with no vowel (b7 -> lyric.vowel null), a phrase start not preceded by silence (c1), the legacy 'na' whose stored IPA copy is 'n' and 'pha' whose stored Hindi copy is फ़ (kept by the legacy block, PACK-1), and a vocal track with no phonetic data (-> syllables []).",
   "pieceJson": {
     "raga": {
       "name": "Yaman",
