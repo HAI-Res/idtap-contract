@@ -677,3 +677,15 @@ Hindi/Urdu, Jyutping and Kurmanji packs are built together. Status: **drafted on
 Validator checks: every pack against the schema; every hindi-urdu legacy key heals to
 a pack key and its `legacy` block equals `tables[indexOf(key)]`; no other pack carries
 a `legacy` block or sets `legacyExact`; finals are consistent with nuclei and codas.
+
+### Hints and key normalization (0.3.1, 2026-11-13)
+- **`hint`** (optional, display only) on consonants, codas, vowels and tones:
+  `{status: 'proposed'|'reviewed', en: 'b in bat', example?: {...}, checkedExample?: {...}}`.
+  It is for the syllable editor's sound picker, for people who don't know the language.
+  No projection, invariant or guard reads it. Every hint shipped in 0.3.1 is a draft
+  (`proposed`, from the syllable-UI design session, `tools/data/hints-draft.json`). Hindi's
+  legacy `engTrans` is a transliteration, not a sound hint. Yingyao reviews the jyutping
+  hints and Seba the kurmanji ones; the Hindi reviewer is open.
+- **Pack keys are NFC.** Kurmanji ḵ and ṯ are the precomposed U+1E35 and U+1E6F. p̱, ç̱ and x̱
+  have no precomposed form and keep U+0331. Clients should NFC-normalize typed input before
+  looking up a key.

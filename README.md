@@ -94,7 +94,7 @@ reference loop and this repo's own self-check.
 
 ## Versioning
 
-The contract is versioned (`version` in `contract.json`, currently **0.3.0**;
+The contract is versioned (`version` in `contract.json`, currently **0.3.1**;
 `versionPolicy` there carries the changelog). Serialized documents carry no
 version field, so the assertion lives in each client's **conformance suite**, not
 in the loader:
