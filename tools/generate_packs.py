@@ -11,7 +11,7 @@ Run:  python3 tools/generate_packs.py      (writes packs/*.json)
 The validator checks every pack against schemas/pack.schema.json and checks
 that hindi-urdu's `legacy` blocks reproduce `legacyTables` exactly.
 """
-import json, os
+import json, os, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "packs")
@@ -131,7 +131,7 @@ def hindi_urdu():
     return {
         "id": "hindi-urdu",
         "name": "Hindi / Urdu (Hindustani vocal)",
-        "packVersion": "1.0.0",
+        "packVersion": "1.1.0",
         "status": "complete",
         "keyScheme": "ISO 15919, consonants with the inherent a (ka, kha, ...), as stored in Trajectory.startConsonant/endConsonant/vowel since 2022.",
         "scripts": ["Deva", "Latn", "Arab"],
@@ -260,7 +260,7 @@ def jyutping():
     return {
         "id": "jyutping",
         "name": "Cantonese (Jyutping)",
-        "packVersion": "0.1.0",
+        "packVersion": "0.2.0",
         "status": "draft: pending review by Yingyao Yu",
         "keyScheme": "LSHK Jyutping letters. A syllable stores onset, nucleus and coda as Jyutping letters and tone as its digit; IPA is derived from `finals`, never stored.",
         "scripts": ["Latn", "Hant"],
@@ -395,9 +395,9 @@ def kurmanji():
     return {
         "id": "kurmanji",
         "name": "Kurmanji Kurdish",
-        "packVersion": "0.1.0",
+        "packVersion": "0.2.0",
         "status": "draft: pending review by Seba Kayan",
-        "keyScheme": "Kurmanji Latin (Hawar) letters. Thackston's underlined letters, which the spelling does not distinguish, are written with U+0331 COMBINING MACRON BELOW (p̱ ṯ ḵ ç̱ x̱); pharyngeal h is ḥ; the trill is rr; 'ayn is ʿ.",
+        "keyScheme": "Kurmanji Latin (Hawar) letters. Thackston's underlined letters, which the spelling does not distinguish, are written with U+0331 COMBINING MACRON BELOW (p̱ ç̱ x̱), or the precomposed letter where Unicode has one (ṯ U+1E6F, ḵ U+1E35); keys are NFC; pharyngeal h is ḥ; the trill is rr; 'ayn is ʿ.",
         "scripts": ["Latn"],
         "sources": [
             "Seba Kayan, 'Kurmanji Kurdish: Vowels and Consonants' (overview for IDTAP, 2026-11-11)",
@@ -424,9 +424,34 @@ def kurmanji():
     }
 
 
+def nfc_keys(pack):
+    """Pack keys are NFC (2026-11-13): Kurmanji's underlined k and t have
+    precomposed forms (U+1E35, U+1E6F); p, c-cedilla and x keep U+0331."""
+    for table in ("consonants", "vowels", "codas", "finals", "tones"):
+        if isinstance(pack.get(table), dict):
+            pack[table] = {unicodedata.normalize("NFC", k): v for k, v in pack[table].items()}
+    return pack
+
+
+HINTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "hints-draft.json")
+
+
+def add_hints(pack):
+    """Attach the drafted 'sounds like' hints (display only, status 'proposed')."""
+    hints = json.load(open(HINTS, encoding="utf-8"))["packs"].get(pack["id"], {})
+    for table in ("consonants", "codas", "vowels", "tones"):
+        entries = hints.get(table) or {}
+        target = pack["consonants"] if table == "codas" and pack.get("codas") == "consonants" else pack.get(table)
+        for key, hint in entries.items():
+            if not isinstance(target, dict) or key not in target:
+                raise SystemExit(f"hint for unknown {pack['id']} {table} key {key!r}")
+            target[key]["hint"] = hint
+    return pack
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    for pack in (hindi_urdu(), jyutping(), kurmanji()):
+    for pack in (add_hints(nfc_keys(p())) for p in (hindi_urdu, jyutping, kurmanji)):
         path = os.path.join(OUT, pack["id"] + ".json")
         with open(path, "w", encoding="utf-8") as f:
             json.dump(pack, f, ensure_ascii=False, indent=2)

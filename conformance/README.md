@@ -122,5 +122,5 @@ wire and not asserted.
 Version assertion (README "Versioning"): add to the suite
 
 ```python
-assert json.load(open("path/to/idtap-contract/contract.json"))["version"] == CONTRACT_VERSION  # "0.3.0"
+assert json.load(open("path/to/idtap-contract/contract.json"))["version"] == CONTRACT_VERSION  # "0.3.1"
 ```
