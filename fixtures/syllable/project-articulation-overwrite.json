@@ -1,0 +1,262 @@
+{
+  "name": "project-articulation-overwrite",
+  "scenario": "articulations",
+  "kind": "project",
+  "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Where the tier has no consonant, the existing non-consonant articulation is kept (o3's pluck). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
+  "pieceJson": {
+    "raga": {
+      "name": "Yaman",
+      "fundamental": 246.0,
+      "ratios": [
+        1,
+        1.122462048309373,
+        1.2599210498948732,
+        1.4142135623730951,
+        1.4983070768766815,
+        1.681792830507429,
+        1.8877486253633868
+      ],
+      "tuning": {
+        "sa": 1,
+        "re": {
+          "lowered": 1.0594630943592953,
+          "raised": 1.122462048309373
+        },
+        "ga": {
+          "lowered": 1.189207115002721,
+          "raised": 1.2599210498948732
+        },
+        "ma": {
+          "lowered": 1.3348398541700344,
+          "raised": 1.4142135623730951
+        },
+        "pa": 1.4983070768766815,
+        "dha": {
+          "lowered": 1.5874010519681994,
+          "raised": 1.681792830507429
+        },
+        "ni": {
+          "lowered": 1.7817974362806785,
+          "raised": 1.8877486253633868
+        }
+      }
+    },
+    "phraseGrid": [
+      [
+        {
+          "durTot": 1.5,
+          "durArray": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.3333333333333333
+          ],
+          "chikaris": {},
+          "startTime": 0.0,
+          "trajectoryGrid": [
+            [
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "o1",
+                "vowel": "ā"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "1.00": {
+                    "name": "dampen"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "o2",
+                "vowel": "ā"
+              },
+              {
+                "id": 0,
+                "pitches": [
+                  {
+                    "swara": 0,
+                    "raised": true,
+                    "oct": 0,
+                    "logOffset": 0.0
+                  }
+                ],
+                "durTot": 0.5,
+                "durArray": [
+                  1.0
+                ],
+                "slope": 2.0,
+                "articulations": {
+                  "0.00": {
+                    "name": "pluck",
+                    "stroke": "d"
+                  }
+                },
+                "num": 0,
+                "uniqueId": "o3",
+                "vowel": "ī"
+              }
+            ]
+          ],
+          "instrumentation": [
+            "Vocal (F)"
+          ],
+          "groupsGrid": [
+            []
+          ],
+          "categorizationGrid": [],
+          "uniqueId": "ph-o",
+          "adHocCategorizationGrid": [],
+          "isSectionStart": false,
+          "syllables": [
+            {
+              "anchor": {
+                "traj": "o1",
+                "t": 0
+              },
+              "onset": "ba",
+              "nucleus": "ā",
+              "coda": "ma",
+              "lyric": {
+                "vowel": "ā",
+                "source": "pack"
+              }
+            },
+            {
+              "anchor": {
+                "traj": "o3",
+                "t": 0
+              },
+              "nucleus": "ī",
+              "lyric": {
+                "vowel": "ī",
+                "source": "pack"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "instrumentation": [
+      "Vocal (F)"
+    ],
+    "durTot": 1.5,
+    "durArrayGrid": [
+      [
+        1.0
+      ]
+    ],
+    "sectionCatGrid": [
+      []
+    ],
+    "meters": [],
+    "title": "Articulation overwrite (fixture)",
+    "_id": "fixture000000000000000000"
+  },
+  "expected": {
+    "legacy": {
+      "o1": {
+        "art0": {
+          "name": "consonant",
+          "stroke": "ba",
+          "hindi": "ब",
+          "ipa": "b",
+          "engTrans": "b"
+        },
+        "art1": null,
+        "vowel": "ā",
+        "startConsonant": "ba",
+        "startConsonantHindi": "ब",
+        "startConsonantIpa": "b",
+        "startConsonantEngTrans": "b"
+      },
+      "o2": {
+        "art0": null,
+        "art1": {
+          "name": "consonant",
+          "stroke": "ma",
+          "hindi": "म",
+          "ipa": "m",
+          "engTrans": "m"
+        },
+        "vowel": "ā",
+        "endConsonant": "ma",
+        "endConsonantHindi": "म",
+        "endConsonantIpa": "m",
+        "endConsonantEngTrans": "m"
+      },
+      "o3": {
+        "art0": null,
+        "art1": null,
+        "vowel": "ī"
+      }
+    },
+    "derivedIpa": [
+      "baːm",
+      "iː"
+    ],
+    "appliedArticulations": {
+      "o1": {
+        "0.00": {
+          "name": "consonant",
+          "stroke": "ba",
+          "hindi": "ब",
+          "ipa": "b",
+          "engTrans": "b"
+        }
+      },
+      "o2": {
+        "1.00": {
+          "name": "consonant",
+          "stroke": "ma",
+          "hindi": "म",
+          "ipa": "m",
+          "engTrans": "m"
+        }
+      },
+      "o3": {
+        "0.00": {
+          "name": "pluck",
+          "stroke": "d"
+        }
+      }
+    },
+    "legacySafe": false,
+    "legacySafeReasons": [
+      "boundary"
+    ],
+    "violations": []
+  }
+}

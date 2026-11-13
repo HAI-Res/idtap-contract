@@ -199,6 +199,36 @@ def fx_cantonese():
     })
 
 
+def fx_articulation_overwrite():
+    pluck = {"name": "pluck", "stroke": "d"}
+    a1 = traj("o1", "ā"); a1["articulations"]["0.00"] = dict(pluck)
+    a2 = traj("o2", "ā"); a2["articulations"]["1.00"] = {"name": "dampen"}
+    a3 = traj("o3", "ī"); a3["articulations"]["0.00"] = dict(pluck)
+    pc = piece([[phrase("ph-o", [a1, a2, a3],
+                        [syl("o1", "ā", onset="ba", coda="ma"), syl("o3", "ī")])]],
+               title="Articulation overwrite (fixture)")
+    h, ipa, eng = legacy_copies("ba")
+    hm, ipam, engm = legacy_copies("ma")
+    want = {
+        "o1": {"0.00": {"name": "consonant", "stroke": "ba", "hindi": h, "ipa": ipa, "engTrans": eng}},
+        "o2": {"1.00": {"name": "consonant", "stroke": "ma", "hindi": hm, "ipa": ipam, "engTrans": engm}},
+        "o3": {"0.00": dict(pluck)},
+    }
+    applied = S.apply_projection(pc)
+    got = {t["uniqueId"]: t.get("articulations") for t in applied["phraseGrid"][0][0]["trajectoryGrid"][0]}
+    same(want, got, "articulations after the projection")
+    emit("syllable", {
+        "name": "project-articulation-overwrite",
+        "scenario": "articulations",
+        "kind": "project",
+        "description": "Where the tier puts an onset or coda, the projection writes the 'consonant' mirror at '0.00' / '1.00' and REPLACES whatever articulation was there (a pluck, a dampen), as today's Trajectory constructor and the reference apply_projection do. Where the tier has no consonant, the existing non-consonant articulation is kept (o3's pluck). The vocal tracks of the 2026-11-13 dump have 172 plucks at '0.00' and 57 dampens at '1.00', so clients must agree on this.",
+        "pieceJson": pc,
+        "expected": {"legacy": S.project_piece(pc), "derivedIpa": [S.derive_ipa(x, S.pack_of(pc)) for x in pc["phraseGrid"][0][0]["syllables"]],
+                     "appliedArticulations": want,
+                     "legacySafe": S.legacy_safe(pc)[0], "legacySafeReasons": S.legacy_safe(pc)[1], "violations": []},
+    })
+
+
 # ------------------------------------------------------------------ 3. mixed
 def fx_mixed():
     # ph-m0 was saved by a 0.3.0 client: syllables + dual-written legacy fields,
@@ -438,6 +468,7 @@ def main():
     fx_cantonese()
     fx_mixed()
     fx_instrumental()
+    fx_articulation_overwrite()
     fx_rehome("rehome-split-at-syllable-boundary", 2,
               [[syl("r1", "ā", onset="ba")], [syl("r3", "ī", onset="ga")]], True, [],
               "Split ph-r0 between r2 and r3, at a syllable boundary. The ga syllable follows r3 into the new phrase ph-r1; the legacy fields are unchanged and the piece stays legacy-safe.")

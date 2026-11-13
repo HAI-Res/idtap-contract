@@ -504,7 +504,7 @@ On vocal tracks only (non-vocal tracks are never projected). For every syllable 
 `startConsonant` + three copies + the `'0.00'` mirror on the first, `endConsonant` +
 three copies + the `'1.00'` mirror on the last; every other row-0 trajectory has
 all of them cleared (a stale `'0.00'`/`'1.00'` articulation is removed only when its name
-is `consonant`). The values come from the pack entry's `legacy` block:
+is `consonant`). Where the tier does put a consonant, its mirror replaces whatever articulation is at that key (a pluck, a dampen), as today's Trajectory constructor does (`project-articulation-overwrite`). The values come from the pack entry's `legacy` block:
 - **hindi-urdu:** exact, `{iso, hindi, ipa, engTrans}` = today's tables at
   `indexOf(key)`, bugs included (Jon, 2026-11-12: "legacy block"), so the round trip is
   byte-identical. A stored string that is not a pack key is written back as-is with no
